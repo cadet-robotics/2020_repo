@@ -3,19 +3,10 @@
     "desc": "You thought it was digital IO, but it was ME! DIO!"
   },
   "dio": {
-    "desc": "Digital IO Ports",
-    "top limit switch": 1,
-    "bottom limit switch": 0,
-    "proximity sensor 1": 4,
-    "proximity sensor 2": 9,
-    "proximity sensor 3": 8,
-    "proximity sensor 4": 7,
-    "proximity sensor 5": 5,
-    "proximity sensor 6": 6
+    "desc": "Digital IO Ports"
   },
   "analog in": {
-    "desc": "Analogue IN Ports",
-    "ball distance sensor": 0
+    "desc": "Analogue IN Ports"
   },
   "pwm": {
     "desc": "PWM Ports",
@@ -34,48 +25,19 @@
     "rear left": {
       "type": "can",
       "id": 3
-    },
-    "left elevator": {
-      "type": "pwm",
-      "id": 7
-    },
-    "right claw wheel": {
-      "type": "pwm",
-      "id": 9
-    },
-    "right elevator": {
-      "type": "pwm",
-      "id": 0
-    },
-    "left claw wheel": {
-      "type": "pwm",
-      "id": 8
     }
   },
   "pcm": {
-    "desc": "Pneumatics Control Module settings",
-    "right claw solenoid": 6,
-    "left claw solenoid": 7
+    "desc": "Pneumatics Control Module settings"
   },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
     "main joystick x-axis": 0,
-    "elevator hatch 3": 7,
-    "elevator ball 3": 8,
     "main joystick y-axis": 1,
     "main joystick auto-lock": 6,
-    "elevator up": 5,
     "main joystick z-axis": 2,
-    "elevator hatch 2": 9,
-    "elevator ball 1": 12,
-    "elevator hatch 1": 11,
-    "elevator ball 2": 10,
-    "toggle claw": 4,
-    "elevator down": 3,
-    "get ball": 1,
     "toggle type": 6,
-    "main joystick throttle axis": 3,
-    "eject ball, get hatch": 2
+    "main joystick throttle axis": 3
   }
 }

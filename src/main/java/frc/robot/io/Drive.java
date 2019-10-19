@@ -1,7 +1,6 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import frc.robot.io.Motors;
 
 /**
  * Contains the MecanumDrive for the robot

@@ -15,24 +15,6 @@
         "rear right": {
             "port-default": 0,
             "type": "victor"
-        },
-        "elevator": [
-            {
-                "port-default": -1,
-                "type": "spark"
-            },
-            {
-                "port-default": -1,
-                "type": "spark"
-            },
-            {
-                "port-default": -1,
-                "type": "spark"
-            },
-            {
-                "port-default": -1,
-                "type": "spark"
-            }
-        ]
+        }
     }
 }

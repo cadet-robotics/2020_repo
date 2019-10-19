@@ -32,13 +32,7 @@ public class Controls {
 
     //Buttons
     int autoLockButtonPort = 5,
-            elevatorUp = 5,
-            elevatorDown = 3,
-            getBall = 1,
-            ejectBall = 2,
-            toggleClaw = 4,
             toggleType = 9; //TODO: TEMPORARY
-    int[] elevatorPos = new int[6];
 
     boolean debug = false;
     
@@ -186,50 +180,6 @@ public class Controls {
                 case "main joystick auto-lock":
                     autoLockButtonPort = itemInt;
                     break;
-                
-                case "elevator hatch 1":
-                	elevatorPos[0] = itemInt;
-                	break;
-                
-                case "elevator ball 1":
-                	elevatorPos[1] = itemInt;
-                	break;
-                
-                case "elevator hatch 2":
-                	elevatorPos[2] = itemInt;
-                	break;
-                
-                case "elevator ball 2":
-                	elevatorPos[3] = itemInt;
-                	break;
-                
-                case "elevator hatch 3":
-                	elevatorPos[4] = itemInt;
-                	break;
-                
-                case "elevator ball 3":
-                	elevatorPos[5] = itemInt;
-                	break;
-                
-                case "elevator up":
-                	elevatorUp = itemInt;
-                	break;
-                
-                case "elevator down":
-                	elevatorDown = itemInt;
-                	break;
-                
-                case "toggle claw":
-                	toggleClaw = itemInt;
-                	break;
-                
-                case "get ball":
-                	getBall = itemInt;
-                	break;
-                
-                case "eject ball, get hatch":
-                	ejectBall = itemInt;
-                	break;
                 
                 case "toggle type": //TODO: TEMPORARY
                 	toggleType = itemInt;

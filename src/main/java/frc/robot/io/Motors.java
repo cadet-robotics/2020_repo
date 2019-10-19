@@ -28,12 +28,6 @@ public class Motors {
 					   frontRightDrive,
 					   backLeftDrive,
 					   backRightDrive;
-	
-	public Talon leftElevator,
-				 rightElevator;
-	
-	public VictorSP leftClaw,
-					rightClaw;
 			 
 	
 	boolean debug = true;
@@ -101,22 +95,6 @@ public class Motors {
 					backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					break;
 
-				case "left elevator":
-					leftElevator = new Talon(itemInt);
-					break;
-
-				case "right elevator":
-					rightElevator = new Talon(itemInt);
-					break;
-
-				case "left claw wheel":
-					leftClaw = new VictorSP(itemInt);
-					break;
-
-				case "right claw wheel":
-					rightClaw = new VictorSP(itemInt);
-					break;
-
 				default:
 					System.err.println("Unrecognized motor: " + k);
 					return;
@@ -133,11 +111,5 @@ public class Motors {
 		frontRightDrive.set(0);
 		backLeftDrive.set(0);
 		backRightDrive.set(0);
-
-		leftElevator.set(0);
-		rightElevator.set(0);
-
-		leftClaw.set(0);
-		rightClaw.set(0);
 	}
 }

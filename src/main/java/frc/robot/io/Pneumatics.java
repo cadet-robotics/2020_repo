@@ -11,11 +11,7 @@ import frc.robot.config.ConfigUtil;
  * @author Alex Pickering
  */
 public class Pneumatics {
-	public DoubleSolenoid clawSolenoid;
-	
 	JsonObject configJSON;
-	
-	int[] clawSolenoidPorts;
 	
 	boolean debug = false;
 	
@@ -25,8 +21,6 @@ public class Pneumatics {
 	 * @param conf The config to parse
 	 */
 	public Pneumatics(JsonObject conf) {
-		clawSolenoidPorts = new int[2];
-		
 		init(conf);
 	}
 	
@@ -41,8 +35,6 @@ public class Pneumatics {
 		this.configJSON = configJSON;
 		
 		loadPneumatics();
-		
-		clawSolenoid = new DoubleSolenoid(clawSolenoidPorts[0], clawSolenoidPorts[1]);
 	}
 	
 	/**
@@ -58,14 +50,6 @@ public class Pneumatics {
 			int itemInt = ConfigUtil.getAsInt(item, "PCM", k);
 			
 			switch(k) {
-				case "left claw solenoid":
-					clawSolenoidPorts[0] = itemInt;
-					break;
-				
-				case "right claw solenoid":
-					clawSolenoidPorts[1] = itemInt;
-					break;
-				
 				default:
 					System.err.println("Unrecognised Pneumatics Object: " + k);
 			}

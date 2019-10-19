@@ -19,13 +19,6 @@ public class Sensors {
 	//null until we have a gyro on the robot
     public Gyro gyro = null; //new ADXRS450_Gyro();
     
-    public DigitalInput[] elevatorSensors;
-    
-    public DigitalInput topLimitSwitch,
-    					bottomLimitSwitch;
-    
-    public AnalogInput ballDistance;
-    
     JsonObject configJSON;
     
     /**
@@ -34,8 +27,6 @@ public class Sensors {
      * @param conf The config to parse
      */
     public Sensors(JsonObject conf) {
-    	elevatorSensors = new DigitalInput[6];
-    	
     	init(conf);
     }
     
@@ -63,38 +54,6 @@ public class Sensors {
     		int itemInt = ConfigUtil.getAsInt(item, "DIO", k);
     		
     		switch(k) {
-    			case "proximity sensor 1":
-    				elevatorSensors[0] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "proximity sensor 2":
-    				elevatorSensors[1] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "proximity sensor 3":
-    				elevatorSensors[2] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "proximity sensor 4":
-    				elevatorSensors[3] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "proximity sensor 5":
-    				elevatorSensors[4] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "proximity sensor 6":
-    				elevatorSensors[5] = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "bottom limit switch":
-    				bottomLimitSwitch = new DigitalInput(itemInt);
-    				break;
-    			
-    			case "top limit switch":
-    				topLimitSwitch = new DigitalInput(itemInt);
-    				break;
-    			
     			default:
     				System.err.println("Unrecognized DIO Sensor: " + k);
     		}
@@ -108,10 +67,6 @@ public class Sensors {
     		int itemInt = ConfigUtil.getAsInt(item, "AIN", k);
     		
     		switch(k) {
-    			case "ball distance sensor":
-    				ballDistance = new AnalogInput(itemInt);
-    				break;
-    			
     			default:
     				System.err.println("Unregocnized AIn Sensor: " + k);
     		}
