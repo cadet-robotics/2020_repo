@@ -164,3 +164,4 @@ bin/
 
 /src/main/deploy/config_test.json
 .idea
+out
