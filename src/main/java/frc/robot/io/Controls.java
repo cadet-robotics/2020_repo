@@ -93,51 +93,6 @@ public class Controls {
     }
 
     /**
-     * Gets the manual raise elevator button
-     *
-     * @return Elevator Up button state
-     */
-    public boolean getElevatorUp() {
-        return mainJoystick.getRawButton(elevatorUp);
-    }
-
-    /**
-     * Gets the manual lower elevator button
-     *
-     * @return Elevator Down button state
-     */
-    public boolean getElevatorDown() {
-        return mainJoystick.getRawButton(elevatorDown);
-    }
-
-    /**
-     * Gets the get ball button
-     *
-     * @return Get Ball button state
-     */
-    public boolean getGetBall() {
-        return mainJoystick.getRawButton(getBall);
-    }
-
-    /**
-     * Gets the eject ball/get hatch button
-     *
-     * @return Eject Ball button state
-     */
-    public boolean getEjectBall() {
-        return mainJoystick.getRawButton(ejectBall);
-    }
-
-    /**
-     * Gets the toggle claw button
-     *
-     * @return Toggle Claw button state
-     */
-    public boolean getToggleClaw() {
-        return mainJoystick.getRawButton(toggleClaw);
-    }
-
-    /**
      * Gets the type toggle button
      * TODO: TEMPORARY
      *
@@ -145,16 +100,6 @@ public class Controls {
      */
     public boolean getToggleType() {
         return mainJoystick.getRawButton(toggleType);
-    }
-
-    /**
-     * Gets an elevator position button
-     *
-     * @param pos The position to check
-     * @return Whether or not the position's button is pressed
-     */
-    public boolean getElevatorButton(int pos) {
-        return mainJoystick.getRawButton(elevatorPos[pos]);
     }
     
     //TODO: TEMPORARY

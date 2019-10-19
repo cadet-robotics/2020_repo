@@ -37,7 +37,7 @@ public class IHaveNothingToDo {
 			System.out.println("fnf");
 			return;
 		}
-		String s = "";
+		String s;
 		
 		try {
 			while((s = br.readLine()) != null) {
