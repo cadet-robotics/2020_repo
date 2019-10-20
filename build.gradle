@@ -68,3 +68,11 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+task buildRust(type: Exec) {
+    workingDir "src/main/rust"
+
+    commandLine "cargo", "build", "--target", "arm-unknown-linux-gnueabi", "--release"
+}
+
+compileJava.dependsOn buildRust
