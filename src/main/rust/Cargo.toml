@@ -8,3 +8,7 @@ edition = "2018"
 
 [dependencies]
 jni = "0.13.1"
+
+[lib]
+name = "rustpart"
+crate-type = ["cdylib"]
