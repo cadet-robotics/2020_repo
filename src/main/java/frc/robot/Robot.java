@@ -7,22 +7,12 @@
 
 package frc.robot;
 
-import frc.robot.config.ConfigLoader;
-import frc.robot.io.Controls;
-import frc.robot.io.Drive;
-import frc.robot.io.Motors;
-import frc.robot.io.Pneumatics;
-import com.google.gson.JsonObject;
-
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.sensors.Sensors;
-
-import java.io.IOException;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,26 +26,9 @@ public class Robot extends TimedRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
-	
-	public static final double DRIVE_MODIFIER = 0.85,					//Multiplier for teleop drive motors
-							   DRIVE_THRESHOLD = 0.1;					//Threshold for the teleop controls
 
 	public static final boolean debug = true,
 								useCamera = true;
-
-	private JsonObject configJSON;
-
-	private Controls controls;
-
-	private Motors motors;
-
-	private Drive drive;
-
-	private Sensors sensors;
-	
-	private Pneumatics pneumatics;
-	
-	boolean throttle = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -66,20 +39,6 @@ public class Robot extends TimedRobot {
 		m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
 		m_chooser.addOption("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
-		
-		try{
-			configJSON = ConfigLoader.loadConfigFile();
-		} catch(IOException e){
-			e.printStackTrace();
-		}
-		
-		//Initialize configured classes
-		controls = new Controls(configJSON);
-		motors = new Motors(configJSON);
-		sensors = new Sensors(configJSON);
-		pneumatics = new Pneumatics(configJSON);
-		
-		drive = new Drive(motors);
 		
 		if(useCamera) {
 			UsbCamera driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
@@ -137,7 +96,6 @@ public class Robot extends TimedRobot {
 		}
 		*/
 		Scheduler.getInstance().run();
-		drivePeriodic();
 	}
 
 	@Override
@@ -149,41 +107,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		motors.resetAll();
 		Scheduler.getInstance().run();
-		drivePeriodic();
 	}
 	
 	/**
 	 * Outputs debug
 	 */
 	public void runDebug() {
-	}
-	
-	/**
-	 * Runs the mecanum drive
-	 */
-	public void drivePeriodic() {
-		double xAxis = -controls.getXAxis(),
-			   yAxis = controls.getYAxis(),
-			   zAxis = -controls.getZAxis();
-		
-		if(Math.abs(xAxis) < DRIVE_THRESHOLD) xAxis = 0;
-		if(Math.abs(yAxis) < DRIVE_THRESHOLD) yAxis = 0;
-		if(Math.abs(zAxis) < DRIVE_THRESHOLD) zAxis = 0;
-		
-		xAxis *= DRIVE_MODIFIER;
-		yAxis *= DRIVE_MODIFIER;
-		zAxis *= DRIVE_MODIFIER;
-		
-		if(throttle) {
-			double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
-			xAxis *= t;
-			yAxis *= t;
-			zAxis *= t;
-		}
-		
-		drive.driveCartesian(xAxis, yAxis, zAxis);
 	}
 	
 	/**
@@ -199,24 +129,4 @@ public class Robot extends TimedRobot {
 	public double mapDouble(double val, double oldMin, double oldMax, double newMin, double newMax){
 	  	return (((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
   	}
-
-	public Controls getControls() {
-		return controls;
-	}
-
-	public Drive getDrive() {
-		return drive;
-	}
-
-	public Motors getMotors() {
-		return motors;
-	}
-
-	public Sensors getSensors() {
-		return sensors;
-	}
-
-	public Pneumatics getPneumatics() {
-		return pneumatics;
-	}
 }
