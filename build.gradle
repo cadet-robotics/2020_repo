@@ -72,9 +72,15 @@ jar {
 task buildRust(type: Exec) {
     workingDir "src/main/rust"
 
-    commandLine "cross", "build", "--target", "arm-unknown-linux-gnueabi", "--release"
-    commandLine "rm", "../deploy/librustpart.so"
+    commandLine "cargo", "build", "--target", "arm-unknown-linux-gnueabi", "--release"
+}
+
+task deployRust(type: Exec) {
+    workingDir "src/main/rust"
+
     commandLine "cp", "target/arm-unknown-linux-gnueabi/release/librustpart.so", "../deploy/"
 }
 
-compileJava.dependsOn buildRust
+deployRust.dependsOn buildRust
+
+deployFrcStaticFileDeployRoborio.dependsOn deployRust

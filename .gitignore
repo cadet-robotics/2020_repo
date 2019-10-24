@@ -169,3 +169,4 @@ imgui.ini
 out
 /src/main/rust/target
 /src/main/rust/Cargo.lock
+/src/main/deploy/librustpart.so
