@@ -13,6 +13,7 @@ mod tests {
 }
 
 #[no_mangle]
+#[allow(non_snake_case)]
 pub extern "system" fn Java_frc_robot_JNI_test(_env: JNIEnv, _obj: JObject, var: c_int) -> c_int {
     var * var * var
 }
