@@ -72,22 +72,17 @@ jar {
 sourceCompatibility = 1.11
 targetCompatibility = 1.11
 
-boolean isLinux() {
-    return System.getProperty("os.name").toLowerCase().indexOf("win") == -1;
-}
-
 task buildRust(type: Exec) {
     workingDir "src/main/rust"
 
     commandLine "bash", "-c", "cargo build --target arm-unknown-linux-gnueabi --release"
 }
 
-task deployRust(type: Exec) {
+task copyRust(type: Exec) {
     workingDir "src/main/rust"
 
     commandLine "bash", "-c", "cp target/arm-unknown-linux-gnueabi/release/librustpart.so ../deploy/"
 }
 
-deployRust.dependsOn buildRust
-
-deployFrcStaticFileDeployRoborio.dependsOn deployRust
+copyRust.dependsOn buildRust
+build.dependsOn copyRust
