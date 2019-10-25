@@ -86,3 +86,11 @@ task copyRust(type: Exec) {
 
 copyRust.dependsOn buildRust
 build.dependsOn copyRust
+
+task cleanRust(type: Exec) {
+    workingDir "src/main/rust"
+
+    commandLine "bash", "-c", "rm -rf target && rm ../deploy/librustpart.so"
+}
+
+clean.dependsOn cleanRust
