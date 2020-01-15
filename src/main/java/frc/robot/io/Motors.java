@@ -12,7 +12,7 @@ public class Motors {
     /**
      * Loads the configuration, initializing motor objects
      * 
-     * @param motorsConfig A Config instance containing only the motors category
+     * @param mainConfig The config instance
      */
     public static void loadConfiguration(Config mainConfig) {
         // We'll need these once we start properly programming

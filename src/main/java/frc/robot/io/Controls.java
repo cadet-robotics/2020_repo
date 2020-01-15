@@ -24,7 +24,7 @@ public class Controls {
     /**
      * Loads the configuration, initializing all controls
      * 
-     * @param controlsConfig A Config instance holding only the "controls" category
+     * @param mainConfig The config instance
      */
     public static void loadConfiguration(Config mainConfig) {
         Config controls = mainConfig.separateCategory("controls");
