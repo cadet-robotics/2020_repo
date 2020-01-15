@@ -7,9 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.io.Controls;
+import frc.robot.io.Motors;
+import frc6868.config.api.Config;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,15 +23,21 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
-
+    
     private RobotContainer m_robotContainer;
-
+    
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
     @Override
     public void robotInit() {
+        // Initialize configured things
+        Config mainConfig = new Config(Filesystem.getDeployDirectory().getAbsolutePath() + "/config.json");
+        
+        Controls.loadConfiguration(mainConfig);
+        Motors.loadConfiguration(mainConfig);
+        
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
@@ -97,7 +107,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
     }
-
+    
     @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.
