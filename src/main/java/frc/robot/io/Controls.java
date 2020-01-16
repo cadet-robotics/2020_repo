@@ -19,24 +19,23 @@ import frc6868.config.api.Config;
  * @author Alex Pickering
  */
 public class Controls {
-    
-    private static Joystick controller;
-    private static JoystickButton spinButton;
+    private Joystick controller;
+    private JoystickButton spinButton;
     
     // Axes
-    private static int xAxis,
+    private int xAxis,
                        yAxis;
     
     // Axis geters
-    public static double getXAxis() { return controller.getRawAxis(xAxis); }
-    public static double getYAxis() { return controller.getRawAxis(yAxis); }
+    public double getXAxis() { return controller.getRawAxis(xAxis); }
+    public double getYAxis() { return controller.getRawAxis(yAxis); }
     
     /**
-     * Loads the configuration, initializing all controls
+     * Initializes the Controls object, reading from the given Config
      * 
      * @param mainConfig The config instance
      */
-    public static void loadConfiguration(Config mainConfig) {
+    public Controls(Config mainConfig) {
         Config controls = mainConfig.separateCategory("controls");
         
         controller = new Joystick(controls.getIntValue("controller port"));
@@ -54,7 +53,7 @@ public class Controls {
      * 
      * @param arm The subsystem for the spinner arm
      */
-    public static void setupCommands(ArmSubsystem arm) {
+    public void setupCommands(ArmSubsystem arm) {
         spinButton.whenPressed(() -> {
             System.out.println("RUNNING IN THE ||{}");
             new RotateWheelCountChanges(arm).schedule(false);

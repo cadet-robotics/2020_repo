@@ -14,17 +14,17 @@ import frc6868.config.api.Config;
 public class Motors {
     
     // Spark MAXes
-    public static CANSparkMax wheelSpinner;
+    public CANSparkMax wheelSpinner;
     
-    public static MotorPair<CANSparkMax> leftDrive,
-                                         rightDrive;
+    public MotorPair<CANSparkMax> leftDrive,
+                                  rightDrive;
     
     /**
-     * Loads the configuration, initializing motor objects
+     * Initializes the Motors object, reading from the given Config
      * 
      * @param mainConfig The config instance
      */
-    public static void loadConfiguration(Config mainConfig) {
+    public Motors(Config mainConfig) {
         // We'll need these once we start properly programming
         Config pwmMotors = mainConfig.separateCategory("pwm motors"),
                canMotors = mainConfig.separateCategory("can motors");
