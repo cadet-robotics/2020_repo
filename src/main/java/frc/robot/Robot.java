@@ -7,12 +7,15 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.io.Controls;
 import frc.robot.io.Motors;
+import frc.robot.subsystems.ArmSubsystem;
 import frc6868.config.api.Config;
 
 /**
@@ -41,6 +44,8 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
+
+        arm = new ArmSubsystem();
     }
 
     /**
@@ -50,13 +55,16 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
+    private ArmSubsystem arm;
+    private int cnt = 0;
+
     @Override
     public void robotPeriodic() {
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
-        CommandScheduler.getInstance().run();
+        m_robotContainer.armSubsystem.periodic();
     }
 
     /**
