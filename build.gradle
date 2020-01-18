@@ -48,7 +48,7 @@ dependencies {
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 	
 	// Local, homebrew library
-	implementation files('locallib/config-1.0.0.jar')
+	implementation files('locallib/config.jar')
 	
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
