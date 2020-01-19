@@ -9,26 +9,28 @@ public class ColorChangeTracker extends Thread {
 
     private final Object lock = new Object();
 
-    private double old_id = ;
+    private ColorEnum old = null;
 
     private int cnt = 0;
 
-    private static final long DELAY = 25;
+    private static final long DELAY = 15;
 
     @Override
     public void run() {
         while (!Thread.interrupted()) {
             long now = System.currentTimeMillis();
-            double new_h = wheel.getHue();
+            ColorEnum new_c = wheel.getColor();
+            //System.out.println(ColorWheelUtil.getIdName(new_id));
             double diff;
             synchronized (lock) {
-                diff = old_h - new_h;
-                old_h = new_h;
-                diff = Math.abs(diff);
-                // False if old_h was NaN
-                System.out.println("DELTA: " + diff);
-                if (diff > MIN_HUE_CHANGE) {
-                    cnt += 1;
+                if (new_c != null) {
+                    if (old != null) {
+                        if (new_c != old) {
+                            cnt += 1;
+                            old = new_c;
+                        }
+                    }
+                    old = new_c;
                 }
             }
             long now2 = System.currentTimeMillis();
@@ -48,13 +50,13 @@ public class ColorChangeTracker extends Thread {
     public void reset() {
         synchronized (lock) {
             cnt = 0;
-            old_h = Double.NaN;
+            old = null;
         }
     }
 
     public boolean hasMeasure() {
         synchronized (lock) {
-            return Double.isNaN(old_h);
+            return old != null;
         }
     }
 

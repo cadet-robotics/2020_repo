@@ -17,7 +17,13 @@ public class ColorWheel {
 
     private static final int NUM_SAMPLES = 4;
 
-    Color getColor() {
+    /**
+     * Gets the color from the color sensor
+     * Takes NUM_SAMPLES samples and averages them
+     *
+     * @return The color from the sensor as RGB
+     */
+    private Color getColorRGB() {
         double r = 0, g = 0, b = 0;
         for (int i = 0; i < NUM_SAMPLES; i++) {
             Color c = sensor.getColor();
@@ -31,12 +37,14 @@ public class ColorWheel {
                 b / NUM_SAMPLES);
     }
 
-    double getHue() {
-        return ColorWheelUtil.getHue(getColor());
-    }
-
-    int getId() {
-        return ColorWheelUtil.toId(getHue());
+    /**
+     * Gets the color from the color sensor
+     * Takes NUM_SAMPLES samples and averages them
+     *
+     * @return The color from the sensor as a wheel color, or null
+     */
+    ColorEnum getColor() {
+        return ColorEnum.from(getColorRGB());
     }
 
     public int getCount() {
