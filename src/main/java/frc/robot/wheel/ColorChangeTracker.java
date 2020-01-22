@@ -9,10 +9,13 @@ public class ColorChangeTracker extends Thread {
 
     private final Object lock = new Object();
 
+    // The last color we saw
     private ColorEnum old = null;
 
+    // The number of color changes we've detected
     private int cnt = 0;
 
+    // The expected time between sensor measurements (nanoseconds)
     private static final long DELAY = 15;
 
     @Override
@@ -22,17 +25,18 @@ public class ColorChangeTracker extends Thread {
             ColorEnum new_c = wheel.getColor();
             //System.out.println(ColorWheelUtil.getIdName(new_id));
             double diff;
+            // Detects any change
             synchronized (lock) {
                 if (new_c != null) {
-                    if (old != null) {
-                        if (new_c != old) {
+                    if (new_c != old) {
+                        if (old != null) {
                             cnt += 1;
-                            old = new_c;
                         }
+                        old = new_c;
                     }
-                    old = new_c;
                 }
             }
+            // Waits so that each loop takes ~DELAY amount of nanoseconds to execute
             long now2 = System.currentTimeMillis();
             long time = DELAY - (now2 - now);
             if (time <= 0) {
