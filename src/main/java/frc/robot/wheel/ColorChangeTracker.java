@@ -1,5 +1,11 @@
 package frc.robot.wheel;
 
+import java.util.function.Consumer;
+
+/**
+ * Keeps track of the number of color changes we've seen
+ * Created by, and stores, an instance of ColorWheel
+ */
 public class ColorChangeTracker extends Thread {
     private ColorWheel wheel;
 
@@ -21,33 +27,50 @@ public class ColorChangeTracker extends Thread {
     @Override
     public void run() {
         while (!Thread.interrupted()) {
-            long now = System.currentTimeMillis();
-            ColorEnum new_c = wheel.getColor();
-            //System.out.println(ColorWheelUtil.getIdName(new_id));
-            double diff;
-            // Detects any change
-            synchronized (lock) {
-                if (new_c != null) {
-                    if (new_c != old) {
-                        if (old != null) {
-                            cnt += 1;
+            try {
+                runForTime(() -> {
+                    ColorEnum new_c = wheel.getColor();
+                    double diff;
+                    // Detects any change
+                    synchronized (lock) {
+                        if (new_c != null) {
+                            if (new_c != old) {
+                                if (old != null) {
+                                    cnt += 1;
+                                }
+                                old = new_c;
+                            }
                         }
-                        old = new_c;
                     }
-                }
+                }, (time) -> System.out.println("COLOR COUNTER OVERTIME: " + time), DELAY);
+            } catch (InterruptedException e) {
+                break;
             }
-            // Waits so that each loop takes ~DELAY amount of nanoseconds to execute
-            long now2 = System.currentTimeMillis();
-            long time = DELAY - (now2 - now);
-            if (time <= 0) {
-                System.out.println("COLOR COUNTER OVERTIME: " + time);
-            } else {
-                try {
-                    Thread.sleep(time);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
+        }
+    }
+
+    /**
+     * Calls a method, attempting to take as close to a given time as possible
+     *
+     * If the method takes less time than expected, waits
+     *
+     * If the method takes longer than expected, calls overflowCallback and returns
+     *
+     * @param r The method to call
+     * @param overflowCallback A callback that accepts the time overflowed by
+     * @param delay The time in milliseconds that this method call should take
+     * @throws InterruptedException
+     */
+    public void runForTime(Runnable r, Consumer<Long> overflowCallback, long delay) throws InterruptedException {
+        long now = System.currentTimeMillis();
+        r.run();
+        // Waits so that this method takes ~delay time to execute
+        long now2 = System.currentTimeMillis();
+        long time = delay - (now2 - now);
+        if (time <= 0) {
+            overflowCallback.accept(-time);
+        } else {
+            Thread.sleep(time);
         }
     }
 
