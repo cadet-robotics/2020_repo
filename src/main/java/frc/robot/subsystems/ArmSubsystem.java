@@ -25,7 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
         int cnt = colorSensor.getCount();
         SmartDashboard.putNumber("CNT", cnt);
         if (cnt < 30) {
-            Motors.wheelSpinner.set(1);
+            Motors.wheelSpinner.set(0.18);
         } else {
             Motors.wheelSpinner.set(0);
         }

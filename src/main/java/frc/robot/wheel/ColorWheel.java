@@ -15,7 +15,7 @@ public class ColorWheel {
         tracker.start();
     }
 
-    private static final int NUM_SAMPLES = 4;
+    private static final int NUM_SAMPLES = 16;
 
     /**
      * Gets the color from the color sensor

@@ -1,6 +1,6 @@
 {
-    "controls": {},
-    "pwm motors": {},
+    "controls": [],
+    "pwm motors": [],
     "can motors": [
         {
             "name": "wheel spinner",

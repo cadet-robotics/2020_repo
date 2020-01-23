@@ -18,6 +18,8 @@ import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc6868.config.api.Config;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -42,6 +44,20 @@ public class Robot extends TimedRobot {
 
         try {
             mainConfig.readFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //System.out.println(mainConfig);
+        try {
+            BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()));
+            while (true) {
+                String s = r.readLine();
+                if (s == null) {
+                    break;
+                }
+                System.out.println("#>>> " + s);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

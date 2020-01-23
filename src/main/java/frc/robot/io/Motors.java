@@ -23,6 +23,8 @@ public class Motors {
         Config pwmMotors = mainConfig.separateCategory("pwm motors"),
                canMotors = mainConfig.separateCategory("can motors");
 
+        System.out.println(mainConfig);
+
         wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
     }
 }
