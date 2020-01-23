@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.ColorShim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.io.Motors;
 import frc.robot.wheel.ColorWheel;
 
 import java.nio.ByteBuffer;
@@ -21,6 +22,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("CNT", colorSensor.getCount());
+        int cnt = colorSensor.getCount();
+        SmartDashboard.putNumber("CNT", cnt);
+        if (cnt < 30) {
+            Motors.wheelSpinner.set(1);
+        } else {
+            Motors.wheelSpinner.set(0);
+        }
     }
 }

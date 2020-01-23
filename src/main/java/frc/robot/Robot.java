@@ -18,6 +18,8 @@ import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc6868.config.api.Config;
 
+import java.io.IOException;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -37,6 +39,12 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Initialize configured things
         Config mainConfig = new Config(Filesystem.getDeployDirectory().getAbsolutePath() + "/config.json");
+
+        try {
+            mainConfig.readFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         
         Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
