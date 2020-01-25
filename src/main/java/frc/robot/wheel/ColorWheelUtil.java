@@ -69,6 +69,7 @@ class ColorWheelUtil {
         double min = Math.min(Math.min(c.red, c.green), c.blue);
         double max = Math.max(Math.max(c.red, c.green), c.blue);
         double d = max - min;
+        /*
         System.out.println("MIN: " + min);
         System.out.println("MAX: " + max);
         System.out.println("delta: " + d);

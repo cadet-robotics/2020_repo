@@ -35,7 +35,7 @@ public enum ColorEnum {
      * @return The wheel color, or null if the hue doesn't match sufficiently
      */
     public static ColorEnum from(double hue) {
-        System.out.println("HUE: " + hue);
+        //System.out.println("HUE: " + hue);
         if (Double.isNaN(hue)) {
             return null;
         }

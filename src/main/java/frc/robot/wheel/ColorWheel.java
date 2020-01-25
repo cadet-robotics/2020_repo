@@ -4,6 +4,8 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.ColorShim;
+import frc.robot.Robot;
+import frc.robot.colordebug.ColorReporter;
 
 public class ColorWheel {
     ColorSensorV3 sensor;
@@ -31,10 +33,14 @@ public class ColorWheel {
             g += c.green;
             b += c.blue;
         }
-        return new ColorShim(
+        var s = new ColorShim(
                 r / NUM_SAMPLES,
                 g / NUM_SAMPLES,
                 b / NUM_SAMPLES);
+        if (Robot.cvSource != null) {
+            ColorReporter.reportColor(Robot.cvSource, s);
+        }
+        return s;
     }
 
     /**

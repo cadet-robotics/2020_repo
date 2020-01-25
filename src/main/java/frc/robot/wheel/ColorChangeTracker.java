@@ -31,7 +31,7 @@ public class ColorChangeTracker extends Thread {
                 runForTime(() -> {
                     ColorEnum new_c = wheel.getColor();
                     if (new_c != null) {
-                        System.out.println(new_c.name());
+                        //System.out.println(new_c.name());
                         synchronized (lock) {
                             if (new_c != old) {
                                 if (old != null) {
