@@ -1,5 +1,11 @@
 {
     "controls": [],
     "pwm motors": [],
-    "can motors": []
+    "can motors": [
+        {
+            "name": "wheel spinner",
+            "value": "1",
+            "description": "The motor used to spin the big wheel"
+        }
+    ]
 }

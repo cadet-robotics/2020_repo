@@ -7,13 +7,20 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.io.Controls;
 import frc.robot.io.Motors;
+import frc.robot.subsystems.ArmSubsystem;
 import frc6868.config.api.Config;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -34,6 +41,26 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Initialize configured things
         Config mainConfig = new Config(Filesystem.getDeployDirectory().getAbsolutePath() + "/config.json");
+
+        try {
+            mainConfig.readFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //System.out.println(mainConfig);
+        try {
+            BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()));
+            while (true) {
+                String s = r.readLine();
+                if (s == null) {
+                    break;
+                }
+                System.out.println("#>>> " + s);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         
         Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
@@ -41,6 +68,10 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
+
+        arm = new ArmSubsystem();
+
+        Controls.setupCommands(arm);
     }
 
     /**
@@ -50,6 +81,9 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
+    private ArmSubsystem arm;
+    private int cnt = 0;
+
     @Override
     public void robotPeriodic() {
         // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
