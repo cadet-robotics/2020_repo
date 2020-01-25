@@ -139,7 +139,20 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         
+        // Run a basic drive
+        double left = 0, right = 0;
         
+        left += Controls.getYAxis();
+        right += Controls.getYAxis();
+        
+        left -= Controls.getXAxis();
+        right += Controls.getXAxis();
+        
+        left /= 4;
+        right /= 4;
+        
+        Motors.leftDrive.set(left);
+        Motors.rightDrive.set(right);
     }
     
     @Override

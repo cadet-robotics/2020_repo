@@ -35,21 +35,24 @@ public enum ColorEnum {
      * @return The wheel color, or null if the hue doesn't match sufficiently
      */
     public static ColorEnum from(double hue) {
-        System.out.println("HUE: " + hue);
+        //System.out.println("HUE: " + hue);
         if (Double.isNaN(hue)) {
             return null;
         }
+        
         // Finds the best match
         // Initial match is null, creating a matching threshold
         ColorEnum current = null;
         double min = 20;
         for (ColorEnum cmp : ColorEnum.values()) {
             double v = getWheelDiff(hue, cmp.matchingHue);
+            
             if (v < min) {
                 min = v;
                 current = cmp;
             }
         }
+        
         return current;
     }
 }

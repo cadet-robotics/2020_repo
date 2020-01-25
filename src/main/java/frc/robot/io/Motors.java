@@ -2,6 +2,8 @@ package frc.robot.io;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+
+import frc.robot.io.motortype.MotorPair;
 import frc6868.config.api.Config;
 
 /**
@@ -12,9 +14,10 @@ import frc6868.config.api.Config;
 public class Motors {
     
     // Spark MAXes
-    public static CANSparkMax wheelSpinner,
-                              leftDrive,
-                              rightDrive;
+    public static CANSparkMax wheelSpinner;
+    
+    public static MotorPair<CANSparkMax> leftDrive,
+                                         rightDrive;
     
     /**
      * Loads the configuration, initializing motor objects
@@ -28,9 +31,14 @@ public class Motors {
 
         // System.out.println(mainConfig);
         
-        // init SparkMAX
+        // init SparkMAXes
         wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        leftDrive = new CANSparkMax(canMotors.getIntValue("left drive"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        rightDrive = new CANSparkMax(canMotors.getIntValue("right drive"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        
+        // init motor pairs
+        leftDrive = new MotorPair<>(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
+        rightDrive = new MotorPair<>(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
+        
+        leftDrive.setInverted(false);
+        rightDrive.setInverted(true);
     }
 }
