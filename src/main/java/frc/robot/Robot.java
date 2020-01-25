@@ -49,18 +49,16 @@ public class Robot extends TimedRobot {
         }
 
         //System.out.println(mainConfig);
-        try {
-            BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()));
-            while (true) {
-                String s = r.readLine();
-                if (s == null) {
-                    break;
-                }
-                System.out.println("#>>> " + s);
-            }
+        
+        /*
+        // Echo config file so in case it's breaking
+        // try with resources to autoclose
+        try (BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()))) {
+            r.lines().forEach(System.out::println);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        */
         
         Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
@@ -140,6 +138,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        
+        
     }
     
     @Override

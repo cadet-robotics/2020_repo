@@ -23,13 +23,13 @@ public class Controls {
     private static Joystick controller;
     private static JoystickButton spinButton;
     
-    // Example variable
-    private static int xAxis;
+    // Axes
+    private static int xAxis,
+                       yAxis;
     
-    // Example getter
-    public static double getXAxis() {
-        return controller.getRawAxis(xAxis);
-    }
+    // Axis geters
+    public static double getXAxis() { return controller.getRawAxis(xAxis); }
+    public static double getYAxis() { return controller.getRawAxis(yAxis); }
     
     /**
      * Loads the configuration, initializing all controls
@@ -41,12 +41,19 @@ public class Controls {
         
         controller = new Joystick(controls.getIntValue("controller port"));
         
-        // Example initialization
+        // Axes
         xAxis = controls.getIntValue("x axis");
-
-        spinButton = new JoystickButton(controller, 1);
+        yAxis = controls.getIntValue("y axis");
+        
+        // Buttons
+        spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
     }
-
+    
+    /**
+     * Setup command listeners
+     * 
+     * @param arm The subsystem for the spinner arm
+     */
     public static void setupCommands(ArmSubsystem arm) {
         spinButton.whenPressed(() -> {
             System.out.println("RUNNING IN THE ||{}");

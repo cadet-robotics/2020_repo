@@ -10,8 +10,11 @@ import frc6868.config.api.Config;
  * @author Alex Pickering
  */
 public class Motors {
-
-    public static CANSparkMax wheelSpinner;
+    
+    // Spark MAXes
+    public static CANSparkMax wheelSpinner,
+                              leftDrive,
+                              rightDrive;
     
     /**
      * Loads the configuration, initializing motor objects
@@ -23,8 +26,11 @@ public class Motors {
         Config pwmMotors = mainConfig.separateCategory("pwm motors"),
                canMotors = mainConfig.separateCategory("can motors");
 
-        System.out.println(mainConfig);
-
+        // System.out.println(mainConfig);
+        
+        // init SparkMAX
         wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        leftDrive = new CANSparkMax(canMotors.getIntValue("left drive"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        rightDrive = new CANSparkMax(canMotors.getIntValue("right drive"), CANSparkMaxLowLevel.MotorType.kBrushed);
     }
 }
