@@ -5,10 +5,10 @@ import static frc.robot.wheel.ColorWheelUtil.getWheelDiff;
 import static frc.robot.wheel.ColorWheelUtil.toHue;
 
 public enum ColorEnum {
-    RED(25),
-    GREEN(120),
+    RED(60),
+    GREEN(130),
     BLUE(160),
-    YELLOW(75);
+    YELLOW(90);
 
     // Measured experimentally
     // Used to match a hue to a wheel color
@@ -35,13 +35,14 @@ public enum ColorEnum {
      * @return The wheel color, or null if the hue doesn't match sufficiently
      */
     public static ColorEnum from(double hue) {
+        System.out.println("HUE: " + hue);
         if (Double.isNaN(hue)) {
             return null;
         }
         // Finds the best match
         // Initial match is null, creating a matching threshold
         ColorEnum current = null;
-        double min = 7;
+        double min = 20;
         for (ColorEnum cmp : ColorEnum.values()) {
             double v = getWheelDiff(hue, cmp.matchingHue);
             if (v < min) {

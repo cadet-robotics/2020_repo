@@ -1,6 +1,15 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.RotateWheelCountChanges;
+import frc.robot.subsystems.ArmSubsystem;
 import frc6868.config.api.Config;
 
 /**
@@ -12,6 +21,7 @@ import frc6868.config.api.Config;
 public class Controls {
     
     private static Joystick controller;
+    private static JoystickButton spinButton;
     
     // Example variable
     private static int xAxis;
@@ -33,5 +43,14 @@ public class Controls {
         
         // Example initialization
         xAxis = controls.getIntValue("x axis");
+
+        spinButton = new JoystickButton(controller, 1);
+    }
+
+    public static void setupCommands(ArmSubsystem arm) {
+        spinButton.whenPressed(() -> {
+            System.out.println("RUNNING IN THE ||{}");
+            new RotateWheelCountChanges(arm).schedule(false);
+        });
     }
 }

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public class ColorChangeTracker extends Thread {
     private ColorWheel wheel;
 
-    ColorChangeTracker(ColorWheel wheelIn) {
+    public ColorChangeTracker(ColorWheel wheelIn) {
         wheel = wheelIn;
     }
 
@@ -22,7 +22,7 @@ public class ColorChangeTracker extends Thread {
     private int cnt = 0;
 
     // The expected time between sensor measurements (nanoseconds)
-    private static final long DELAY = 15;
+    private static final long DELAY = 25;
 
     @Override
     public void run() {
@@ -30,10 +30,9 @@ public class ColorChangeTracker extends Thread {
             try {
                 runForTime(() -> {
                     ColorEnum new_c = wheel.getColor();
-                    double diff;
-                    // Detects any change
-                    synchronized (lock) {
-                        if (new_c != null) {
+                    if (new_c != null) {
+                        System.out.println(new_c.name());
+                        synchronized (lock) {
                             if (new_c != old) {
                                 if (old != null) {
                                     cnt += 1;
@@ -42,7 +41,7 @@ public class ColorChangeTracker extends Thread {
                             }
                         }
                     }
-                }, (time) -> System.out.println("COLOR COUNTER OVERTIME: " + time), DELAY);
+                }, (time) -> {}/*System.out.println("COLOR COUNTER OVERTIME: " + time)*/, DELAY);
             } catch (InterruptedException e) {
                 break;
             }

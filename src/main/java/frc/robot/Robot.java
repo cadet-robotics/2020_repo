@@ -70,6 +70,8 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
 
         arm = new ArmSubsystem();
+
+        Controls.setupCommands(arm);
     }
 
     /**
@@ -88,7 +90,7 @@ public class Robot extends TimedRobot {
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
-        m_robotContainer.armSubsystem.periodic();
+        CommandScheduler.getInstance().run();
     }
 
     /**

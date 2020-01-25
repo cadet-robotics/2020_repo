@@ -53,7 +53,7 @@ class ColorWheelUtil {
         return null;
     }
 
-    //private static final double MIN_VAL = 0.4;
+    //private static final double MAX_VAL = 0.5;
 
     /**
      * Converts an RGB color to HSV
@@ -69,9 +69,12 @@ class ColorWheelUtil {
         double min = Math.min(Math.min(c.red, c.green), c.blue);
         double max = Math.max(Math.max(c.red, c.green), c.blue);
         double d = max - min;
+        System.out.println("MIN: " + min);
+        System.out.println("MAX: " + max);
+        System.out.println("delta: " + d);
         /*
-        if (max < MIN_VAL) {
-            System.out.println("BELOW MIN VAL: " + max);
+        if (max > MAX_VAL) {
+            //System.out.println("BELOW MIN VAL: " + max);
             return Double.NaN;
         }
         */
