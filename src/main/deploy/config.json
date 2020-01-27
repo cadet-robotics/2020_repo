@@ -22,6 +22,15 @@
 		}
 	],
 	
+	
+	"sensors": [
+		{
+			"name": "magazine proximity",
+			"value": "--",
+			"description": "Proximity sensor for the magazine"
+		}
+	],
+	
 	"pwm motors": [
 	
 	],
@@ -51,6 +60,29 @@
 			"name": "right drive b",
 			"value": "5",
 			"description": "Right drive motor (B)"
+		}
+	],
+	
+	"unknown": [
+		{
+			"name": "shooter a",
+			"value": "--",
+			"description": "Shooter drive motor A"
+		},
+		{
+			"name": "shooter b",
+			"value": "--",
+			"description": "Shooter drive motor B"
+		},
+		{
+			"name": "intake",
+			"value": "--",
+			"description": "Intake drive motor"
+		},
+		{
+			"name": "magazine",
+			"value": "--",
+			"description": "Magazine drive motor"
 		}
 	]
 }
