@@ -16,8 +16,9 @@ public class ColorReporter {
 
     public static void reportColor(CvSource s, Color rgb) {
         Scalar sc = new Scalar(rgb.blue * 255, rgb.green * 255, rgb.red * 255);
-        System.out.println(sc);
+        //System.out.println(sc);
         Mat m = new Mat(240, 320, CV_8UC3, sc);
         s.putFrame(m);
+        m.release();
     }
 }

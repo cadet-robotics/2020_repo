@@ -17,7 +17,7 @@ public class ColorWheel {
         tracker.start();
     }
 
-    private static final int NUM_SAMPLES = 8;
+    private static final int NUM_SAMPLES = 1;
 
     /**
      * Gets the color from the color sensor
@@ -33,6 +33,10 @@ public class ColorWheel {
             g += c.green;
             b += c.blue;
         }
+        r *= 2.2 / 3.0;
+        g *= 0.5;
+        b *= 1;
+        //System.out.println("R: " + r + ", G: " + g + ", B: " + b);
         var s = new ColorShim(
                 r / NUM_SAMPLES,
                 g / NUM_SAMPLES,
