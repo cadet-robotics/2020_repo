@@ -13,6 +13,9 @@ import edu.wpi.cscore.VideoCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
@@ -43,6 +46,8 @@ public class Robot extends TimedRobot {
     public static CvSource cvSource;
 
     public static VideoCamera cam;
+
+    public static NetworkTableEntry cnt;
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -82,12 +87,14 @@ public class Robot extends TimedRobot {
 
         arm = new ArmSubsystem();
 
-        //Controls.setupCommands(arm);
+        Controls.setupCommands(arm);
 
-        cam = CameraServer.getInstance().startAutomaticCapture();
+        //cam = CameraServer.getInstance().startAutomaticCapture();
 
-        cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
+        //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
         //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
+
+        cnt = NetworkTableInstance.getDefault().getEntry("CNT");
     }
 
     /**
@@ -98,7 +105,6 @@ public class Robot extends TimedRobot {
      * LiveWindow and SmartDashboard integrated updating.
      */
     private ArmSubsystem arm;
-    private int cnt = 0;
 
     @Override
     public void robotPeriodic() {
@@ -107,12 +113,6 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        if (cnt >= 0) {
-            cnt = 0;
-        } else {
-            cnt += 1;
-        }
-        //System.out.println("CNT: " + cnt);
     }
 
     /**
