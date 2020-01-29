@@ -18,6 +18,9 @@ public class Motors {
     
     public static MotorPair<CANSparkMax> leftDrive,
                                          rightDrive;
+
+    public static CANSparkMax topFly;
+    public static CANSparkMax bottomFly;
     
     /**
      * Loads the configuration, initializing motor objects
@@ -40,5 +43,9 @@ public class Motors {
         
         leftDrive.setInverted(false);
         rightDrive.setInverted(true);
+
+        // init flywheels
+        topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
     }
 }
