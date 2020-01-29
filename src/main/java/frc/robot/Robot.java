@@ -43,11 +43,11 @@ public class Robot extends TimedRobot {
     
     private RobotContainer m_robotContainer;
 
-    public static CvSource cvSource;
+    //public static CvSource cvSource;
 
-    public static VideoCamera cam;
+    //public static VideoCamera cam;
 
-    public static NetworkTableEntry cnt;
+    //public static NetworkTableEntry cnt;
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
         //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
         //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
 
-        cnt = NetworkTableInstance.getDefault().getEntry("CNT");
+        //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
     }
 
     /**

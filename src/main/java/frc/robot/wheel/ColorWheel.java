@@ -37,14 +37,10 @@ public class ColorWheel {
         g *= 0.5;
         b *= 1;
         //System.out.println("R: " + r + ", G: " + g + ", B: " + b);
-        var s = new ColorShim(
+        return new ColorShim(
                 r / NUM_SAMPLES,
                 g / NUM_SAMPLES,
                 b / NUM_SAMPLES);
-        if (Robot.cvSource != null) {
-            ColorReporter.reportColor(Robot.cvSource, s);
-        }
-        return s;
     }
 
     /**
