@@ -39,18 +39,20 @@ public enum ColorEnum {
         if (Double.isNaN(hue)) {
             return null;
         }
+        
         // Finds the best match
         // Initial match is null, creating a matching threshold
         ColorEnum current = null;
         double min = 20;
         for (ColorEnum cmp : ColorEnum.values()) {
             double v = getWheelDiff(hue, cmp.matchingHue);
+            
             if (v < min) {
                 min = v;
                 current = cmp;
             }
         }
-        //System.out.println((current != null) ? current.name() : "NONE");
+      
         return current;
     }
 }

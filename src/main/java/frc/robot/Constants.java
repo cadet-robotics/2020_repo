@@ -16,4 +16,8 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+	
+	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
+							   DRIVE_X_AXIS_MODIFIER = 1,
+							   DRIVE_SPEED_MODIFIER = 0.25;
 }

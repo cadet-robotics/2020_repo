@@ -65,18 +65,16 @@ public class Robot extends TimedRobot {
         }
 
         //System.out.println(mainConfig);
-        try {
-            BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()));
-            while (true) {
-                String s = r.readLine();
-                if (s == null) {
-                    break;
-                }
-                System.out.println("#>>> " + s);
-            }
+        
+        /*
+        // Echo config file so in case it's breaking
+        // try with resources to autoclose
+        try (BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()))) {
+            r.lines().forEach(System.out::println);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        */
         
         Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
@@ -125,6 +123,10 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
     }
+    
+    /*
+     * Autonomous Group Methods
+     */
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -145,6 +147,10 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
     }
+    
+    /*
+     * Teleop Group Methods
+     */
 
     @Override
     public void teleopInit() {
@@ -162,8 +168,38 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+    	
+    	runManualDrive();
     }
     
+    /**
+     * Runs the drive train manually
+     */
+    public void runManualDrive() {
+    	// Start with no movement
+    	double left = 0, right = 0;
+    	
+    	// Add forwards/backwards movement based on the y-axis
+    	left += Controls.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
+    	right += Controls.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
+    	
+    	// Add left/right turning based on the x-axis, opposite per side
+    	left -= Controls.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
+    	right += Controls.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
+    	
+    	// Apply total speed modifier
+    	left *= Constants.DRIVE_SPEED_MODIFIER;
+    	right *= Constants.DRIVE_SPEED_MODIFIER;
+    	
+    	// Set motor values
+    	Motors.leftDrive.set(left);
+    	Motors.rightDrive.set(right);
+    }
+    
+    
+    /*
+     * Test Group Methods
+     */
     @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.

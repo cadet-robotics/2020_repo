@@ -1,11 +1,90 @@
 {
-    "controls": [],
-    "pwm motors": [],
-    "can motors": [
-        {
-            "name": "wheel spinner",
-            "value": "1",
-            "description": "The motor used to spin the big wheel"
-        }
-    ]
+	"controls": [
+		{
+			"name": "controller port",
+			"value": "0",
+			"description": "USB Order id of the controller"
+		},
+		{
+			"name": "x axis",
+			"value": "0",
+			"description": "Axis ID for the X-Axis"
+		},
+		{
+			"name": "y axis",
+			"value": "1",
+			"description": "Axis ID for the Y-Axis"
+		},
+		{
+			"name": "spin button",
+			"value": "1",
+			"description": "Button ID for the spinner control (A)"
+		}
+	],
+	
+	
+	"sensors": [
+		{
+			"name": "magazine proximity",
+			"value": "--",
+			"description": "Proximity sensor for the magazine"
+		}
+	],
+	
+	"pwm motors": [
+	
+	],
+	
+	"can motors": [
+		{
+			"name": "wheel spinner",
+			"value": "1",
+			"description": "Motor to spin the Wheel of Probability"
+		},
+		{
+			"name": "left drive a",
+			"value": "2",
+			"description": "Left drive motor (A)"
+		},
+		{
+			"name": "left drive b",
+			"value": "3",
+			"description": "Left drive motor (B)"
+		},
+		{
+			"name": "right drive a",
+			"value": "4",
+			"description": "Right drive motor (A)"
+		},
+		{
+			"name": "right drive b",
+			"value": "5",
+			"description": "Right drive motor (B)"
+		}
+	],
+	
+	"unknown": [
+		{
+			"name": "shooter a",
+			"value": "--",
+			"description": "Shooter drive motor A"
+		},
+		{
+			"name": "shooter b",
+			"value": "--",
+			"description": "Shooter drive motor B"
+		},
+		{
+			"name": "intake",
+			"value": "--",
+			"description": "Intake drive motor"
+		},
+		{
+			"name": "magazine",
+			"value": "--",
+			"description": "Magazine drive motor"
+		}
+	]
 }
+
+
