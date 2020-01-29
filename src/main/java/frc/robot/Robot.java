@@ -8,11 +8,21 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.VideoCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.ColorShim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.colordebug.ColorReporter;
 import frc.robot.io.Controls;
 import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
@@ -32,6 +42,12 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     
     private RobotContainer m_robotContainer;
+
+    //public static CvSource cvSource;
+
+    //public static VideoCamera cam;
+
+    //public static NetworkTableEntry cnt;
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -70,6 +86,13 @@ public class Robot extends TimedRobot {
         arm = new ArmSubsystem();
 
         Controls.setupCommands(arm);
+
+        //cam = CameraServer.getInstance().startAutomaticCapture();
+
+        //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
+        //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
+
+        //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
     }
 
     /**
@@ -80,7 +103,6 @@ public class Robot extends TimedRobot {
      * LiveWindow and SmartDashboard integrated updating.
      */
     private ArmSubsystem arm;
-    private int cnt = 0;
 
     @Override
     public void robotPeriodic() {
