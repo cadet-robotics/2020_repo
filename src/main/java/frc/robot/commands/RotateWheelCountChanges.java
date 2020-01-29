@@ -2,13 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.wheel.ColorChangeTracker;
 
 public class RotateWheelCountChanges extends CommandBase {
     private ArmSubsystem arm;
-    private ColorChangeTracker track;
     private int changes;
-    private boolean isDone = false;
 
     private static final double SPEED = 0.2;
 
@@ -16,7 +13,6 @@ public class RotateWheelCountChanges extends CommandBase {
         arm = armIn;
         addRequirements(arm);
         changes = changesIn;
-        track = new ColorChangeTracker(arm.getColorWheel());
     }
 
     public RotateWheelCountChanges(ArmSubsystem arm) {
@@ -25,13 +21,9 @@ public class RotateWheelCountChanges extends CommandBase {
 
     @Override
     public void execute() {
-        if (isDone) {
-            return;
-        }
-        System.out.println("CNT: " + track.getCount());
-        if (track.getCount() >= changes) {
+        int cnt = arm.getColorWheel().getCount();
+        if (cnt >= changes) {
             arm.stopWheelSpinner();
-            isDone = true;
         } else {
             arm.activateWheelSpinner(SPEED);
         }
@@ -39,6 +31,6 @@ public class RotateWheelCountChanges extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return isDone;
+        return arm.isWheelSpinnerStopped();
     }
 }

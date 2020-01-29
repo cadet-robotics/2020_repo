@@ -22,7 +22,7 @@ public class ColorChangeTracker extends Thread {
     private int cnt = 0;
 
     // The expected time between sensor measurements (nanoseconds)
-    private static final long DELAY = 25;
+    private static final long DELAY = 50;
 
     @Override
     public void run() {
@@ -31,7 +31,6 @@ public class ColorChangeTracker extends Thread {
                 runForTime(() -> {
                     ColorEnum new_c = wheel.getColor();
                     if (new_c != null) {
-                        System.out.println(new_c.name());
                         synchronized (lock) {
                             if (new_c != old) {
                                 if (old != null) {
@@ -73,12 +72,14 @@ public class ColorChangeTracker extends Thread {
         }
     }
 
+    /*
     public void reset() {
         synchronized (lock) {
             cnt = 0;
             old = null;
         }
     }
+    */
 
     public boolean hasMeasure() {
         synchronized (lock) {

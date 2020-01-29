@@ -22,9 +22,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /*
         int cnt = colorSensor.getCount();
         SmartDashboard.putNumber("CNT", cnt);
+        /*
         if (cnt < 30) {
             Motors.wheelSpinner.set(0.18);
         } else {
@@ -38,6 +38,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void stopWheelSpinner() {
         Motors.wheelSpinner.stopMotor();
+    }
+
+    public boolean isWheelSpinnerStopped() {
+        return Motors.wheelSpinner.get() <= 1e-8;
     }
 
     public ColorWheel getColorWheel() {
