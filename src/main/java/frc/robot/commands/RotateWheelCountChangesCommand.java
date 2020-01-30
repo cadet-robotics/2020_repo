@@ -3,19 +3,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class RotateWheelCountChanges extends CommandBase {
+public class RotateWheelCountChangesCommand extends CommandBase {
     private ArmSubsystem arm;
     private int changes;
 
     private static final double SPEED = 0.2;
 
-    public RotateWheelCountChanges(ArmSubsystem armIn, int changesIn) {
+    public RotateWheelCountChangesCommand(ArmSubsystem armIn, int changesIn) {
         arm = armIn;
         addRequirements(arm);
         changes = changesIn;
     }
 
-    public RotateWheelCountChanges(ArmSubsystem arm) {
+    public RotateWheelCountChangesCommand(ArmSubsystem arm) {
         this(arm, 26);
     }
 
