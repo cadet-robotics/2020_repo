@@ -133,12 +133,35 @@ public class Robot extends TimedRobot {
                 //Imgproc.cvtColor(sourceMat, destMat, Imgproc.COLOR_BGR2GRAY);
                 
                 // do the things
+                /*
                 Imgproc.rectangle(sourceMat,                  // frame
                                   new Point(10, 10),    // first corner
                                   new Point(20, 20),    // second corner
                                   new Scalar(0, 0, 0)); // color in BGR?
                 Imgproc.line(sourceMat, lineAPointA, lineAPointB, new Scalar(0, 255, 0));
                 Imgproc.line(sourceMat, lineBPointA, lineBPointB, new Scalar(255, 0, 0));
+                */
+                
+                // Draw a parabola
+                double a = 1, b = 3, c = 6; // ax^2 + bx + c
+                double minX = 0, minY = 0, maxX = 50, maxY = 2000;   // range of values
+                
+                // Assemble points
+                Point[] points = new Point[320]; // camera width
+                for(int i = 0; i < points.length; i++) {
+                    double x = Util.map(i, 0, points.length - 1, minX, maxX); // map to x value
+                    double y = (a * x * x) + (b * x) + c;   // standard form
+                    
+                    y = 240 - Util.map(y, minY, maxY, 0, 240);    // map to pixel
+                    
+                    points[i] = new Point(i, (int) y);
+                }
+                
+                // Plot points
+                // we could do this better but >:(
+                for(int i = 1; i < points.length; i++) {
+                    Imgproc.line(sourceMat, points[i - 1], points[i], new Scalar(0, 0, 255));
+                }
                 
                 // uuuuuuhhhh copy mat
                 sourceMat.copyTo(destMat);
@@ -222,21 +245,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
     	
-        // vision line test stuff
-        Joystick js = Controls.getController();
-        double leftX = js.getRawAxis(0),
-               leftY = js.getRawAxis(1),
-               rightX = js.getRawAxis(4),
-               rightY = js.getRawAxis(5);
-        
-        double left = js.getRawAxis(1),
-               right = js.getRawAxis(5);
-        
-        lineAPointA.x += leftX * 5;
-        lineAPointA.y += leftY * 5;
-        
-        lineAPointB.x += rightX * 5;
-        lineAPointB.y += rightY * 5;
+       
         
     	runManualDrive();
     }
