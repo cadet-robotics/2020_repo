@@ -27,9 +27,12 @@ public class Controls {
     private static int xAxis,
                        yAxis;
     
-    // Axis geters
+    // Axis getters
     public static double getXAxis() { return controller.getRawAxis(xAxis); }
     public static double getYAxis() { return controller.getRawAxis(yAxis); }
+    
+    // Raw getters
+    public static Joystick getController() { return controller; }
     
     /**
      * Loads the configuration, initializing all controls

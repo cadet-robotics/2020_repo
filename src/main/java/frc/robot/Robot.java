@@ -8,7 +8,10 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoSink;
@@ -17,6 +20,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.ColorShim;
@@ -32,6 +36,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -43,11 +52,17 @@ public class Robot extends TimedRobot {
     
     private RobotContainer m_robotContainer;
 
-    //public static CvSource cvSource;
+   // public static CvSource cvSource;
 
-    //public static VideoCamera cam;
+    public static VideoCamera cam;
 
-    //public static NetworkTableEntry cnt;
+   // public static NetworkTableEntry cnt;
+    
+    // test points
+    public static Point lineAPointA = new Point(0, 50),
+                        lineAPointB = new Point(320, 50),
+                        lineBPointA = new Point(0, 150),
+                        lineBPointB = new Point(320, 150);
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -88,11 +103,49 @@ public class Robot extends TimedRobot {
         Controls.setupCommands(arm);
 
         //cam = CameraServer.getInstance().startAutomaticCapture();
-
+        
         //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
         //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
 
         //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
+        
+        // Let's try some vision
+        // Goal: Add a line to the screen, preferably one we control
+        new Thread(() -> {
+            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setResolution(320, 240);
+            camera.setFPS(15);
+            
+            // setup streams
+            CvSink sink = CameraServer.getInstance().getVideo();
+            CvSource output = CameraServer.getInstance().putVideo("uwu", 320, 240);
+            
+            System.out.println("starting vision thread owo");
+            
+            Mat sourceMat = new Mat(),
+                destMat = new Mat();
+            
+            // process the things
+            while(!Thread.interrupted()) {
+                long val = sink.grabFrame(sourceMat);
+                if(val == 0) continue;
+                
+                //Imgproc.cvtColor(sourceMat, destMat, Imgproc.COLOR_BGR2GRAY);
+                
+                // do the things
+                Imgproc.rectangle(sourceMat,                  // frame
+                                  new Point(10, 10),    // first corner
+                                  new Point(20, 20),    // second corner
+                                  new Scalar(0, 0, 0)); // color in BGR?
+                Imgproc.line(sourceMat, lineAPointA, lineAPointB, new Scalar(0, 255, 0));
+                Imgproc.line(sourceMat, lineBPointA, lineBPointB, new Scalar(255, 0, 0));
+                
+                // uuuuuuhhhh copy mat
+                sourceMat.copyTo(destMat);
+                
+                output.putFrame(destMat);
+            }
+        }).start();
     }
 
     /**
@@ -169,6 +222,22 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
     	
+        // vision line test stuff
+        Joystick js = Controls.getController();
+        double leftX = js.getRawAxis(0),
+               leftY = js.getRawAxis(1),
+               rightX = js.getRawAxis(4),
+               rightY = js.getRawAxis(5);
+        
+        double left = js.getRawAxis(1),
+               right = js.getRawAxis(5);
+        
+        lineAPointA.x += leftX * 5;
+        lineAPointA.y += leftY * 5;
+        
+        lineAPointB.x += rightX * 5;
+        lineAPointB.y += rightY * 5;
+        
     	runManualDrive();
     }
     
