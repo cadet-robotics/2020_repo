@@ -30,6 +30,9 @@ import frc.robot.colordebug.ColorReporter;
 import frc.robot.io.Controls;
 import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.vision.ParabolaOverlay;
+import frc.robot.vision.TextOverlay;
+import frc.robot.vision.VisionThread;
 import frc6868.config.api.Config;
 
 import java.io.BufferedReader;
@@ -58,11 +61,9 @@ public class Robot extends TimedRobot {
 
    // public static NetworkTableEntry cnt;
     
-    // test points
-    public static Point lineAPointA = new Point(0, 50),
-                        lineAPointB = new Point(320, 50),
-                        lineBPointA = new Point(0, 150),
-                        lineBPointB = new Point(320, 150);
+    // test stuff
+    ParabolaOverlay parOverlay;
+    TextOverlay textOverlay;
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -102,7 +103,9 @@ public class Robot extends TimedRobot {
 
         Controls.setupCommands(arm);
 
-        //cam = CameraServer.getInstance().startAutomaticCapture();
+        cam = CameraServer.getInstance().startAutomaticCapture();
+        cam.setResolution(320, 240);
+        cam.setFPS(15);
         
         //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
         //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
@@ -110,65 +113,14 @@ public class Robot extends TimedRobot {
         //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
         
         // Let's try some vision
-        // Goal: Add a line to the screen, preferably one we control
-        new Thread(() -> {
-            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-            camera.setResolution(320, 240);
-            camera.setFPS(15);
-            
-            // setup streams
-            CvSink sink = CameraServer.getInstance().getVideo();
-            CvSource output = CameraServer.getInstance().putVideo("uwu", 320, 240);
-            
-            System.out.println("starting vision thread owo");
-            
-            Mat sourceMat = new Mat(),
-                destMat = new Mat();
-            
-            // process the things
-            while(!Thread.interrupted()) {
-                long val = sink.grabFrame(sourceMat);
-                if(val == 0) continue;
-                
-                //Imgproc.cvtColor(sourceMat, destMat, Imgproc.COLOR_BGR2GRAY);
-                
-                // do the things
-                /*
-                Imgproc.rectangle(sourceMat,                  // frame
-                                  new Point(10, 10),    // first corner
-                                  new Point(20, 20),    // second corner
-                                  new Scalar(0, 0, 0)); // color in BGR?
-                Imgproc.line(sourceMat, lineAPointA, lineAPointB, new Scalar(0, 255, 0));
-                Imgproc.line(sourceMat, lineBPointA, lineBPointB, new Scalar(255, 0, 0));
-                */
-                
-                // Draw a parabola
-                double a = 1, b = 3, c = 6; // ax^2 + bx + c
-                double minX = 0, minY = 0, maxX = 50, maxY = 2000;   // range of values
-                
-                // Assemble points
-                Point[] points = new Point[320]; // camera width
-                for(int i = 0; i < points.length; i++) {
-                    double x = Util.map(i, 0, points.length - 1, minX, maxX); // map to x value
-                    double y = (a * x * x) + (b * x) + c;   // standard form
-                    
-                    y = 240 - Util.map(y, minY, maxY, 0, 240);    // map to pixel
-                    
-                    points[i] = new Point(i, (int) y);
-                }
-                
-                // Plot points
-                // we could do this better but >:(
-                for(int i = 1; i < points.length; i++) {
-                    Imgproc.line(sourceMat, points[i - 1], points[i], new Scalar(0, 0, 255));
-                }
-                
-                // uuuuuuhhhh copy mat
-                sourceMat.copyTo(destMat);
-                
-                output.putFrame(destMat);
-            }
-        }).start();
+        parOverlay = new ParabolaOverlay(-50, 50, 0, 2000);
+        textOverlay = new TextOverlay("beans", 10, 240 - 10, new Scalar(0, 255, 0));
+        
+        VisionThread vt = new VisionThread("uwu feed", 320, 240);
+        vt.addProcessor(parOverlay);
+        vt.addProcessor(textOverlay);
+        
+        new Thread(vt).start();
     }
 
     /**
@@ -244,8 +196,47 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-    	
-       
+        
+        Joystick js = Controls.getController();
+        
+        double leftJoystickX = -js.getRawAxis(0),
+               leftJoystickY = -js.getRawAxis(1),
+               rightJoystickX = -js.getRawAxis(4),
+               rightJoystickY = -js.getRawAxis(5);
+        
+        boolean leftXUsed = false,
+                leftYUsed = false,
+                rightYUsed = false;
+        
+        // Left x = A
+        // left y = B
+        // right y = c
+        if(!leftXUsed && Math.abs(leftJoystickX) > 0.9) {
+            leftXUsed = true;
+            
+            parOverlay.setA(parOverlay.getA() + Math.signum(leftJoystickX));
+        } else if(Math.abs(leftJoystickX) <= 0.9) {
+            leftXUsed = false;
+        }
+        
+        if(!leftYUsed && Math.abs(leftJoystickY) > 0.9) {
+            leftYUsed = true;
+            
+            parOverlay.setB(parOverlay.getB() + Math.signum(leftJoystickY));
+        } else if(Math.abs(leftJoystickY) <= 0.9) {
+            leftYUsed = false;
+        }
+        
+        if(!rightYUsed && Math.abs(rightJoystickY) > 0.9) {
+            rightYUsed = true;
+            
+            parOverlay.setC(parOverlay.getC() + Math.signum(rightJoystickY));
+        } else if(Math.abs(rightJoystickY) <= 0.9) {
+            rightYUsed = false;
+        }
+        
+        // set text
+        textOverlay.setText(String.format("a=%-3s b=%-3s c=%-3s", parOverlay.getA(), parOverlay.getB(), parOverlay.getC()));
         
     	runManualDrive();
     }
