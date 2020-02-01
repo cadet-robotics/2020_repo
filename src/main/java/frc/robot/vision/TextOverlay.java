@@ -83,7 +83,7 @@ public class TextOverlay implements VisionProcessor {
     }
     
     @Override
-    public void process(Mat source, Mat dest) {
+    public void process(Mat source, Mat dest, int width, int height) {
         Imgproc.putText(source, text, new Point(x, y), Core.FONT_HERSHEY_PLAIN, scale, color);
         source.copyTo(dest);
     }

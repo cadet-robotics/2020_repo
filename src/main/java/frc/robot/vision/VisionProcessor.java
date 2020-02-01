@@ -14,6 +14,8 @@ public interface VisionProcessor {
      * 
      * @param source The source matrix, has the original frame
      * @param dest The destination matrix, is sent to the output
+     * @param width The width of the video
+     * @param height The height of the video
      */
-    public void process(Mat source, Mat dest);
+    public void process(Mat source, Mat dest, int width, int height);
 }

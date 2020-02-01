@@ -19,6 +19,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -30,6 +31,7 @@ import frc.robot.colordebug.ColorReporter;
 import frc.robot.io.Controls;
 import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
 import frc.robot.vision.VisionThread;
@@ -113,11 +115,14 @@ public class Robot extends TimedRobot {
         //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
         
         // Let's try some vision
-        parOverlay = new ParabolaOverlay(-50, 50, 0, 2000);
-        textOverlay = new TextOverlay("beans", 10, 240 - 10, new Scalar(0, 255, 0));
+        parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
+        textOverlay = new TextOverlay("beans", 5, 240 - 10, new Scalar(0, 255, 0));
         
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
         vt.addProcessor(parOverlay);
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 100)); // y axis
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 0)); // x axis
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 2.5, 0)); // target height
         vt.addProcessor(textOverlay);
         
         new Thread(vt).start();
@@ -190,7 +195,17 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
     }
-
+    
+    boolean leftXUsed = false,
+            leftYUsed = false,
+            rightXUsed = false,
+            rightYUsed = false;
+    
+    double velocity = 0, angle = 0;
+    
+    final double GRAVITY_CONSTANT = -9.81, // m/s^2
+                 ANGLE_CONSTANT = Math.toRadians(45);
+    
     /**
      * This function is called periodically during operator control.
      */
@@ -204,39 +219,20 @@ public class Robot extends TimedRobot {
                rightJoystickX = -js.getRawAxis(4),
                rightJoystickY = -js.getRawAxis(5);
         
-        boolean leftXUsed = false,
-                leftYUsed = false,
-                rightYUsed = false;
         
-        // Left x = A
-        // left y = B
-        // right y = c
-        if(!leftXUsed && Math.abs(leftJoystickX) > 0.9) {
-            leftXUsed = true;
-            
-            parOverlay.setA(parOverlay.getA() + Math.signum(leftJoystickX));
-        } else if(Math.abs(leftJoystickX) <= 0.9) {
-            leftXUsed = false;
-        }
+        // Apply the formula where c=0
+        double secTheta = 1.0d / Math.cos(ANGLE_CONSTANT);
+        double formA = (GRAVITY_CONSTANT * (secTheta * secTheta)) / (2 * velocity * velocity),
+               formB = Math.tan(ANGLE_CONSTANT);
         
-        if(!leftYUsed && Math.abs(leftJoystickY) > 0.9) {
-            leftYUsed = true;
-            
-            parOverlay.setB(parOverlay.getB() + Math.signum(leftJoystickY));
-        } else if(Math.abs(leftJoystickY) <= 0.9) {
-            leftYUsed = false;
-        }
+        parOverlay.setParabola(formA, formB, 0);
         
-        if(!rightYUsed && Math.abs(rightJoystickY) > 0.9) {
-            rightYUsed = true;
-            
-            parOverlay.setC(parOverlay.getC() + Math.signum(rightJoystickY));
-        } else if(Math.abs(rightJoystickY) <= 0.9) {
-            rightYUsed = false;
+        if(Math.abs(leftJoystickY) > 0.1) {
+            velocity += leftJoystickY / 20;
         }
         
         // set text
-        textOverlay.setText(String.format("a=%-3s b=%-3s c=%-3s", parOverlay.getA(), parOverlay.getB(), parOverlay.getC()));
+        textOverlay.setText(String.format("a=%-4.4s b=%-4.4s c=%-4.4s v=%-4.4s t=%-4.4s", parOverlay.getA(), parOverlay.getB(), parOverlay.getC(), velocity, angle));
         
     	runManualDrive();
     }

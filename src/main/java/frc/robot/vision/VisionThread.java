@@ -94,7 +94,7 @@ public class VisionThread implements Runnable {
             for(int i = 0; i < processors.size(); i++) {
                 if(i != 0) dest.copyTo(source);
                 
-                processors.get(i).process(source, dest);
+                processors.get(i).process(source, dest, width, height);
             }
             
             // Output the frame

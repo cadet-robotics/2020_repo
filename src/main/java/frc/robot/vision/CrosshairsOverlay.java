@@ -11,7 +11,7 @@ public class CrosshairsOverlay implements VisionProcessor {
     
 
     @Override
-    public void process(Mat source, Mat dest) {
+    public void process(Mat source, Mat dest, int width, int height) {
         // TODO Auto-generated method stub
         
     }

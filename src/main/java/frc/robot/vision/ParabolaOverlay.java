@@ -94,14 +94,14 @@ public class ParabolaOverlay implements VisionProcessor {
     public double getC() { return c; }
     
     @Override
-    public void process(Mat source, Mat dest) {
+    public void process(Mat source, Mat dest, int width, int height) {
         // Assemble points
-        Point[] points = new Point[320]; // camera width
-        for(int i = 0; i < points.length; i++) {
-            double x = Util.map(i, 0, points.length - 1, minX, maxX); // map to x value
-            double y = (a * x * x) + (b * x) + c;   // standard form
+        Point[] points = new Point[width]; // camera width
+        for(int i = 0; i < width; i++) {
+            double x = Util.map(i, 0, width - 1, minX, maxX), // map to x value
+                   y = (a * x * x) + (b * x) + c;   // standard form
             
-            y = 240 - Util.map(y, minY, maxY, 0, 240);    // map to pixel
+            y = height - Util.map(y, minY, maxY, 0, height);    // map to pixel
             
             points[i] = new Point(i, (int) y);
         }
