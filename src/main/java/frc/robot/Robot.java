@@ -35,11 +35,13 @@ import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
 import frc.robot.vision.VisionThread;
+import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc6868.config.api.Config;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -66,6 +68,11 @@ public class Robot extends TimedRobot {
     // test stuff
     ParabolaOverlay parOverlay;
     TextOverlay textOverlay;
+    
+    // oh boy time to test the c r o s s f i t
+    CrosshairsOverlay crosshairs;
+    LineOverlay intersectLineA,
+                intersectLineB;
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -118,11 +125,31 @@ public class Robot extends TimedRobot {
         parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
         textOverlay = new TextOverlay("beans", 5, 240 - 10, new Scalar(0, 255, 0));
         
+        // Crosshairs testing
+        crosshairs = new CrosshairsOverlay(Constants.CAMERA_HEIGHT,
+                                           Math.toRadians(45),
+                                           Constants.LIFECAM_3000_VERTICAL_FOV,
+                                           Constants.IMAGE_HEIGHT,
+                                           Constants.SHOOTER_HEIGHT,
+                                           Constants.TARGET_HEIGHT,
+                                           Constants.GRAVITY_ACCEL,
+                                           Constants.CROSSHAIR_A_COLOR,
+                                           Constants.CROSSHAIR_B_COLOR,
+                                           Constants.CROSSHAIR_CENTER_COLOR);
+        
+        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0);
+        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0);
+        
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
         vt.addProcessor(parOverlay);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 100)); // y axis
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, Math.toRadians(90))); // y axis
         vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 0)); // x axis
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 2.5, 0)); // target height
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.TARGET_HEIGHT, 0)); // target height
+        vt.addProcessor(crosshairs);
+        vt.addProcessor(intersectLineA);
+        vt.addProcessor(intersectLineB);
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(45) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(45) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2)));
         vt.addProcessor(textOverlay);
         
         new Thread(vt).start();
@@ -220,19 +247,34 @@ public class Robot extends TimedRobot {
                rightJoystickY = -js.getRawAxis(5);
         
         
+        // Apply the velocity to the crosshairs
+        crosshairs.setAngle(ANGLE_CONSTANT);
+        crosshairs.setVelocity(velocity);
+        crosshairs.calculateLinePositions();
+        
+        // Show the projected parabola
+        parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), Constants.SHOOTER_HEIGHT);
+        
+        // Show the lines its using
+        intersectLineA.setAngle(crosshairs.getAngleA());
+        intersectLineB.setAngle(crosshairs.getAngleB());
+        
+        /*
         // Apply the formula where c=0
         double secTheta = 1.0d / Math.cos(ANGLE_CONSTANT);
         double formA = (GRAVITY_CONSTANT * (secTheta * secTheta)) / (2 * velocity * velocity),
                formB = Math.tan(ANGLE_CONSTANT);
         
         parOverlay.setParabola(formA, formB, 0);
+        */
         
         if(Math.abs(leftJoystickY) > 0.1) {
             velocity += leftJoystickY / 20;
         }
         
         // set text
-        textOverlay.setText(String.format("a=%-4.4s b=%-4.4s c=%-4.4s v=%-4.4s t=%-4.4s", parOverlay.getA(), parOverlay.getB(), parOverlay.getC(), velocity, angle));
+        DecimalFormat df = new DecimalFormat("##.##");
+        textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(velocity), df.format(ANGLE_CONSTANT)));
         
     	runManualDrive();
     }
