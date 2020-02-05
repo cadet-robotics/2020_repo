@@ -65,13 +65,13 @@ public class Robot extends TimedRobot {
 
    // public static NetworkTableEntry cnt;
     
-    // test stuff
+    // Crosshairs debug
     ParabolaOverlay parOverlay;
     TextOverlay textOverlay;
     
-    // oh boy time to test the c r o s s f i t
+    // time for c r o s s f i t
     CrosshairsOverlay crosshairs;
-    LineOverlay intersectLineA,
+    LineOverlay intersectLineA, // These two are debug
                 intersectLineB;
     
     /**
@@ -88,44 +88,29 @@ public class Robot extends TimedRobot {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        //System.out.println(mainConfig);
         
-        /*
-        // Echo config file so in case it's breaking
-        // try with resources to autoclose
-        try (BufferedReader r = new BufferedReader(new FileReader(mainConfig.getFileLocation()))) {
-            r.lines().forEach(System.out::println);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        */
-        
+        // Initialize the configurations
         Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
         
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
-
+        
+        // Initialize subsystems
         arm = new ArmSubsystem();
 
         Controls.setupCommands(arm);
-
+        
+        // Initialize the camera itself
         cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setResolution(320, 240);
         cam.setFPS(15);
         
-        //cvSource = CameraServer.getInstance().putVideo("cv_debug", 320, 240);
-        //cvSource.setPixelFormat(VideoMode.PixelFormat.kBGR);
-
-        //cnt = NetworkTableInstance.getDefault().getEntry("CNT");
+        // Crosshairs vision setup
+        textOverlay = new TextOverlay("parabola data", 5, Constants.IMAGE_HEIGHT - 10, new Scalar(0, 255, 0));
         
-        // Let's try some vision
-        parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
-        textOverlay = new TextOverlay("beans", 5, 240 - 10, new Scalar(0, 255, 0));
-        
-        // Crosshairs testing
+        // Create the crosshairs object
         crosshairs = new CrosshairsOverlay(Constants.CAMERA_HEIGHT,
                                            Math.toRadians(20),
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
@@ -137,24 +122,39 @@ public class Robot extends TimedRobot {
                                            Constants.CROSSHAIR_B_COLOR,
                                            Constants.CROSSHAIR_CENTER_COLOR);
         
+        // Create the thread to process stuff
+        VisionThread vt = new VisionThread("uwu feed", 320, 240);
+        vt.addProcessor(crosshairs);
+        vt.addProcessor(textOverlay);
+        
+        // Debug stuff if we use it
+        if(Constants.CROSSHAIRS_DEBUG) {
+            setupDebugVision(vt);
+        }
+        
+        new Thread(vt).start();
+    }
+    
+    /**
+     * Sets up vision overlays for crosshair debug
+     */
+    private void setupDebugVision(VisionThread vt) {
+        // Draw the parabola
+        parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
+        
+        // Draw intersecting lines
         intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_A_COLOR);
         intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_B_COLOR);
         
-        VisionThread vt = new VisionThread("uwu feed", 320, 240);
-        vt.addProcessor(parOverlay);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, Math.toRadians(90))); // y axis
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 0)); // x axis
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.TARGET_HEIGHT, 0)); // target height
-        vt.addProcessor(crosshairs);
-        vt.addProcessor(intersectLineA);
+        // Add processors
+        vt.addProcessor(parOverlay);                                                                                                                                            // Parabola
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, Math.toRadians(90)));                                                                                             // y axis
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, 0, 0));                                                                                                              // x axis
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.TARGET_HEIGHT, 0));                                                                                        // target height
+        vt.addProcessor(intersectLineA);                                                                                                                                        // Intersecting lines
         vt.addProcessor(intersectLineB);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));    // Camera FOV indicators
         vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
-        vt.addProcessor(textOverlay);
-        
-        System.out.println(Math.toRadians(30));
-        
-        new Thread(vt).start();
     }
 
     /**
@@ -241,52 +241,48 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         
-        Joystick js = Controls.getController();
-        
-        double leftJoystickX = -js.getRawAxis(0),
-               leftJoystickY = -js.getRawAxis(1),
-               rightJoystickX = -js.getRawAxis(4),
-               rightJoystickY = -js.getRawAxis(5);
-        
-        
-        // Apply the velocity to the crosshairs
-        crosshairs.setAngle(ANGLE_CONSTANT);
-        crosshairs.setVelocity(velocity);
-        crosshairs.calculateLinePositions();
-        
-        // Show the projected parabola
-        parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), Constants.SHOOTER_HEIGHT);
-        
-        // Show the lines its using
-        intersectLineA.setAngle(crosshairs.getAngleA());
-        intersectLineB.setAngle(crosshairs.getAngleB());
-        
-        /*
-        // Apply the formula where c=0
-        double secTheta = 1.0d / Math.cos(ANGLE_CONSTANT);
-        double formA = (GRAVITY_CONSTANT * (secTheta * secTheta)) / (2 * velocity * velocity),
-               formB = Math.tan(ANGLE_CONSTANT);
-        
-        parOverlay.setParabola(formA, formB, 0);
-        */
-        
-        if(Math.abs(leftJoystickY) > 0.1) {
-            velocity += leftJoystickY / 20;
+        // Drive them wheels
+    	runManualDrive();
+    	
+    	// Update the values of the crosshairs system
+    	runCrosshairs();
+    }
+    
+    private void runCrosshairs() {
+        // We don't have anything giving us data so this is it actually
+        if(Constants.CROSSHAIRS_DEBUG) {
+            // Run the crosshairs manually
+            Joystick js = Controls.getController();
+            double leftJoystickY = -js.getRawAxis(1);
+            
+            if(Math.abs(leftJoystickY) > 0.1) {
+                velocity += leftJoystickY / 20;
+            }
+            
+            // Apply the velocity to the crosshairs
+            crosshairs.setAngle(ANGLE_CONSTANT);
+            crosshairs.setVelocity(velocity);
+            crosshairs.calculateLinePositions();
+            
+            
+            // Show the projected parabola
+            parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), Constants.SHOOTER_HEIGHT);
+            
+            // Show the lines its using
+            intersectLineA.setAngle(crosshairs.getAngleA());
+            intersectLineB.setAngle(crosshairs.getAngleB());
+            
         }
         
-        // set text
+        // Update info
         DecimalFormat df = new DecimalFormat("##.##");
         textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(velocity), df.format(ANGLE_CONSTANT)));
-        
-        //System.out.println(String.format("%s %s", df.format(crosshairs.getAngleA()), df.format(crosshairs.getAngleB())));
-        
-    	runManualDrive();
     }
     
     /**
      * Runs the drive train manually
      */
-    public void runManualDrive() {
+    private void runManualDrive() {
     	// Start with no movement
     	double left = 0, right = 0;
     	

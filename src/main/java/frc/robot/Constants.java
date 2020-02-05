@@ -24,6 +24,8 @@ public final class Constants {
 							   DRIVE_SPEED_MODIFIER = 0.25,
 							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	
+	public static final boolean CROSSHAIRS_DEBUG = true;
+	
 	// TESTING CONSTANTS
 	public static final double SHOOTER_HEIGHT = 0.9144,    // From 36 inches
 	                           CAMERA_HEIGHT = 0.8128,     // From 32 inches
