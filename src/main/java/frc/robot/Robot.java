@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
         
         // Crosshairs testing
         crosshairs = new CrosshairsOverlay(Constants.CAMERA_HEIGHT,
-                                           Math.toRadians(45),
+                                           Math.toRadians(20),
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
                                            Constants.SHOOTER_HEIGHT,
@@ -137,8 +137,8 @@ public class Robot extends TimedRobot {
                                            Constants.CROSSHAIR_B_COLOR,
                                            Constants.CROSSHAIR_CENTER_COLOR);
         
-        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0);
-        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0);
+        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_A_COLOR);
+        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_B_COLOR);
         
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
         vt.addProcessor(parOverlay);
@@ -148,9 +148,11 @@ public class Robot extends TimedRobot {
         vt.addProcessor(crosshairs);
         vt.addProcessor(intersectLineA);
         vt.addProcessor(intersectLineB);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(45) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2)));
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(45) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
         vt.addProcessor(textOverlay);
+        
+        System.out.println(Math.toRadians(30));
         
         new Thread(vt).start();
     }
@@ -275,6 +277,8 @@ public class Robot extends TimedRobot {
         // set text
         DecimalFormat df = new DecimalFormat("##.##");
         textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(velocity), df.format(ANGLE_CONSTANT)));
+        
+        //System.out.println(String.format("%s %s", df.format(crosshairs.getAngleA()), df.format(crosshairs.getAngleB())));
         
     	runManualDrive();
     }

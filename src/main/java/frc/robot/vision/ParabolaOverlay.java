@@ -109,7 +109,7 @@ public class ParabolaOverlay implements VisionProcessor {
         // Plot points
         // we could do this better but >:(
         for(int i = 1; i < points.length; i++) {
-            Imgproc.line(source, points[i - 1], points[i], new Scalar(0, 0, 255));
+            Imgproc.line(source, points[i - 1], points[i], new Scalar(150, 150, 150));
         }
         
         // uuuuuuhhhh copy mat

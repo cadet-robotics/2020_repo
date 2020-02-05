@@ -22,7 +22,7 @@ public final class Constants {
 	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
 							   DRIVE_X_AXIS_MODIFIER = 1,
 							   DRIVE_SPEED_MODIFIER = 0.25,
-							   LIFECAM_3000_VERTICAL_FOV = 36.93; // found from some searching
+							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	
 	// TESTING CONSTANTS
 	public static final double SHOOTER_HEIGHT = 0.9144,    // From 36 inches

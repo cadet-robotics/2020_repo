@@ -159,19 +159,14 @@ public class CrosshairsOverlay implements VisionProcessor {
         angleA = Math.atan2(targetY - cameraY, roots[0]);
         angleB = Math.atan2(targetY - cameraY, roots[1]);
         
-        // Convert to angle in camera
-        angleA += cameraAngle;
-        angleB += cameraAngle;
-        
         // Convert to y coordinate
         double anglePerPixel = cameraFOV / imageHeight,     // Angle per pixel of the image
-               angleToTop = cameraAngle + (cameraFOV / 2);  // Angle from the x axis to the top of the image
+               angleToTop = cameraAngle + (cameraFOV / 2),  // Angle from the x axis to the top of the image
+               fromTopA = angleToTop - angleA,              // Angle from the top to the crosshair, different variable to preserve debug
+               fromTopB = angleToTop - angleB;
         
-        angleA = angleToTop - angleA;   // Convert to angle from top
-        angleB = angleToTop - angleB;
-        
-        lineAY = (int) (angleA / anglePerPixel);    // Finally convert to y coord
-        lineBY = (int) (angleB / anglePerPixel);
+        lineAY = (int) (fromTopA / anglePerPixel);    // Finally convert to y coord
+        lineBY = (int) (fromTopB / anglePerPixel);
     }
     
     /**
