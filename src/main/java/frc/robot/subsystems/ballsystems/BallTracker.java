@@ -18,7 +18,8 @@ public class BallTracker {
     
     private int ballCount = 0; // Number of balls in the magazine itself
     
-    private boolean previousMiddleState = false;
+    private boolean previousTopState = false,
+                    previousMiddleState = false;
     
     public BallTracker() {
         
@@ -43,6 +44,15 @@ public class BallTracker {
     }
     
     /**
+     * Gets the number of balls in the magazine
+     * 
+     * @return The number of b a l l
+     */
+    public int getBallCount() {
+        return ballCount;
+    }
+    
+    /**
      * Updates the state based on the sensors
      */
     public void update() {
@@ -55,5 +65,11 @@ public class BallTracker {
             ballCount++;
         }
         previousMiddleState = m;
+        
+        // a ball left the shooter
+        if(!t && previousTopState) {
+            ballCount--;
+        }
+        previousTopState = t;
     }
 }

@@ -173,6 +173,13 @@ public class Robot extends TimedRobot {
     }
     
     /**
+     * Updates the dashboard to show the informations
+     */
+    private void updateDashboard() {
+        // (BallTracker) SmartDashboard.putNumber("Balls in magazine", tracker.getBallCount());
+    }
+    
+    /**
      * Runs the drive train manually
      */
     public void runManualDrive() {
