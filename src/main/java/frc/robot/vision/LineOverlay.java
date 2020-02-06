@@ -54,15 +54,6 @@ public class LineOverlay implements VisionProcessor {
     
     @Override
     public void process(Mat source, Mat dest, int width, int height) {
-        /*
-        // Map values from coords to pixels
-        double x = Util.map(x1, minX, maxX, 0, width),
-               y = Util.map(y1, minY, maxY, height, 0); // Y increases top to bottom
-        
-        // Each point is extended from the origin point by a bunch so it goes across the whole thing
-        double xDistance = Util.map(Math.cos(angle), -1, 1, 0, width),  // Guarantee this goes off the screen no matter what, i hope
-               yDistance = Util.map(Math.sin(angle), -1, 1, height, 0);
-        */
         
         // Get line endpoints such that they go outside the screen
         double xDist = Math.cos(angle) * (maxX - minX),
