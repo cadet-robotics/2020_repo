@@ -6,12 +6,16 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class MaintainRPMCommand extends PIDCommand {
     private MaintainRPMCommand(SpeedController motor, Encoder encoder, PIDController controller, double targetRPM, Subsystem... requirements) {
-        super(controller, encoder::get, targetRPM, motor::set, requirements);
+        super(controller, encoder::get, targetRPM, (v) -> {
+            if (v < -1) {
+                v = -1;
+            } else if (v > 1) {
+                v = 1;
+            }
+            motor.set(v);
+        }, requirements);
     }
 
     public MaintainRPMCommand(SpeedController motor, Encoder encoder, double p, double i, double d, double targetRPM, Subsystem... requirements) {
