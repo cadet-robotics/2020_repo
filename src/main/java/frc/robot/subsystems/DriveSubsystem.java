@@ -7,6 +7,7 @@ public class DriveSubsystem extends SubsystemBase {
     private RobotDriveBase driveBase;
 
     public DriveSubsystem(RobotDriveBase driveBaseIn) {
+        super();
         driveBase = driveBaseIn;
     }
 
