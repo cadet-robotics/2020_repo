@@ -12,6 +12,7 @@ import frc6868.config.api.Config;
  * @author Alex Pickering
  */
 public class Motors {
+    // TODO: Configure encoders, setDistancePerPulse
     
     // Spark MAXes
     public static CANSparkMax wheelSpinner;

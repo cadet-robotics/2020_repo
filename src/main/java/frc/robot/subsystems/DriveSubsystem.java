@@ -1,16 +1,87 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
+import frc.robot.io.Motors;
 
 public class DriveSubsystem extends SubsystemBase {
-    private RobotDriveBase driveBase;
+    private static final double MAX_SPEED = 2;
 
-    public DriveSubsystem(RobotDriveBase driveBaseIn) {
-        driveBase = driveBaseIn;
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
+
+    private DifferentialDrive driveBase;
+    private DifferentialDriveOdometry odometry;
+
+    private Encoder leftEncoder;
+    private Encoder rightEncoder;
+
+    private PIDController leftController;
+    private PIDController rightController;
+
+    private Gyro gyro;
+
+    private DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.76);
+
+    public DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
+        super();
+        driveBase = new DifferentialDrive(left, right);
+
+        leftEncoder = eLeft;
+        rightEncoder = eRight;
+
+        // TODO: Check gear ratio between encoder and wheels
+        final double DIST = 6 * .0254 * Math.PI / 1024;
+        leftEncoder.setDistancePerPulse(DIST);
+        rightEncoder.setDistancePerPulse(DIST);
+
+        leftController = new PIDController(1, 0, 0);
+        rightController = new PIDController(1, 0, 0);
+
+        leftEncoder.reset();
+        rightEncoder.reset();
+
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
     }
 
-    public RobotDriveBase getDriveBase() {
+    public DifferentialDrive getDriveBase() {
         return driveBase;
+    }
+
+    @Override
+    public void periodic() {
+        odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
+    }
+
+    public RamseteCommand ramseteCommandBuilder(Trajectory t) {
+        return new RamseteCommand(
+                t,
+                odometry::getPoseMeters,
+                new RamseteController(),
+                feedforward,
+                kin,
+                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate()),
+                leftController,
+                rightController,
+                (vLeft, vRight) -> {
+                    Motors.leftDrive.set(vLeft);
+                    Motors.rightDrive.set(vRight);
+                },
+                this
+        );
     }
 }
