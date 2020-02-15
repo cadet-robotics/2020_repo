@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import org.opencv.core.Scalar;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -18,24 +16,23 @@ import org.opencv.core.Scalar;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-	
+    
+    /*
+     * Drive Constants
+     */
 	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
 							   DRIVE_X_AXIS_MODIFIER = 1,
 							   DRIVE_SPEED_MODIFIER = 0.25,
 							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	
+	/*
+	 * Crosshairs Constants
+	 */
 	public static final boolean CROSSHAIRS_DEBUG = true;
-	
-	// TESTING CONSTANTS
-	public static final double SHOOTER_HEIGHT = 0.9144,    // From 36 inches
-	                           CAMERA_HEIGHT = 0.8128,     // From 32 inches
-	                           TARGET_HEIGHT = 2.49555,    // From 8 ft 2.25 in (98.25 in)
-	                           GRAVITY_ACCEL = -9.807;      // From wikipedia, the free encyclopedia, at en dot wikipedia dot org
 	
 	public static final int IMAGE_HEIGHT = 240;    // 240p
 	
-	public static final Scalar CROSSHAIR_CENTER_COLOR = new Scalar(0, 255, 0), // Epic gamer green
-	                           CROSSHAIR_A_COLOR = new Scalar(255, 0, 0),      // b l u e
-	                           CROSSHAIR_B_COLOR = new Scalar(0, 0, 255);      // Fires of hell red
+	public static final double GRAVITY_ACCEL = -9.807,     // From Wikipedia, the free encyclopedia, at e n dot wikipedia dot org
+	                           TARGET_HEIGHT = 2.49555;    // From 8 ft 2.25 in (98.25 in)
 	                        
 }
