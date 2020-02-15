@@ -49,7 +49,7 @@ public class ColorWheel {
      *
      * @return The color from the sensor as a wheel color, or null
      */
-    ColorEnum getColor() {
+    public ColorEnum getColor() {
         return ColorEnum.from(getColorRGB());
     }
 

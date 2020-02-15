@@ -17,6 +17,7 @@ public class ArmSubsystem extends SubsystemBase {
     private ColorWheel colorSensor;
 
     public ArmSubsystem() {
+        super();
         colorSensor = new ColorWheel();
     }
 
