@@ -14,13 +14,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.drive.RobotDriveBase;
-import frc.robot.Robot;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
-import frc.robot.io.motortype.MotorPair;
 
 public class DriveSubsystem extends SubsystemBase {
     private static final double MAX_SPEED = 2;

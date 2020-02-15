@@ -4,8 +4,6 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.ColorShim;
-import frc.robot.Robot;
-import frc.robot.colordebug.ColorReporter;
 
 public class ColorWheel {
     ColorSensorV3 sensor;
