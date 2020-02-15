@@ -18,6 +18,6 @@ public class Util {
 	 * @return The mapped value
 	 */
 	public static double map(double val, double min1, double max1, double min2, double max2) {
-		return min2 + (min2 - min1) * ((val - min1) / (max1 - min1));
+		return min2 + (max2 - min2) * ((val - min1) / (max1 - min1));
 	}
 }
