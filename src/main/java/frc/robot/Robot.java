@@ -230,7 +230,7 @@ public class Robot extends TimedRobot {
             rightXUsed = false,
             rightYUsed = false;
     
-    double velocity = 0, angle = 0;
+    double velocity = 0, angle = Math.toRadians(45);
     
     final double GRAVITY_CONSTANT = -9.81, // m/s^2
                  ANGLE_CONSTANT = Math.toRadians(45);
@@ -253,17 +253,21 @@ public class Robot extends TimedRobot {
         if(Constants.CROSSHAIRS_DEBUG) {
             // Run the crosshairs manually
             Joystick js = Controls.getController();
-            double leftJoystickY = -js.getRawAxis(1);
+            double leftJoystickY = -js.getRawAxis(1),
+                   rightJoystickY = -js.getRawAxis(5);
             
             if(Math.abs(leftJoystickY) > 0.1) {
                 velocity += leftJoystickY / 20;
             }
             
+            if(Math.abs(rightJoystickY) > 0.1) {
+                angle += rightJoystickY / 100;
+            }
+            
             // Apply the velocity to the crosshairs
-            crosshairs.setAngle(ANGLE_CONSTANT);
+            crosshairs.setAngle(angle);
             crosshairs.setVelocity(velocity);
             crosshairs.calculateLinePositions();
-            
             
             // Show the projected parabola
             parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), Constants.SHOOTER_HEIGHT);
