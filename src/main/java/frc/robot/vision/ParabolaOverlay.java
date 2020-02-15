@@ -8,7 +8,7 @@ import org.opencv.imgproc.Imgproc;
 import frc.robot.Util;
 
 /**
- * Testing overlay 
+ * Draws a parabola in the form y=ax^2 + bx + c
  * 
  * @author Alex Pickering
  */

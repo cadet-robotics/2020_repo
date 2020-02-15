@@ -54,6 +54,8 @@ public class Robot extends TimedRobot {
     // Crosshairs debug
     ParabolaOverlay parOverlay;
     TextOverlay textOverlay;
+    double camHeight,       // These two are used elsewhere
+           shooterHeight;
     
     // time for c r o s s f i t
     CrosshairsOverlay crosshairs;
@@ -99,19 +101,32 @@ public class Robot extends TimedRobot {
         cam.setFPS(15);
         
         // Crosshairs vision setup
+        setupCrosshairsVision(mainConfig);
+    }
+    
+    /**
+     * Sets up the stuff for the crosshairs vision system
+     * 
+     * @param mainConfig
+     */
+    private void setupCrosshairsVision(Config mainConfig) {
         textOverlay = new TextOverlay("parabola data", 5, Constants.IMAGE_HEIGHT - 10, new Scalar(0, 255, 0));
+        camHeight = mainConfig.getDoubleValue("crosshairs", "camera height");
+        shooterHeight = mainConfig.getDoubleValue("crosshairs", "shooter height");
         
         // Create the crosshairs object
-        crosshairs = new CrosshairsOverlay(Constants.CAMERA_HEIGHT,
-                                           Math.toRadians(20),
+        crosshairs = new CrosshairsOverlay(camHeight, //Constants.CAMERA_HEIGHT,
+                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "camera angle")), //Math.toRadians(20),
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
-                                           Constants.SHOOTER_HEIGHT,
+                                           shooterHeight, //Constants.SHOOTER_HEIGHT,
                                            Constants.TARGET_HEIGHT,
                                            Constants.GRAVITY_ACCEL,
-                                           Constants.CROSSHAIR_A_COLOR,
-                                           Constants.CROSSHAIR_B_COLOR,
-                                           Constants.CROSSHAIR_CENTER_COLOR);
+                                           0,
+                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "shooter angle")),
+                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color a")), //Constants.CROSSHAIR_A_COLOR,
+                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color b")), //Constants.CROSSHAIR_B_COLOR,
+                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
         
         // Create the thread to process stuff
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
@@ -129,14 +144,16 @@ public class Robot extends TimedRobot {
     
     /**
      * Sets up vision overlays for crosshair debug
+     * 
+     * @param vt
      */
     private void setupDebugVision(VisionThread vt) {
         // Draw the parabola
         parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
         
         // Draw intersecting lines
-        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_A_COLOR);
-        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, 0, Constants.CROSSHAIR_B_COLOR);
+        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, camHeight, 0, new Scalar(0, 0, 0));
+        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, camHeight, 0, new Scalar(0, 0, 0));
         
         // Add processors
         vt.addProcessor(parOverlay);                                                                                                                                            // Parabola
@@ -145,8 +162,8 @@ public class Robot extends TimedRobot {
         vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.TARGET_HEIGHT, 0));                                                                                        // target height
         vt.addProcessor(intersectLineA);                                                                                                                                        // Intersecting lines
         vt.addProcessor(intersectLineB);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));    // Camera FOV indicators
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.CAMERA_HEIGHT, Math.toRadians(20) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));    // Camera FOV indicators
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Math.toRadians(20) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
     }
 
     /**
@@ -217,16 +234,6 @@ public class Robot extends TimedRobot {
         }
     }
     
-    boolean leftXUsed = false,
-            leftYUsed = false,
-            rightXUsed = false,
-            rightYUsed = false;
-    
-    double velocity = 0, angle = Math.toRadians(45);
-    
-    final double GRAVITY_CONSTANT = -9.81, // m/s^2
-                 ANGLE_CONSTANT = Math.toRadians(45);
-    
     /**
      * This function is called periodically during operator control.
      */
@@ -240,8 +247,12 @@ public class Robot extends TimedRobot {
     	runCrosshairs();
     }
     
+    double debugVelocity = 0,
+           debugAngle = 0;
+    
     private void runCrosshairs() {
         // We don't have anything giving us data so this is it actually
+        // Once we have information from Owen's system there will be proper stuff here
         if(Constants.CROSSHAIRS_DEBUG) {
             // Run the crosshairs manually
             Joystick js = controlSubsystem.getController();
@@ -249,20 +260,20 @@ public class Robot extends TimedRobot {
                    rightJoystickY = -js.getRawAxis(5);
             
             if(Math.abs(leftJoystickY) > 0.1) {
-                velocity += leftJoystickY / 20;
+                debugVelocity += leftJoystickY / 20;
             }
             
             if(Math.abs(rightJoystickY) > 0.1) {
-                angle += rightJoystickY / 100;
+                debugAngle += rightJoystickY / 100;
             }
             
             // Apply the velocity to the crosshairs
-            crosshairs.setAngle(angle);
-            crosshairs.setVelocity(velocity);
+            crosshairs.setAngle(debugAngle);
+            crosshairs.setVelocity(debugVelocity);
             crosshairs.calculateLinePositions();
             
             // Show the projected parabola
-            parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), Constants.SHOOTER_HEIGHT);
+            parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), shooterHeight);
             
             // Show the lines its using
             intersectLineA.setAngle(crosshairs.getAngleA());
@@ -272,7 +283,7 @@ public class Robot extends TimedRobot {
         
         // Update info
         DecimalFormat df = new DecimalFormat("##.##");
-        textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(velocity), df.format(ANGLE_CONSTANT)));
+        textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(debugVelocity), df.format(debugAngle)));
     }
     
     /**
