@@ -17,7 +17,10 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
+import frc.robot.Robot;
 import frc.robot.io.Motors;
+import frc.robot.io.Sensors;
+import frc.robot.io.motortype.MotorPair;
 
 public class DriveSubsystem extends SubsystemBase {
     private static final double MAX_SPEED = 2;
@@ -36,6 +39,10 @@ public class DriveSubsystem extends SubsystemBase {
     private Gyro gyro;
 
     private DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.76);
+
+    public DriveSubsystem(Pose2d initialPosMeters) {
+        this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
+    }
 
     public DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
         super();

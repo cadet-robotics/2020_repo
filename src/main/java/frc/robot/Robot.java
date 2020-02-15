@@ -7,30 +7,21 @@
 
 package frc.robot;
 
-import com.revrobotics.ColorSensorV3;
-
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoCamera;
-import edu.wpi.cscore.VideoMode;
-import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.ColorShim;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.colordebug.ColorReporter;
-import frc.robot.io.Controls;
+import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
@@ -38,15 +29,10 @@ import frc.robot.vision.VisionThread;
 import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc6868.config.api.Config;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -73,7 +59,11 @@ public class Robot extends TimedRobot {
     CrosshairsOverlay crosshairs;
     LineOverlay intersectLineA, // These two are debug
                 intersectLineB;
-    
+
+    public ControlSubsystem controlSubsystem;
+    public DriveSubsystem driveSubsystem;
+    public ShooterSubsystem shooterSubsystem;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -90,7 +80,6 @@ public class Robot extends TimedRobot {
         }
         
         // Initialize the configurations
-        Controls.loadConfiguration(mainConfig);
         Motors.loadConfiguration(mainConfig);
         
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -98,9 +87,11 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         
         // Initialize subsystems
-        arm = new ArmSubsystem();
+        armSubsystem = new ArmSubsystem();
+        driveSubsystem = new DriveSubsystem(new Pose2d(new Translation2d(), new Rotation2d()));
+        shooterSubsystem = new ShooterSubsystem();
 
-        Controls.setupCommands(arm);
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
         
         // Initialize the camera itself
         cam = CameraServer.getInstance().startAutomaticCapture();
@@ -133,6 +124,7 @@ public class Robot extends TimedRobot {
         }
         
         new Thread(vt).start();
+
     }
     
     /**
@@ -164,7 +156,7 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
-    private ArmSubsystem arm;
+    private ArmSubsystem armSubsystem;
 
     @Override
     public void robotPeriodic() {
@@ -252,7 +244,7 @@ public class Robot extends TimedRobot {
         // We don't have anything giving us data so this is it actually
         if(Constants.CROSSHAIRS_DEBUG) {
             // Run the crosshairs manually
-            Joystick js = Controls.getController();
+            Joystick js = controlSubsystem.getController();
             double leftJoystickY = -js.getRawAxis(1),
                    rightJoystickY = -js.getRawAxis(5);
             
@@ -291,12 +283,12 @@ public class Robot extends TimedRobot {
     	double left = 0, right = 0;
     	
     	// Add forwards/backwards movement based on the y-axis
-    	left += Controls.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
-    	right += Controls.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
+    	left += controlSubsystem.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
+    	right += controlSubsystem.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
     	
     	// Add left/right turning based on the x-axis, opposite per side
-    	left -= Controls.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
-    	right += Controls.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
+    	left -= controlSubsystem.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
+    	right += controlSubsystem.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
     	
     	// Apply total speed modifier
     	left *= Constants.DRIVE_SPEED_MODIFIER;

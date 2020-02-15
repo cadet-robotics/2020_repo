@@ -19,6 +19,11 @@
 			"name": "spin button",
 			"value": "1",
 			"description": "Button ID for the spinner control (A)"
+		},
+		{
+			"name": "shoot button",
+			"value": "2",
+			"description": "Button ID for the shooter control"
 		}
 	],
 	
