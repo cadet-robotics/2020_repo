@@ -7,6 +7,11 @@ import org.opencv.imgproc.Imgproc;
 
 import frc.robot.Util;
 
+/**
+ * Draws a line on the image based on angle and origin
+ * 
+ * @author Alex Pickering
+ */
 public class LineOverlay implements VisionProcessor {
     private double minX, maxX, minY, maxY, x, y, angle;
     

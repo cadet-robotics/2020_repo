@@ -9,7 +9,7 @@ import org.opencv.imgproc.Imgproc;
 import frc.robot.vision.VisionProcessor;
 
 /**
- * Contains the code that works with the crosshairs
+ * Calculates and draws the crosshairs for the shooter
  * 
  * @author Alex Pickering
  */

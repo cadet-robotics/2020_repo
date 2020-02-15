@@ -110,6 +110,15 @@ public class Robot extends TimedRobot {
         cam.setFPS(15);
         
         // Crosshairs vision setup
+        setupCrosshairsVision(mainConfig);
+    }
+    
+    /**
+     * Sets up the stuff for the crosshairs vision system
+     * 
+     * @param mainConfig
+     */
+    private void setupCrosshairsVision(Config mainConfig) {
         textOverlay = new TextOverlay("parabola data", 5, Constants.IMAGE_HEIGHT - 10, new Scalar(0, 255, 0));
         camHeight = mainConfig.getDoubleValue("crosshairs", "camera height");
         shooterHeight = mainConfig.getDoubleValue("crosshairs", "shooter height");
@@ -143,6 +152,8 @@ public class Robot extends TimedRobot {
     
     /**
      * Sets up vision overlays for crosshair debug
+     * 
+     * @param vt
      */
     private void setupDebugVision(VisionThread vt) {
         // Draw the parabola
@@ -231,16 +242,6 @@ public class Robot extends TimedRobot {
         }
     }
     
-    boolean leftXUsed = false,
-            leftYUsed = false,
-            rightXUsed = false,
-            rightYUsed = false;
-    
-    double velocity = 0, angle = Math.toRadians(45);
-    
-    final double GRAVITY_CONSTANT = -9.81, // m/s^2
-                 ANGLE_CONSTANT = Math.toRadians(45);
-    
     /**
      * This function is called periodically during operator control.
      */
@@ -254,8 +255,12 @@ public class Robot extends TimedRobot {
     	runCrosshairs();
     }
     
+    double debugVelocity = 0,
+           debugAngle = 0;
+    
     private void runCrosshairs() {
         // We don't have anything giving us data so this is it actually
+        // Once we have information from Owen's system there will be proper stuff here
         if(Constants.CROSSHAIRS_DEBUG) {
             // Run the crosshairs manually
             Joystick js = Controls.getController();
@@ -263,16 +268,16 @@ public class Robot extends TimedRobot {
                    rightJoystickY = -js.getRawAxis(5);
             
             if(Math.abs(leftJoystickY) > 0.1) {
-                velocity += leftJoystickY / 20;
+                debugVelocity += leftJoystickY / 20;
             }
             
             if(Math.abs(rightJoystickY) > 0.1) {
-                angle += rightJoystickY / 100;
+                debugAngle += rightJoystickY / 100;
             }
             
             // Apply the velocity to the crosshairs
-            crosshairs.setAngle(angle);
-            crosshairs.setVelocity(velocity);
+            crosshairs.setAngle(debugAngle);
+            crosshairs.setVelocity(debugVelocity);
             crosshairs.calculateLinePositions();
             
             // Show the projected parabola
@@ -286,7 +291,7 @@ public class Robot extends TimedRobot {
         
         // Update info
         DecimalFormat df = new DecimalFormat("##.##");
-        textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(velocity), df.format(ANGLE_CONSTANT)));
+        textOverlay.setText(String.format("a=%-4s b=%-4s v=%-4s t=%-4s", df.format(crosshairs.getQuadraticA()), df.format(crosshairs.getQuadraticB()), df.format(debugVelocity), df.format(debugAngle)));
     }
     
     /**

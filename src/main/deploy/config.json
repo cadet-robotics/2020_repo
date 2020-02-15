@@ -60,6 +60,16 @@
 			"name": "right drive b",
 			"value": "5",
 			"description": "Right drive motor (B)"
+		},
+		{
+			"name": "top flywheel motor",
+			"value": "6",
+			"description": "Upper shooter flywheel motor"
+		},
+		{
+			"name": "bottom flywheel motor",
+			"value": "7",
+			"description": "Lower shooter flywheel motor"
 		}
 	],
 	
