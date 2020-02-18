@@ -30,9 +30,9 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds) {
         super(
-                new SetShooterSpeedCommand(shooterSubsystemIn, 0),
+                new SetShooterSpeedCommand(shooterSubsystemIn, rpm),
                 new WaitCommand(seconds),
-                new SetShooterSpeedCommand(shooterSubsystemIn, 0)
+                new SetShooterSpeedCommand(shooterSubsystemIn, rpm)
         );
     }
 }

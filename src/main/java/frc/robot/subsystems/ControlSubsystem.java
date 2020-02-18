@@ -75,13 +75,17 @@ public class ControlSubsystem extends SubsystemBase {
             new SetShooterSpeedCommand(shooterSubsystem, 1000, 2).schedule();
         });
     }
-
+    
+    /*
+     * RUN PERIODIC CONTROLS HERE
+     */
     @Override
     public void periodic() {
         //Drive Movement
         if (DriverStation.getInstance().isOperatorControl()) {
             driveSubsystem.getDriveBase().arcadeDrive(getYAxis(), getXAxis(), true);
         }
-
+        
+        
     }
 }

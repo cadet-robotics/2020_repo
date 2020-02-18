@@ -37,7 +37,26 @@
 	],
 	
 	"pwm motors": [
-	
+		{
+			"name": "intake",
+			"value": "3",
+			"description": "Runs the intake"
+		},
+		{
+			"name": "magazine",
+			"value": "2",
+			"description": "Runs the magazine"
+		},
+		{
+			"name": "winch a",
+			"value": "0",
+			"description": "Drives the winch (a)"
+		},
+		{
+			"name": "winch b",
+			"value": "1",
+			"description": "Drives the winch (b)"
+		}
 	],
 	
 	"can motors": [
