@@ -26,8 +26,8 @@ public class Motors {
     public static CANSparkMax topFly,
                               bottomFly;
     
-    public static VictorSP intake,
-                           magazine;
+    public static PWMVictorSPX intake,
+                               magazine;
     
     /**
      * Loads the configuration, initializing motor objects
@@ -47,7 +47,7 @@ public class Motors {
         // init motor pairs
         leftDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
         rightDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
-        winch = new SpeedControllerGroup(new VictorSP(pwmMotors.getIntValue("winch a")), new VictorSP(pwmMotors.getIntValue("winch b")));
+        winch = new SpeedControllerGroup(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
         
         leftDrive.setInverted(false);
         rightDrive.setInverted(true);
@@ -57,7 +57,7 @@ public class Motors {
         bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
         
         // init others
-        intake = new VictorSP(pwmMotors.getIntValue("intake"));
-        magazine = new VictorSP(pwmMotors.getIntValue("magazine"));
+        intake = new PWMVictorSPX(pwmMotors.getIntValue("intake"));
+        magazine = new PWMVictorSPX(pwmMotors.getIntValue("magazine"));
     }
 }
