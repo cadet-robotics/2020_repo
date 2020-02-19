@@ -30,9 +30,19 @@
 	
 	"sensors": [
 		{
-			"name": "magazine proximity",
-			"value": "--",
-			"description": "Proximity sensor for the magazine"
+			"name": "top ball sensor",
+			"value": "0",
+			"description": "Top proximity sensor for the magazine"
+		},
+		{
+			"name": "middle ball sensor",
+			"value": "1",
+			"description": "Middle proximity sensor for the magazine"
+		},
+		{
+			"name": "bottom ball sensor",
+			"value": "2",
+			"description": "Bottom proximity sensor for the magazine"
 		}
 	],
 	
@@ -133,7 +143,20 @@
 			"value": "0,0,255",
 			"description": "hellfire red"
 		}
-	]
+	],
+	
+	"other": [
+		{
+			"name": "piston solenoid",
+			"value": "0",
+			"description": "PCM Port with the locking piston"
+		},
+		{
+			"name": "unused solenoid",
+			"value": "1",
+			"description": "PCM Port with the unused part"
+		}
+	],
 	
 	"unknown": [
 		{

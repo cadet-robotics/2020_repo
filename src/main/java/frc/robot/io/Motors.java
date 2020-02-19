@@ -47,7 +47,7 @@ public class Motors {
         // init motor pairs
         leftDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
         rightDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
-        winch = new SpeedControllerGroup(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
+        winch = new SpeedControllerGroup(new VictorSP(pwmMotors.getIntValue("winch a")), new VictorSP(pwmMotors.getIntValue("winch b")));
         
         leftDrive.setInverted(false);
         rightDrive.setInverted(true);
