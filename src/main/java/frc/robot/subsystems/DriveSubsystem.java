@@ -77,8 +77,8 @@ public class DriveSubsystem extends SubsystemBase {
                 leftController,
                 rightController,
                 (vLeft, vRight) -> {
-                    Motors.leftDrive.set(vLeft);
-                    Motors.rightDrive.set(vRight);
+                    Motors.leftDrive.setVoltage(vLeft);
+                    Motors.rightDrive.setVoltage(vRight);
                 },
                 this
         );
