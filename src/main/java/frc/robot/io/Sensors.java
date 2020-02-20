@@ -25,5 +25,11 @@ public class Sensors {
         topBallSensor = new DigitalInput(dioSensors.getIntValue("top ball sensor"));
         middleBallSensor = new DigitalInput(dioSensors.getIntValue("middle ball sensor"));
         bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
+
+        // Encoders
+        topFlyEncoder = new Encoder(dioSensors.getIntValue("top shooter encoder 1"), dioSensors.getIntValue("top shooter encoder 2"));
+        bottomFlyEncoder = new Encoder(dioSensors.getIntValue("bottom shooter encoder 1"), dioSensors.getIntValue("bottom shooter encoder 2"));
+        driveEncoderLeft = new Encoder(dioSensors.getIntValue("left drive encoder 1"), dioSensors.getIntValue("left drive encoder 2"));
+        driveEncoderRight = new Encoder(dioSensors.getIntValue("right drive encoder 1"), dioSensors.getIntValue("right drive encoder 2"));
     }
 }

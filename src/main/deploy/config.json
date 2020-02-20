@@ -43,6 +43,46 @@
 			"name": "bottom ball sensor",
 			"value": "2",
 			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "top shooter encoder 1",
+			"value": "3",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "top shooter encoder 2",
+			"value": "4",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "bottom shooter encoder 1",
+			"value": "5",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "bottom shooter encoder 2",
+			"value": "6",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "left drive encoder 1",
+			"value": "7",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "left drive encoder 2",
+			"value": "8",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "right drive encoder 1",
+			"value": "9",
+			"description": "Bottom proximity sensor for the magazine"
+		},
+		{
+			"name": "right drive encoder 2",
+			"value": "10",
+			"description": "Bottom proximity sensor for the magazine"
 		}
 	],
 	
