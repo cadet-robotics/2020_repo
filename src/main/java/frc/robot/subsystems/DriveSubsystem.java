@@ -40,17 +40,13 @@ public class DriveSubsystem extends SubsystemBase {
         this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
     }
 
-    public DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
+    private DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
         super();
         driveBase = new DifferentialDrive(left, right);
 
+        // Assumes encoders measure rate as m/s for each side
         leftEncoder = eLeft;
         rightEncoder = eRight;
-
-        // TODO: Check gear ratio between encoder and wheels
-        final double DIST = 6 * .0254 * Math.PI / 1024;
-        leftEncoder.setDistancePerPulse(DIST);
-        rightEncoder.setDistancePerPulse(DIST);
 
         leftController = new PIDController(1, 0, 0);
         rightController = new PIDController(1, 0, 0);

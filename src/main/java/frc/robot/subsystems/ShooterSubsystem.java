@@ -26,6 +26,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!DriverStation.getInstance().isDisabled()) {
+            // Assumes encoders measure rate as rpm
             Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getRate()));
             Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getRate()));
         } else {
