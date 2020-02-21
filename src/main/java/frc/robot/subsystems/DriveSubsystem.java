@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -26,8 +28,8 @@ public class DriveSubsystem extends SubsystemBase {
     private DifferentialDrive driveBase;
     private DifferentialDriveOdometry odometry;
 
-    private Encoder leftEncoder;
-    private Encoder rightEncoder;
+    private CANEncoder leftEncoder;
+    private CANEncoder rightEncoder;
 
     private PIDController leftController;
     private PIDController rightController;
@@ -40,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
         this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
     }
 
-    private DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
+    private DriveSubsystem(SpeedController left, SpeedController right, CANEncoder eLeft, CANEncoder eRight, Gyro gyro, Pose2d initialPosMeters) {
         super();
         driveBase = new DifferentialDrive(left, right);
 
@@ -51,8 +53,8 @@ public class DriveSubsystem extends SubsystemBase {
         leftController = new PIDController(1, 0, 0);
         rightController = new PIDController(1, 0, 0);
 
-        leftEncoder.reset();
-        rightEncoder.reset();
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
     }
@@ -63,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
+        odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 
     public RamseteCommand ramseteCommandBuilder(Trajectory t) {
@@ -73,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
                 new RamseteController(),
                 feedforward,
                 kin,
-                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate()),
+                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity()),
                 leftController,
                 rightController,
                 (vLeft, vRight) -> {

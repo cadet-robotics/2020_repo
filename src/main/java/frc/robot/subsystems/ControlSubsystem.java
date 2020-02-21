@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
+import frc.robot.io.Motors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.wheel.ColorEnum;
 import frc6868.config.api.Config;
@@ -26,7 +27,9 @@ public class ControlSubsystem extends SubsystemBase {
     
     // Axes
     private int xAxis,
-                       yAxis;
+                yAxis,
+                intakeButton,
+                magButton;
 
     //Private Subsystem instances
     private DriveSubsystem driveSubsystem;
@@ -64,6 +67,9 @@ public class ControlSubsystem extends SubsystemBase {
         // Buttons
         spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
         shootButton = new JoystickButton(controller, controls.getIntValue("shoot button"));
+        
+        intakeButton = controls.getIntValue("intake");
+        magButton = controls.getIntValue("magazine");
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -82,10 +88,21 @@ public class ControlSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //Drive Movement
-        if (DriverStation.getInstance().isOperatorControl()) {
+        /*if (DriverStation.getInstance().isOperatorControl()) {
+            System.out.println("running drive");
             driveSubsystem.getDriveBase().arcadeDrive(getYAxis(), getXAxis(), true);
+        }*/
+        
+        // TEMPORARY MAG CONTROLS
+        Motors.intake.set(0);
+        Motors.magazine.set(0);
+        
+        if(controller.getRawButton(intakeButton)) {
+            Motors.intake.set(0.5);
         }
         
-        
+        if(controller.getRawButton(magButton)) {
+            Motors.magazine.set(0.5);
+        }
     }
 }
