@@ -54,7 +54,7 @@ public class Motors {
 
         // init flywheels
         topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);
         
         // init others
         intake = new PWMVictorSPX(pwmMotors.getIntValue("intake"));

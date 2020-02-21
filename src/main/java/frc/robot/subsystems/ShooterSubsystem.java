@@ -7,12 +7,13 @@ import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private PIDController topPid = new PIDController(0.2, 0, 0);
-    private PIDController botPid = new PIDController(0.2, 0, 0);
+    private PIDController topPid = new PIDController(6e-5, 1e-6, 0);
+    private PIDController botPid = new PIDController(6e-5, 1e-6, 0);
     {
         topPid.setSetpoint(0);
         botPid.setSetpoint(0);
     }
+    private static final double FF = 1.5e-5;
 
     public ShooterSubsystem() {
         super();
@@ -26,8 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!DriverStation.getInstance().isDisabled()) {
-            Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getVelocity()));
-            Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity()));
+            Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getVelocity()) + FF);
+            Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity()) + FF);
         } else {
             Motors.topFly.set(0);
             Motors.bottomFly.set(0);

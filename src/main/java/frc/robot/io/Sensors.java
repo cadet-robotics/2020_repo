@@ -31,10 +31,10 @@ public class Sensors {
         bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
 
         // Encoders
-        topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kQuadrature, 8192);
-        bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kQuadrature, 8192);
-        driveEncoderLeft = new Encoder(dioSensors.getIntValue("left drive encoder 1"), dioSensors.getIntValue("left drive encoder 2"));
-        driveEncoderRight = new Encoder(dioSensors.getIntValue("right drive encoder 1"), dioSensors.getIntValue("right drive encoder 2"));
+        topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kQuadrature, 1024);
+        bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 42);
+        //driveEncoderLeft = new Encoder(dioSensors.getIntValue("left drive encoder 1"), dioSensors.getIntValue("left drive encoder 2"));
+        //driveEncoderRight = new Encoder(dioSensors.getIntValue("right drive encoder 1"), dioSensors.getIntValue("right drive encoder 2"));
 
         // Sets up drive encoders to report rate as m/s for each side of the robot
         // TODO: Check gear ratio between encoder and wheels
