@@ -42,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
         this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
     }
 
-    private DriveSubsystem(SpeedController left, SpeedController right, CANEncoder eLeft, CANEncoder eRight, Gyro gyro, Pose2d initialPosMeters) {
+    private DriveSubsystem(SpeedController left, SpeedController right, CANEncoder eLeft, CANEncoder eRight, Gyro gyroIn, Pose2d initialPosMeters) {
         super();
         driveBase = new DifferentialDrive(left, right);
 
@@ -55,6 +55,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+
+        gyro = gyroIn;
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
     }

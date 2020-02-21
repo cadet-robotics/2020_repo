@@ -16,6 +16,7 @@ public class OtherIO {
         Config other = c.separateCategory("other");
         
         // Double solenoid
-        lockingPiston = new DoubleSolenoid(other.getIntValue("piston solenoid"), other.getIntValue("unused solenoid"));
+        // TODO: WIRES
+        //lockingPiston = new DoubleSolenoid(other.getIntValue("piston solenoid"), other.getIntValue("unused solenoid"));
     }
 }

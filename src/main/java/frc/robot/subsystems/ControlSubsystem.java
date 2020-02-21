@@ -28,6 +28,7 @@ public class ControlSubsystem extends SubsystemBase {
     // Axes
     private int xAxis,
                 yAxis,
+                zAxis,
                 intakeButton,
                 magButton;
 
@@ -39,6 +40,7 @@ public class ControlSubsystem extends SubsystemBase {
     // Axis getters
     public double getXAxis() { return controller.getRawAxis(xAxis); }
     public double getYAxis() { return controller.getRawAxis(yAxis); }
+    public double getZAxis() { return controller.getRawAxis(zAxis); }
     
     // Raw getters
     public Joystick getController() { return controller; }
@@ -63,6 +65,7 @@ public class ControlSubsystem extends SubsystemBase {
         // Axes
         xAxis = controls.getIntValue("x axis");
         yAxis = controls.getIntValue("y axis");
+        zAxis = controls.getIntValue("z axis");
         
         // Buttons
         spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
@@ -78,6 +81,7 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Shoot
         shootButton.whenPressed(() -> {
+            System.out.println("WORKING");
             new SetShooterSpeedCommand(shooterSubsystem, 1000, 2).schedule();
         });
     }
@@ -88,10 +92,10 @@ public class ControlSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //Drive Movement
-        /*if (DriverStation.getInstance().isOperatorControl()) {
-            System.out.println("running drive");
-            driveSubsystem.getDriveBase().arcadeDrive(getYAxis(), getXAxis(), true);
-        }*/
+        if (DriverStation.getInstance().isOperatorControl()) {
+            //System.out.println("running drive");
+            driveSubsystem.getDriveBase().arcadeDrive(getZAxis(), getYAxis(), true);
+        }
         
         // TEMPORARY MAG CONTROLS
         Motors.intake.set(0);

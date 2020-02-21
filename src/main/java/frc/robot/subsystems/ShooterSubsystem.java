@@ -20,6 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setSpeed(double rpm) {
+        System.out.println("SETTING SPEED TO: " + rpm + "RPM");
         topPid.setSetpoint(rpm);
         botPid.setSetpoint(rpm);
     }
@@ -27,11 +28,15 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!DriverStation.getInstance().isDisabled()) {
-            Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getVelocity()) + FF);
-            Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity()) + FF);
+            Motors.topFly.set(motorFilter(topPid.calculate(Sensors.topFlyEncoder.getVelocity() + FF * topPid.getSetpoint())));
+            Motors.bottomFly.set(motorFilter(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity() + FF * botPid.getSetpoint())));
         } else {
             Motors.topFly.set(0);
             Motors.bottomFly.set(0);
         }
+    }
+
+    private static double motorFilter(double d) {
+        return Math.max(Math.min(d, 0.5), -0.5);
     }
 }

@@ -1,8 +1,11 @@
 package frc.robot.io;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.EncoderType;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc6868.config.api.Config;
 
@@ -31,8 +34,8 @@ public class Sensors {
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kQuadrature, 1024);
         bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 42);
-        //driveEncoderLeft = new Encoder(dioSensors.getIntValue("left drive encoder 1"), dioSensors.getIntValue("left drive encoder 2"));
-        //driveEncoderRight = new Encoder(dioSensors.getIntValue("right drive encoder 1"), dioSensors.getIntValue("right drive encoder 2"));
+        driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 1024);
+        driveEncoderRight = new CANEncoder(Motors.rightDriveB, EncoderType.kQuadrature, 1024);
 
         /*
         // Sets up drive encoders to report rate as m/s for each side of the robot
@@ -41,5 +44,7 @@ public class Sensors {
         driveEncoderLeft.setDistancePerPulse(DIST_DRIVE);
         driveEncoderRight.setDistancePerPulse(DIST_DRIVE);
          */
+
+        gyro = new AHRS(SerialPort.Port.kMXP);
     }
 }

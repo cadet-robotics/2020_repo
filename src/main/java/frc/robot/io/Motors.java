@@ -17,7 +17,11 @@ public class Motors {
     // TODO: Configure encoders, setDistancePerPulse
     
     // Spark MAXes
-    public static CANSparkMax wheelSpinner;
+    public static CANSparkMax wheelSpinner,
+                              leftDriveA,
+                              leftDriveB,
+                              rightDriveA,
+                              rightDriveB;
     
     public static MotorPair leftDrive,
                             rightDrive,
@@ -45,8 +49,14 @@ public class Motors {
         //wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
         
         // init motor pairs
-        leftDrive = new MotorPair(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
-        rightDrive = new MotorPair(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
+        leftDriveA = new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        leftDriveB = new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        leftDrive = new MotorPair(leftDriveA, leftDriveB);
+
+        rightDriveA = new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        rightDriveB = new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        rightDrive = new MotorPair(rightDriveA, rightDriveB);
+
         winch = new MotorPair(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
         
         leftDrive.setInverted(false);

@@ -95,12 +95,12 @@ public class Robot extends TimedRobot {
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
         
         // Initialize the camera itself
-        cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setResolution(320, 240);
-        cam.setFPS(15);
+        //cam = CameraServer.getInstance().startAutomaticCapture();
+        //cam.setResolution(320, 240);
+        //cam.setFPS(15);
         
         // Crosshairs vision setup
-        setupCrosshairsVision(mainConfig);
+        //setupCrosshairsVision(mainConfig);
     }
     
     /**
@@ -181,6 +181,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        System.out.println("TOP FLY: " + Motors.topFly.getAppliedOutput());
     }
 
     /**
@@ -199,7 +200,7 @@ public class Robot extends TimedRobot {
      */
 
     /**
-     * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+     * This autonomous runs the autonomous command
      */
     @Override
     public void autonomousInit() {
@@ -236,10 +237,10 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         
         // Drive them wheels
-    	runManualDrive();
+    	//runManualDrive();
     	
     	// Update the values of the crosshairs system
-    	runCrosshairs();
+    	//runCrosshairs();
     }
     
     double debugVelocity = 0,
