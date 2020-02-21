@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.io.Motors;
+import frc.robot.io.OtherIO;
+import frc.robot.io.Sensors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -83,6 +85,8 @@ public class Robot extends TimedRobot {
         
         // Initialize the configurations
         Motors.loadConfiguration(mainConfig);
+        Sensors.loadConfig(mainConfig);
+        OtherIO.loadConfig(mainConfig);
         
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
@@ -251,8 +255,14 @@ public class Robot extends TimedRobot {
            debugAngle = 0;
     
     private void runCrosshairs() {
+        // Get known information
+        // Apply the velocity to the crosshairs
+        crosshairs.setAngle(Constants.SHOOTER_ANGLE);
+        crosshairs.setVelocity(debugVelocity);
+        crosshairs.calculateLinePositions();
+        
         // We don't have anything giving us data so this is it actually
-        // Once we have information from Owen's system there will be proper stuff here
+        // Once we have information from Owen's system there will be proper stuff here            
         if(Constants.CROSSHAIRS_DEBUG) {
             // Run the crosshairs manually
             Joystick js = controlSubsystem.getController();

@@ -26,8 +26,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!DriverStation.getInstance().isDisabled()) {
-            Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getRate()));
-            Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getRate()));
+            Motors.topFly.set(topPid.calculate(Sensors.topFlyEncoder.getVelocity()));
+            Motors.bottomFly.set(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity()));
         } else {
             Motors.topFly.set(0);
             Motors.bottomFly.set(0);

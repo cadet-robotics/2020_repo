@@ -22,7 +22,7 @@ public final class Constants {
      */
 	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
 							   DRIVE_X_AXIS_MODIFIER = 1,
-							   DRIVE_SPEED_MODIFIER = 0.25,
+							   DRIVE_SPEED_MODIFIER = 1,
 							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	
 	/*
@@ -33,6 +33,7 @@ public final class Constants {
 	public static final int IMAGE_HEIGHT = 240;    // 240p
 	
 	public static final double GRAVITY_ACCEL = -9.807,     // From Wikipedia, the free encyclopedia, at e n dot wikipedia dot org
-	                           TARGET_HEIGHT = 2.49555;    // From 8 ft 2.25 in (98.25 in)
+	                           TARGET_HEIGHT = 2.49555,    // From 8 ft 2.25 in (98.25 in)
+	                           SHOOTER_ANGLE = Math.toRadians(30);
 	                        
 }

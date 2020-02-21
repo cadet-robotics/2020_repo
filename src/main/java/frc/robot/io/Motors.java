@@ -19,9 +19,9 @@ public class Motors {
     // Spark MAXes
     public static CANSparkMax wheelSpinner;
     
-    public static SpeedControllerGroup leftDrive,
-                                       rightDrive,
-                                       winch;
+    public static MotorPair leftDrive,
+                            rightDrive,
+                            winch;
 
     public static CANSparkMax topFly,
                               bottomFly;
@@ -42,19 +42,19 @@ public class Motors {
         // System.out.println(mainConfig);
         
         // init SparkMAXes
-        wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        //wheelSpinner = new CANSparkMax(canMotors.getIntValue("wheel spinner"), CANSparkMaxLowLevel.MotorType.kBrushed);
         
         // init motor pairs
-        leftDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
-        rightDrive = new SpeedControllerGroup(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
-        winch = new SpeedControllerGroup(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
+        leftDrive = new MotorPair(new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
+        rightDrive = new MotorPair(new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed), new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed));
+        winch = new MotorPair(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
         
         leftDrive.setInverted(false);
         rightDrive.setInverted(true);
 
         // init flywheels
         topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);
         
         // init others
         intake = new PWMVictorSPX(pwmMotors.getIntValue("intake"));

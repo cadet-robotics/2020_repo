@@ -1,15 +1,17 @@
 package frc.robot.io;
 
+import com.revrobotics.CANEncoder;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc6868.config.api.Config;
 
 public class Sensors {
-    public static Encoder topFlyEncoder,
-                          bottomFlyEncoder,
-                          driveEncoderLeft,
-                          driveEncoderRight;
+    public static CANEncoder topFlyEncoder,
+                             bottomFlyEncoder,
+                             driveEncoderLeft,
+                             driveEncoderRight;
     public static Gyro gyro;
     
     // Proximity sensors for the magazine
@@ -25,5 +27,9 @@ public class Sensors {
         topBallSensor = new DigitalInput(dioSensors.getIntValue("top ball sensor"));
         middleBallSensor = new DigitalInput(dioSensors.getIntValue("middle ball sensor"));
         bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
+        
+        // Encoders
+        topFlyEncoder = Motors.topFly.getEncoder();
+        bottomFlyEncoder = Motors.bottomFly.getEncoder();
     }
 }

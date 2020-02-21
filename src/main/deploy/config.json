@@ -24,6 +24,16 @@
 			"name": "shoot button",
 			"value": "2",
 			"description": "Button ID for the shooter control"
+		},
+		{
+			"name": "intake",
+			"value": "3",
+			"description": "TEMPORARY runs the intake in"
+		},
+		{
+			"name": "magazine",
+			"value": "4",
+			"description": "TEMPORARY runs the magazine up"
 		}
 	],
 	

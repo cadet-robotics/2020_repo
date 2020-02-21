@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -26,8 +28,8 @@ public class DriveSubsystem extends SubsystemBase {
     private DifferentialDrive driveBase;
     private DifferentialDriveOdometry odometry;
 
-    private Encoder leftEncoder;
-    private Encoder rightEncoder;
+    private CANEncoder leftEncoder;
+    private CANEncoder rightEncoder;
 
     private PIDController leftController;
     private PIDController rightController;
@@ -40,10 +42,11 @@ public class DriveSubsystem extends SubsystemBase {
         this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
     }
 
-    public DriveSubsystem(SpeedController left, SpeedController right, Encoder eLeft, Encoder eRight, Gyro gyro, Pose2d initialPosMeters) {
+    public DriveSubsystem(SpeedController left, SpeedController right, CANEncoder eLeft, CANEncoder eRight, Gyro gyro, Pose2d initialPosMeters) {
         super();
-        driveBase = new DifferentialDrive(left, right);
-
+        driveBase = new DifferentialDrive(left, right);        
+        
+        /* we don't have encoders rn because why the fuck not
         leftEncoder = eLeft;
         rightEncoder = eRight;
 
@@ -57,8 +60,9 @@ public class DriveSubsystem extends SubsystemBase {
 
         leftEncoder.reset();
         rightEncoder.reset();
+        */
 
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
+        //odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
     }
 
     public DifferentialDrive getDriveBase() {
@@ -67,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
+        //odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
     }
 
     public RamseteCommand ramseteCommandBuilder(Trajectory t) {
@@ -77,7 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
                 new RamseteController(),
                 feedforward,
                 kin,
-                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate()),
+                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity()),
                 leftController,
                 rightController,
                 (vLeft, vRight) -> {
