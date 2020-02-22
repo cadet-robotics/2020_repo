@@ -28,9 +28,7 @@ public class ControlSubsystem extends SubsystemBase {
     // Axes
     private int xAxis,
                 yAxis,
-                zAxis,
-                intakeButton,
-                magButton;
+                zAxis;
     
 
     //Private Subsystem instances
@@ -73,9 +71,6 @@ public class ControlSubsystem extends SubsystemBase {
         // Buttons
         spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
         shootButton = new JoystickButton(controller, controls.getIntValue("shoot button"));
-        
-        intakeButton = controls.getIntValue("intake");
-        magButton = controls.getIntValue("magazine");
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -104,12 +99,16 @@ public class ControlSubsystem extends SubsystemBase {
         Motors.intake.set(0);
         Motors.magazine.set(0);
         
-        if(controller.getRawButton(intakeButton)) {
+        if(controller.getRawButton(3)) {
             Motors.intake.set(0.5);
+        } else if(controller.getRawButton(5)) {
+            Motors.intake.set(-0.5);
         }
         
-        if(controller.getRawButton(magButton)) {
+        if(controller.getRawButton(4)) {
             Motors.magazine.set(0.5);
+        } else if(controller.getRawButton(6)) {
+            Motors.magazine.set(-0.5);
         }
     }
 }  
