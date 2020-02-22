@@ -28,7 +28,7 @@ public class ControlSubsystem extends SubsystemBase {
                      codriverController;
     private JoystickButton spinButton,
                            shootButton;
-    
+
     // Axes
     private int xAxis,
                 yAxis,
@@ -44,6 +44,7 @@ public class ControlSubsystem extends SubsystemBase {
     private ArmSubsystem armSubsystem;
     private ShooterSubsystem shooterSubsystem;
     private WinchSubsystem winchSubsystem;
+    private PickupSubsystem pickupSubsystem;
 
     // Axis getters
     public double getXAxis() { return driverController.getRawAxis(xAxis); }
@@ -61,7 +62,7 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, WinchSubsystem winchSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn, WinchSubsystem winchSubsystemIn) {
         super();
         Config driverControls = mainConfig.separateCategory("driver controls"),
                codriverControls = mainConfig.separateCategory("codriver controls");
@@ -69,6 +70,7 @@ public class ControlSubsystem extends SubsystemBase {
         armSubsystem = armSubsystemIn;
         shooterSubsystem = shooterSubsystemIn;
         winchSubsystem = winchSubsystemIn;
+        pickupSubsystem = pickupSubsystemIn;
         
         driverController = new Joystick(driverControls.getIntValue("controller port"));
         codriverController = new Joystick(codriverControls.getIntValue("controller port"));
@@ -113,7 +115,7 @@ public class ControlSubsystem extends SubsystemBase {
         } else if(pov == winchDownAngle) {
             winchSubsystem.runDown();
         }
-        
+
         /*
          * TEMPORARY MANUAL CONTROLS
          */
@@ -121,21 +123,36 @@ public class ControlSubsystem extends SubsystemBase {
         System.out.println(r);
         new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
         Robot.crosshairs.setVelocityRPM(r);
-        
+
         Motors.intake.set(0);
         Motors.magazine.set(0);
-        
+
         if(driverController.getRawButton(3)) {
-            Motors.intake.set(0.75);
+            pickupSubsystem.setIntakeSpeed(0.75);
         } else if(driverController.getRawButton(5)) {
-            Motors.intake.set(-0.75);
+            pickupSubsystem.setIntakeSpeed(-0.75);
         }
-        
+
         if(driverController.getRawButton(4)) {
-            Motors.magazine.set(0.75);
+            pickupSubsystem.setMagazineSpeed(0.75);
         } else if(driverController.getRawButton(6)) {
-            Motors.magazine.set(-0.75);
+            pickupSubsystem.setMagazineSpeed(-0.75);
         }
+        // Controls for Mag & Intake
+        // TODO: Make intake and magazine automatic
+        /*
+        pickupSubsystem.setIntakeSpeed(0);
+        Motors.magazine.set(0); //TEMP
+
+        if(driverController.getRawButton(inta)) {
+            pickupSubsystem.setIntakeSpeed(0.2);
+        }
+
+        //TEMP
+        if(driverController.getRawButton(magButton)) {
+            Motors.magazine.set(0.5);
+        }
+        */
     }
 }  
 

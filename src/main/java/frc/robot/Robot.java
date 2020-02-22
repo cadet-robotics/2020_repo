@@ -11,7 +11,6 @@ import edu.wpi.cscore.VideoCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -20,25 +19,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.SkitterCommand;
 import frc.robot.greeneva.Limelight;
-import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.io.Sensors;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.WinchSubsystem;
+import frc.robot.subsystems.*;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
 import frc.robot.vision.VisionThread;
 import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc6868.config.api.Config;
+import org.opencv.core.Scalar;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-
-import org.opencv.core.Scalar;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -73,6 +67,7 @@ public class Robot extends TimedRobot {
     public ArmSubsystem armSubsystem;
     public WinchSubsystem winchSubsystem;
     public Limelight limelight;
+    public PickupSubsystem pickupSubsystem;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -98,9 +93,10 @@ public class Robot extends TimedRobot {
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(new Pose2d(new Translation2d(), new Rotation2d()));
         shooterSubsystem = new ShooterSubsystem();
+        pickupSubsystem = new PickupSubsystem();
         winchSubsystem = new WinchSubsystem();
 
-        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, winchSubsystem);
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem);
 
         limelight = new Limelight(NetworkTableInstance.getDefault());
         limelight.setCamMode(Limelight.CamMode.Vision);
