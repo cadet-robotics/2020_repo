@@ -17,18 +17,17 @@ public class Sensors {
     public static Gyro gyro;
     
     // Proximity sensors for the magazine
-    public static DigitalInput topBallSensor,
-                               middleBallSensor,
-                               bottomBallSensor;
+    public static DigitalInput intakeSensor, //Intake Sensor
+                               magSensor; //Ball at mag entry sensor
 
     public static void loadConfig(Config c) {
+        // TODO: Change config to match with names of sensors
         // *jojo's noises*
         Config dioSensors = c.separateCategory("sensors");
         
         // Magazine prox sensors
-        topBallSensor = new DigitalInput(dioSensors.getIntValue("top ball sensor"));
-        middleBallSensor = new DigitalInput(dioSensors.getIntValue("middle ball sensor"));
-        bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
+        magSensor = new DigitalInput(dioSensors.getIntValue("top ball sensor"));
+        intakeSensor = new DigitalInput(dioSensors.getIntValue("middle ball sensor"));
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);

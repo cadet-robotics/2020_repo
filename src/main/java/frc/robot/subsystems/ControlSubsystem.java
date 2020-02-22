@@ -105,16 +105,17 @@ public class ControlSubsystem extends SubsystemBase {
 
         // Controls for Mag & Intake
         // TODO: Make intake and magazine automatic
-        pickupSubsystem.setIntakeSpeed(0);
-        Motors.magazine.set(0); //TEMP
 
         if(controller.getRawButton(intakeButton)) {
             pickupSubsystem.setIntakeSpeed(0.2);
+        } else {
+            pickupSubsystem.setIntakeSpeed(0);
         }
 
-        //TEMP
         if(controller.getRawButton(magButton)) {
-            Motors.magazine.set(0.5);
+            pickupSubsystem.setMagazineSpeed(0.5);
+        } else {
+            pickupSubsystem.setMagazineSpeed(0);
         }
     }
 }  
