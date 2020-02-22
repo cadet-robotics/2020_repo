@@ -17,6 +17,6 @@ public class OtherIO {
         
         // Double solenoid
         // TODO: WIRES
-        //lockingPiston = new DoubleSolenoid(other.getIntValue("piston solenoid"), other.getIntValue("unused solenoid"));
+        lockingPiston = new DoubleSolenoid(other.getIntValue("piston solenoid"), other.getIntValue("unused solenoid"));
     }
 }

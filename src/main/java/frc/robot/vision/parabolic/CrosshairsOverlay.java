@@ -132,6 +132,8 @@ public class CrosshairsOverlay implements VisionProcessor {
     public double getQuadraticC() { return quadC; }
     public double getAngleA() { return angleA; }
     public double getAngleB() { return angleB; }
+    public Scalar getColorA() { return colorA; }
+    public Scalar getColorB() { return colorB; }
     
     
     /*
@@ -151,7 +153,9 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param rpm
      */
     public void setVelocityRPM(double rpm) {
-        shooterVelocity = wheelDiameter * Math.PI * 60 * rpm;
+        shooterVelocity = (wheelDiameter * Math.PI * rpm) / 60;
+        shooterVelocity *= 0.95; // adjust it a bit
+        System.out.println("v: " + shooterVelocity);
     }
     
     /**
@@ -217,6 +221,8 @@ public class CrosshairsOverlay implements VisionProcessor {
         
         lineAY = (int) (fromTopA / anglePerPixel);    // Finally convert to y coord
         lineBY = (int) (fromTopB / anglePerPixel);
+        
+        //System.out.println(String.format("A:%s B:%s", lineAY, lineBY));
     }
     
     /**

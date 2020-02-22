@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Robot;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
 import frc.robot.io.Motors;
+import frc.robot.io.OtherIO;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.wheel.ColorEnum;
 import frc6868.config.api.Config;
@@ -44,7 +47,7 @@ public class ControlSubsystem extends SubsystemBase {
     // Raw getters
     public Joystick getController() { return controller; }
     
-    private double rpm = 3000 / 2;
+    private double rpm = 6000 / 2;
     
     /**
      * Loads the configuration, initializing all controls
@@ -89,26 +92,47 @@ public class ControlSubsystem extends SubsystemBase {
      */
     public void periodicTeleop() {
         //Drive Movement
-        driveSubsystem.getDriveBase().arcadeDrive(getZAxis(), getYAxis(), true);
+        driveSubsystem.getDriveBase().arcadeDrive(-getZAxis(), getYAxis(), true);
         
         double r = rpm * (-controller.getRawAxis(3) + 1);
         System.out.println(r);
         new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
+        Robot.crosshairs.setVelocityRPM(r);
         
-        // TEMPORARY MAG CONTROLS
+        /*
+         * TEMPORARY MANUAL CONTROLS
+         */
         Motors.intake.set(0);
         Motors.magazine.set(0);
         
         if(controller.getRawButton(3)) {
-            Motors.intake.set(0.5);
+            Motors.intake.set(0.75);
         } else if(controller.getRawButton(5)) {
-            Motors.intake.set(-0.5);
+            Motors.intake.set(-0.75);
         }
         
         if(controller.getRawButton(4)) {
-            Motors.magazine.set(0.5);
+            Motors.magazine.set(0.75);
         } else if(controller.getRawButton(6)) {
-            Motors.magazine.set(-0.5);
+            Motors.magazine.set(-0.75);
+        }
+        
+        // run winch uwu
+        Motors.winch.set(0);
+        if(controller.getRawButton(11)) {
+            Motors.winch.set(0.75);
+        } else if(controller.getRawButton(12)) {
+            Motors.winch.set(-0.75);
+        }
+        
+        if(controller.getRawButton(10)) {
+            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kForward);
+        } else if(controller.getRawButton(9)) {
+            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kOff);
+        } else if(controller.getRawButton(8)) {
+            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kReverse);
         }
     }
 }  
+
+

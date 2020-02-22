@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
            shooterHeight;
     
     // time for c r o s s f i t
-    CrosshairsOverlay crosshairs;
+    public static CrosshairsOverlay crosshairs;
     LineOverlay intersectLineA, // These two are debug
                 intersectLineB;
 
@@ -160,8 +160,8 @@ public class Robot extends TimedRobot {
         parOverlay = new ParabolaOverlay(-1, 10, -1, 10);
         
         // Draw intersecting lines
-        intersectLineA = new LineOverlay(-1, 10, -1, 10, 0, camHeight, 0, new Scalar(0, 0, 0));
-        intersectLineB = new LineOverlay(-1, 10, -1, 10, 0, camHeight, 0, new Scalar(0, 0, 0));
+        intersectLineA = new LineOverlay(-1, 10, -1, 10, Constants.CAMERA_X, camHeight, 0, crosshairs.getColorA());
+        intersectLineB = new LineOverlay(-1, 10, -1, 10, Constants.CAMERA_X, camHeight, 0, crosshairs.getColorB());
         
         // Add processors
         vt.addProcessor(parOverlay);                                                                                                                                            // Parabola
@@ -170,8 +170,8 @@ public class Robot extends TimedRobot {
         vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, Constants.TARGET_HEIGHT, 0));                                                                                        // target height
         vt.addProcessor(intersectLineA);                                                                                                                                        // Intersecting lines
         vt.addProcessor(intersectLineB);
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Math.toRadians(20) + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));    // Camera FOV indicators
-        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Math.toRadians(20) - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Constants.CAMERA_ANGLE + (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));    // Camera FOV indicators
+        vt.addProcessor(new LineOverlay(-1, 10, -1, 10, 0, camHeight, Constants.CAMERA_ANGLE - (Constants.LIFECAM_3000_VERTICAL_FOV / 2), new Scalar(0, 100, 0)));
     }
 
     /**
@@ -251,7 +251,7 @@ public class Robot extends TimedRobot {
     	//runManualDrive();
     	
     	// Update the values of the crosshairs system
-    	//runCrosshairs();
+    	runCrosshairs();
         
         // Run controls subsystem periodic
         controlSubsystem.periodicTeleop();
@@ -270,23 +270,7 @@ public class Robot extends TimedRobot {
         // We don't have anything giving us data so this is it actually
         // Once we have information from Owen's system there will be proper stuff here            
         if(Constants.CROSSHAIRS_DEBUG) {
-            // Run the crosshairs manually
-            Joystick js = controlSubsystem.getController();
-            double leftJoystickY = -js.getRawAxis(1),
-                   rightJoystickY = -js.getRawAxis(5);
-            
-            if(Math.abs(leftJoystickY) > 0.1) {
-                debugVelocity += leftJoystickY / 20;
-            }
-            
-            if(Math.abs(rightJoystickY) > 0.1) {
-                debugAngle += rightJoystickY / 100;
-            }
-            
             // Apply the velocity to the crosshairs
-            crosshairs.setAngle(debugAngle);
-            crosshairs.setVelocity(debugVelocity);
-            crosshairs.calculateLinePositions();
             
             // Show the projected parabola
             parOverlay.setParabola(crosshairs.getQuadraticA(), crosshairs.getQuadraticB(), shooterHeight);

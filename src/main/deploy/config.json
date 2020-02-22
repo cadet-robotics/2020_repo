@@ -133,12 +133,12 @@
 	"other": [
 		{
 			"name": "piston solenoid",
-			"value": "0",
+			"value": "2",
 			"description": "PCM Port with the locking piston"
 		},
 		{
 			"name": "unused solenoid",
-			"value": "1",
+			"value": "3",
 			"description": "PCM Port with the unused part"
 		}
 	],
