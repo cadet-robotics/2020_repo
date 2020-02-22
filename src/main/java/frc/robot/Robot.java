@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.cscore.VideoCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.SkitterCommand;
+import frc.robot.greeneva.Limelight;
 import frc.robot.subsystems.*;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
@@ -63,7 +65,10 @@ public class Robot extends TimedRobot {
     public ControlSubsystem controlSubsystem;
     public DriveSubsystem driveSubsystem;
     public ShooterSubsystem shooterSubsystem;
+    public ArmSubsystem armSubsystem;
     public PickupSubsystem pickupSubsystem;
+
+    public Limelight limelight;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -92,14 +97,16 @@ public class Robot extends TimedRobot {
         pickupSubsystem = new PickupSubsystem();
 
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem);
+
+        limelight = new Limelight(NetworkTableInstance.getDefault());
         
         // Initialize the camera itself
-        //cam = CameraServer.getInstance().startAutomaticCapture();
-        //cam.setResolution(320, 240);
-        //cam.setFPS(15);
+        cam = CameraServer.getInstance().startAutomaticCapture();
+        cam.setResolution(320, 240);
+        cam.setFPS(15);
         
         // Crosshairs vision setup
-        //setupCrosshairsVision(mainConfig);
+        setupCrosshairsVision(mainConfig);
     }
     
     /**
@@ -108,23 +115,26 @@ public class Robot extends TimedRobot {
      * @param mainConfig
      */
     private void setupCrosshairsVision(Config mainConfig) {
+        Config cross = mainConfig.separateCategory("crosshairs");
         textOverlay = new TextOverlay("parabola data", 5, Constants.IMAGE_HEIGHT - 10, new Scalar(0, 255, 0));
-        camHeight = mainConfig.getDoubleValue("crosshairs", "camera height");
-        shooterHeight = mainConfig.getDoubleValue("crosshairs", "shooter height");
+        camHeight = Constants.CAMERA_Y;
+        shooterHeight = Constants.SHOOTER_Y;
         
         // Create the crosshairs object
-        crosshairs = new CrosshairsOverlay(camHeight, //Constants.CAMERA_HEIGHT,
-                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "camera angle")), //Math.toRadians(20),
+        crosshairs = new CrosshairsOverlay(Constants.CAMERA_X,
+                                           camHeight,
+                                           Constants.CAMERA_ANGLE, 
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
-                                           shooterHeight, //Constants.SHOOTER_HEIGHT,
+                                           shooterHeight,
+                                           Constants.SHOOTER_WHEELS_DIAMETER,
                                            Constants.TARGET_HEIGHT,
                                            Constants.GRAVITY_ACCEL,
                                            0,
-                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "shooter angle")),
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color a")), //Constants.CROSSHAIR_A_COLOR,
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color b")), //Constants.CROSSHAIR_B_COLOR,
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
+                                           Constants.SHOOTER_ANGLE,
+                                           Util.csvToScalar(cross.getValue("color a")), //Constants.CROSSHAIR_A_COLOR,
+                                           Util.csvToScalar(cross.getValue("color b")), //Constants.CROSSHAIR_B_COLOR,
+                                           Util.csvToScalar(cross.getValue("center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
         
         // Create the thread to process stuff
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
@@ -171,7 +181,6 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
-    private ArmSubsystem armSubsystem;
 
     @Override
     public void robotPeriodic() {
@@ -180,7 +189,8 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        System.out.println("TOP FLY: " + Motors.topFly.getAppliedOutput());
+        System.out.println("SPEED TOP: " + Sensors.bottomFlyEncoder.getVelocity());
+        System.out.println("SPEED BOTTOM: " + Sensors.bottomFlyEncoder.getVelocity());
     }
 
     /**
@@ -227,6 +237,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+        
+        
     }
     
     /**
@@ -240,6 +252,9 @@ public class Robot extends TimedRobot {
     	
     	// Update the values of the crosshairs system
     	//runCrosshairs();
+        
+        // Run controls subsystem periodic
+        controlSubsystem.periodicTeleop();
     }
     
     double debugVelocity = 0,
@@ -248,8 +263,8 @@ public class Robot extends TimedRobot {
     private void runCrosshairs() {
         // Get known information
         // Apply the velocity to the crosshairs
-        crosshairs.setAngle(Constants.SHOOTER_ANGLE);
-        crosshairs.setVelocity(debugVelocity);
+        //crosshairs.setAngle(Constants.SHOOTER_ANGLE);
+        //crosshairs.setVelocity(debugVelocity);
         crosshairs.calculateLinePositions();
         
         // We don't have anything giving us data so this is it actually

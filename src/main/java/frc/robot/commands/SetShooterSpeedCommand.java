@@ -32,7 +32,7 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
         super(
                 new SetShooterSpeedCommand(shooterSubsystemIn, rpm),
                 new WaitCommand(seconds),
-                new SetShooterSpeedCommand(shooterSubsystemIn, rpm)
+                new SetShooterSpeedCommand(shooterSubsystemIn, 0)
         );
     }
 }

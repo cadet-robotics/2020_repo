@@ -63,8 +63,11 @@ public class Motors {
         rightDrive.setInverted(true);
 
         // init flywheels
-        topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);
+        topFly.setInverted(false);
+        
         bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);
+        bottomFly.setInverted(true);
         
         // init others
         intake = new PWMVictorSPX(pwmMotors.getIntValue("intake"));

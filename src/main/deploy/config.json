@@ -15,11 +15,11 @@
 			"value": "1",
 			"description": "Axis ID for the Y-Axis"
 		},
-        {
-            "name": "z axis",
-            "value": "2",
-            "description": "Axis ID for the Z-Axis"
-        },
+		{
+			"name": "z axis",
+			"value": "2",
+			"description": "Axis ID for the Z-Axis"
+		},
 		{
 			"name": "spin button",
 			"value": "1",
@@ -123,26 +123,6 @@
 	],
 	
 	"crosshairs": [
-		{
-			"name": "shooter height",
-			"value": "1",
-			"description": "Height of the shooter in meters"
-		},
-		{
-			"name": "shooter angle",
-			"value": "45",
-			"description": "Angle of the shooter"
-		},
-		{
-			"name": "camera height",
-			"value": "0.9",
-			"description": "Height of the camera in meters"
-		},
-		{
-			"name": "camera angle",
-			"value": "20",
-			"description": "Angle of the camera"
-		},
 		{
 			"name": "center color",
 			"value": "0,255,0",

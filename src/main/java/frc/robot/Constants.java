@@ -22,8 +22,7 @@ public final class Constants {
      */
 	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
 							   DRIVE_X_AXIS_MODIFIER = 1,
-							   DRIVE_SPEED_MODIFIER = 1,
-							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
+							   DRIVE_SPEED_MODIFIER = 1;
 	
 	/*
 	 * Crosshairs Constants
@@ -34,6 +33,21 @@ public final class Constants {
 	
 	public static final double GRAVITY_ACCEL = -9.807,     // From Wikipedia, the free encyclopedia, at e n dot wikipedia dot org
 	                           TARGET_HEIGHT = 2.49555,    // From 8 ft 2.25 in (98.25 in)
-	                           SHOOTER_ANGLE = Math.toRadians(30);
-	                        
+	                           SHOOTER_Y = 1,
+	                           SHOOTER_ANGLE = Math.toRadians(30),
+	                           CAMERA_X = 0.01,
+	                           CAMERA_Y = 0.9,
+	                           CAMERA_ANGLE = Math.toRadians(20),
+	                           SHOOTER_WHEELS_DIAMETER = 0.1524,
+	                           LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
+	                           
+
+	// Limelight constants
+	public static final double LIMELIGHT_ANGLE = Math.toRadians(55);
+	public static final double LIMELIGHT_HEIGHT = 33 * 0.0254;
+	public static final double LIMELIGHT_H_OFFSET = 9 * 0.0254;
+	public static final double LIMELIGHT_H_OFFSET_P2 = LIMELIGHT_H_OFFSET * LIMELIGHT_H_OFFSET;
+
+	// Generic math constants
+	public static final double PI_2 = Math.PI / 2;
 }
