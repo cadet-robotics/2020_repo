@@ -82,7 +82,7 @@ public class ControlSubsystem extends SubsystemBase {
         //Shoot
         shootButton.whenPressed(() -> {
             System.out.println("WORKING");
-            new SetShooterSpeedCommand(shooterSubsystem, 1000, 2).schedule();
+            new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
         });
     }
     

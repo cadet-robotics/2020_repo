@@ -33,7 +33,7 @@ public class Sensors {
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kQuadrature, 1024);
-        bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 42);
+        bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 0);
         driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 1024);
         driveEncoderRight = new CANEncoder(Motors.rightDriveB, EncoderType.kQuadrature, 1024);
 

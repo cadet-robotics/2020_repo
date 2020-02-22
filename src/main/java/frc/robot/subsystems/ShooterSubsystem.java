@@ -13,7 +13,7 @@ public class ShooterSubsystem extends SubsystemBase {
         topPid.setSetpoint(0);
         botPid.setSetpoint(0);
     }
-    private static final double FF = 1.5e-5;
+    private static final double FF = /*1.5*/19e-5;
 
     public ShooterSubsystem() {
         super();
@@ -28,8 +28,16 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!DriverStation.getInstance().isDisabled()) {
-            Motors.topFly.set(motorFilter(topPid.calculate(Sensors.topFlyEncoder.getVelocity() + FF * topPid.getSetpoint())));
-            Motors.bottomFly.set(motorFilter(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity() + FF * botPid.getSetpoint())));
+            if (Math.abs(topPid.getSetpoint()) < 1e-6) {
+                Motors.topFly.set(0);
+            } else {
+                Motors.topFly.set(motorFilter(topPid.calculate(Sensors.topFlyEncoder.getVelocity()) + FF * topPid.getSetpoint()));
+            }
+            if (Math.abs(botPid.getSetpoint()) < 1e-6) {
+                Motors.bottomFly.set(0);
+            } else {
+                Motors.bottomFly.set(motorFilter(botPid.calculate(Sensors.bottomFlyEncoder.getVelocity()) + FF * botPid.getSetpoint()));
+            }
         } else {
             Motors.topFly.set(0);
             Motors.bottomFly.set(0);

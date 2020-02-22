@@ -64,6 +64,7 @@ public class Motors {
 
         // init flywheels
         topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        topFly.setInverted(true);
         bottomFly = new CANSparkMax(canMotors.getIntValue("bottom flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);
         
         // init others
