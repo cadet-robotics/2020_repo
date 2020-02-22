@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.cscore.VideoCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.SkitterCommand;
+import frc.robot.greeneva.Limelight;
 import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
@@ -66,6 +68,8 @@ public class Robot extends TimedRobot {
     public ControlSubsystem controlSubsystem;
     public DriveSubsystem driveSubsystem;
     public ShooterSubsystem shooterSubsystem;
+    public ArmSubsystem armSubsystem;
+    public Limelight limelight;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -93,14 +97,16 @@ public class Robot extends TimedRobot {
         shooterSubsystem = new ShooterSubsystem();
 
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
+
+        limelight = new Limelight(NetworkTableInstance.getDefault());
         
         // Initialize the camera itself
-        //cam = CameraServer.getInstance().startAutomaticCapture();
-        //cam.setResolution(320, 240);
-        //cam.setFPS(15);
+        cam = CameraServer.getInstance().startAutomaticCapture();
+        cam.setResolution(320, 240);
+        cam.setFPS(15);
         
         // Crosshairs vision setup
-        //setupCrosshairsVision(mainConfig);
+        setupCrosshairsVision(mainConfig);
     }
     
     /**
@@ -175,7 +181,6 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
-    private ArmSubsystem armSubsystem;
 
     @Override
     public void robotPeriodic() {

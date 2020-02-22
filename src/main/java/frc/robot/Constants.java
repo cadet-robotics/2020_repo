@@ -41,5 +41,13 @@ public final class Constants {
 	                           SHOOTER_WHEELS_DIAMETER = 0.1524,
 	                           LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	                           
-	                        
+
+	// Limelight constants
+	public static final double LIMELIGHT_ANGLE = Math.toRadians(55);
+	public static final double LIMELIGHT_HEIGHT = 33 * 0.0254;
+	public static final double LIMELIGHT_H_OFFSET = 9 * 0.0254;
+	public static final double LIMELIGHT_H_OFFSET_P2 = LIMELIGHT_H_OFFSET * LIMELIGHT_H_OFFSET;
+
+	// Generic math constants
+	public static final double PI_2 = Math.PI / 2;
 }
