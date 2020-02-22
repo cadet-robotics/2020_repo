@@ -121,6 +121,7 @@ public class Robot extends TimedRobot {
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
                                            shooterHeight,
+                                           Constants.SHOOTER_WHEELS_DIAMETER,
                                            Constants.TARGET_HEIGHT,
                                            Constants.GRAVITY_ACCEL,
                                            0,
@@ -231,6 +232,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+        
+        
     }
     
     /**
@@ -244,6 +247,9 @@ public class Robot extends TimedRobot {
     	
     	// Update the values of the crosshairs system
     	//runCrosshairs();
+        
+        // Run controls subsystem periodic
+        controlSubsystem.periodicTeleop();
     }
     
     double debugVelocity = 0,
@@ -252,8 +258,8 @@ public class Robot extends TimedRobot {
     private void runCrosshairs() {
         // Get known information
         // Apply the velocity to the crosshairs
-        crosshairs.setAngle(Constants.SHOOTER_ANGLE);
-        crosshairs.setVelocity(debugVelocity);
+        //crosshairs.setAngle(Constants.SHOOTER_ANGLE);
+        //crosshairs.setVelocity(debugVelocity);
         crosshairs.calculateLinePositions();
         
         // We don't have anything giving us data so this is it actually

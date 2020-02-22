@@ -31,6 +31,7 @@ public class ControlSubsystem extends SubsystemBase {
                 zAxis,
                 intakeButton,
                 magButton;
+    
 
     //Private Subsystem instances
     private DriveSubsystem driveSubsystem;
@@ -44,6 +45,8 @@ public class ControlSubsystem extends SubsystemBase {
     
     // Raw getters
     public Joystick getController() { return controller; }
+    
+    private double rpm = 3000 / 2;
     
     /**
      * Loads the configuration, initializing all controls
@@ -86,16 +89,16 @@ public class ControlSubsystem extends SubsystemBase {
         });
     }
     
-    /*
-     * RUN PERIODIC CONTROLS HERE
+    /**
+     * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
      */
-    @Override
-    public void periodic() {
+    public void periodicTeleop() {
         //Drive Movement
-        if (DriverStation.getInstance().isOperatorControl()) {
-            //System.out.println("running drive");
-            driveSubsystem.getDriveBase().arcadeDrive(getZAxis(), getYAxis(), true);
-        }
+        driveSubsystem.getDriveBase().arcadeDrive(getZAxis(), getYAxis(), true);
+        
+        double r = rpm * (-controller.getRawAxis(3) + 1);
+        System.out.println(r);
+        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
         
         // TEMPORARY MAG CONTROLS
         Motors.intake.set(0);
@@ -109,4 +112,4 @@ public class ControlSubsystem extends SubsystemBase {
             Motors.magazine.set(0.5);
         }
     }
-}
+}  

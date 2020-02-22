@@ -32,8 +32,12 @@ public class Sensors {
         bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
 
         // Encoders
-        topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kQuadrature, 1024);
+        topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);
+        topFlyEncoder.setPositionConversionFactor(1 / 3);
+        topFlyEncoder.setVelocityConversionFactor(1 / 3);
         bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 0);
+        bottomFlyEncoder.setPositionConversionFactor(1 / 3);
+        bottomFlyEncoder.setVelocityConversionFactor(1 / 3);
         driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 1024);
         driveEncoderRight = new CANEncoder(Motors.rightDriveB, EncoderType.kQuadrature, 1024);
 

@@ -24,7 +24,8 @@ public class CrosshairsOverlay implements VisionProcessor {
                    targetY,         // Y position of the target where the ground is y=0
                    gravity,         // Gravitational constant g in whatever units the rest use
                    shooterVelocity, // Velocity of the ball on launch in units/sec^2
-                   shooterAngle;    // Angle of the shooter in radians
+                   shooterAngle,    // Angle of the shooter in radians
+                   wheelDiameter;   // Diameter of the shooter wheels in meters
     
     private boolean hasLines = true;    // If the lines exist
     
@@ -51,6 +52,7 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param cameraFOV Vertical field of view of the camera in radians
      * @param imageHeight Height of the image in pixels
      * @param shooterY Y position of the shooter where the ground is y=0
+     * @param wheelDiameter Diameter of the shooter wheels in meters
      * @param targetY Y position of the target where the ground is y=0
      * @param gravity Acceleration due to gravity (g)
      * @param shooterVelocity The velocity of the ball as it exists the shooter
@@ -59,13 +61,14 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param colorB The color of line B
      * @param colorC The color of the center line
      */
-    public CrosshairsOverlay(double cameraX, double cameraY, double cameraAngle, double cameraFOV, double imageHeight, double shooterY, double targetY, double gravity, double shooterVelocity, double shooterAngle, Scalar colorA, Scalar colorB, Scalar colorC) {
+    public CrosshairsOverlay(double cameraX, double cameraY, double cameraAngle, double cameraFOV, double imageHeight, double shooterY, double wheelDiameter, double targetY, double gravity, double shooterVelocity, double shooterAngle, Scalar colorA, Scalar colorB, Scalar colorC) {
         this.cameraX = cameraX;
         this.cameraY = cameraY;
         this.cameraAngle = cameraAngle;
         this.cameraFOV = cameraFOV;
         this.imageHeight = imageHeight;
         this.shooterY = shooterY;
+        this.wheelDiameter = wheelDiameter;
         this.targetY = targetY;
         this.gravity = gravity;
         this.shooterVelocity = shooterVelocity;
@@ -88,19 +91,21 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param cameraFOV Vertical field of view of the camera in radians
      * @param imageHeight Height of the image in pixels
      * @param shooterY Y position of the shooter where the ground is y=0
+     * @param wheelDiameter Diameter of the shooter wheels in meters
      * @param targetY Y position of the target where the ground is y=0
      * @param gravity Acceleration due to gravity (g)
      * @param colorA
      * @param colorB
      * @param colorC
      */
-    public CrosshairsOverlay(double cameraX, double cameraY, double cameraAngle, double cameraFOV, double imageHeight, double shooterY, double targetY, double gravity, Scalar colorA, Scalar colorB, Scalar colorC) {
+    public CrosshairsOverlay(double cameraX, double cameraY, double cameraAngle, double cameraFOV, double imageHeight, double shooterY, double wheelDiameter, double targetY, double gravity, Scalar colorA, Scalar colorB, Scalar colorC) {
         this.cameraX = cameraX;
         this.cameraY = cameraY;
         this.cameraAngle = cameraAngle;
         this.cameraFOV = cameraFOV;
         this.imageHeight = imageHeight;
         this.shooterY = shooterY;
+        this.wheelDiameter = wheelDiameter;
         this.targetY = targetY;
         this.gravity = gravity;
         this.colorA = colorA;
@@ -134,6 +139,42 @@ public class CrosshairsOverlay implements VisionProcessor {
      */
     public void setVelocity(double v) { shooterVelocity = v; }
     public void setAngle(double a) { shooterAngle = a; }
+    
+    
+    /*
+     * Calculation setters/getters
+     */
+    
+    /**
+     * Sets the velocity based on rpm
+     * 
+     * @param rpm
+     */
+    public void setVelocityRPM(double rpm) {
+        shooterVelocity = wheelDiameter * Math.PI * 60 * rpm;
+    }
+    
+    /**
+     * Sets the velocity based on distance to the target
+     * 
+     * @param dist
+     */
+    public void setVelocityDistance(double dist) {
+        // v = (sqrt(gravity) * x * sqrt((tan(angle)^2) + 1)) / sqrt((2 * x * tan(angle)) - (2 * y))
+        double tanTheta = Math.tan(shooterAngle),
+               y = targetY - shooterY;
+        
+        shooterVelocity = (Math.sqrt(gravity) * dist * Math.sqrt((tanTheta * tanTheta) + 1)) / Math.sqrt((2 * dist * tanTheta) - (2 * y));
+    }
+    
+    /**
+     * Gets the RPM for the set velocity
+     * 
+     * @return Shooter RPM
+     */
+    public double getRPM() {
+        return shooterVelocity / (wheelDiameter * Math.PI * 60);
+    }
     
     
     /**

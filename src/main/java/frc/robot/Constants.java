@@ -22,8 +22,7 @@ public final class Constants {
      */
 	public static final double DRIVE_Y_AXIS_MODIFIER = 1,
 							   DRIVE_X_AXIS_MODIFIER = 1,
-							   DRIVE_SPEED_MODIFIER = 1,
-							   LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
+							   DRIVE_SPEED_MODIFIER = 1;
 	
 	/*
 	 * Crosshairs Constants
@@ -38,7 +37,9 @@ public final class Constants {
 	                           SHOOTER_ANGLE = Math.toRadians(30),
 	                           CAMERA_X = 0.01,
 	                           CAMERA_Y = 0.9,
-	                           CAMERA_ANGLE = Math.toRadians(20);
+	                           CAMERA_ANGLE = Math.toRadians(20),
+	                           SHOOTER_WHEELS_DIAMETER = 0.1524,
+	                           LIFECAM_3000_VERTICAL_FOV = Math.toRadians(36.93); // found from some searching
 	                           
 	                        
 }
