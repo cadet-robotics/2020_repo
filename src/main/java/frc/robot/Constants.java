@@ -34,6 +34,11 @@ public final class Constants {
 	
 	public static final double GRAVITY_ACCEL = -9.807,     // From Wikipedia, the free encyclopedia, at e n dot wikipedia dot org
 	                           TARGET_HEIGHT = 2.49555,    // From 8 ft 2.25 in (98.25 in)
-	                           SHOOTER_ANGLE = Math.toRadians(30);
+	                           SHOOTER_Y = 1,
+	                           SHOOTER_ANGLE = Math.toRadians(30),
+	                           CAMERA_X = 0.01,
+	                           CAMERA_Y = 0.9,
+	                           CAMERA_ANGLE = Math.toRadians(20);
+	                           
 	                        
 }

@@ -124,31 +124,6 @@
 	
 	"crosshairs": [
 		{
-			"name": "shooter y",
-			"value": "1",
-			"description": "Y position of the shooter in meters"
-		},
-		{
-			"name": "shooter angle",
-			"value": "45",
-			"description": "Angle of the shooter"
-		},
-		{
-			"name": "camera x",
-			"value": "0.01",
-			"description": "X position of the camera in meters"
-		},
-		{
-			"name": "camera y",
-			"value": "0.9",
-			"description": "Y position of the camera in meters"
-		},
-		{
-			"name": "camera angle",
-			"value": "20",
-			"description": "Angle of the camera"
-		},
-		{
 			"name": "center color",
 			"value": "0,255,0",
 			"description": "gamer green"
