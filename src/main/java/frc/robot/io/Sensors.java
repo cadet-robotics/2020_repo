@@ -3,7 +3,6 @@ package frc.robot.io;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.EncoderType;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -33,11 +32,13 @@ public class Sensors {
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);
-        topFlyEncoder.setPositionConversionFactor(1 / 3);
-        topFlyEncoder.setVelocityConversionFactor(1 / 3);
+        topFlyEncoder.setPositionConversionFactor(1 / 3.0);
+        topFlyEncoder.setVelocityConversionFactor(1 / 3.0);
+
         bottomFlyEncoder = new CANEncoder(Motors.bottomFly, EncoderType.kHallSensor, 0);
-        bottomFlyEncoder.setPositionConversionFactor(1 / 3);
-        bottomFlyEncoder.setVelocityConversionFactor(1 / 3);
+        bottomFlyEncoder.setPositionConversionFactor(1 / 3.0);
+        bottomFlyEncoder.setVelocityConversionFactor(1 / 3.0);
+
         driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 1024);
         driveEncoderRight = new CANEncoder(Motors.rightDriveB, EncoderType.kQuadrature, 1024);
 
