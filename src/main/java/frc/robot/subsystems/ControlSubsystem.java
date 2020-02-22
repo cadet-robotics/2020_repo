@@ -146,11 +146,14 @@ public class ControlSubsystem extends SubsystemBase {
 
         if(driverController.getRawButton(inta)) {
             pickupSubsystem.setIntakeSpeed(0.2);
+        } else {
+            pickupSubsystem.setIntakeSpeed(0);
         }
 
-        //TEMP
-        if(driverController.getRawButton(magButton)) {
-            Motors.magazine.set(0.5);
+        if(controller.getRawButton(magButton)) {
+            pickupSubsystem.setMagazineSpeed(0.5);
+        } else {
+            pickupSubsystem.setMagazineSpeed(0);
         }
         */
     }
