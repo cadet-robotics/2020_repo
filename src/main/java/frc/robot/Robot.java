@@ -18,13 +18,10 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.SkitterCommand;
-import frc.robot.subsystems.ControlSubsystem;
+import frc.robot.subsystems.*;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.io.Sensors;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
@@ -66,6 +63,7 @@ public class Robot extends TimedRobot {
     public ControlSubsystem controlSubsystem;
     public DriveSubsystem driveSubsystem;
     public ShooterSubsystem shooterSubsystem;
+    public PickupSubsystem pickupSubsystem;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -91,8 +89,9 @@ public class Robot extends TimedRobot {
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(new Pose2d(new Translation2d(), new Rotation2d()));
         shooterSubsystem = new ShooterSubsystem();
+        pickupSubsystem = new PickupSubsystem();
 
-        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem);
         
         // Initialize the camera itself
         //cam = CameraServer.getInstance().startAutomaticCapture();

@@ -24,6 +24,7 @@ public class ControlSubsystem extends SubsystemBase {
     private Joystick controller;
     private JoystickButton spinButton;
     private JoystickButton shootButton;
+
     
     // Axes
     private int xAxis,
@@ -36,6 +37,7 @@ public class ControlSubsystem extends SubsystemBase {
     private DriveSubsystem driveSubsystem;
     private ArmSubsystem armSubsystem;
     private ShooterSubsystem shooterSubsystem;
+    private PickupSubsystem pickupSubsystem;
 
     // Axis getters
     public double getXAxis() { return controller.getRawAxis(xAxis); }
@@ -53,12 +55,13 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn) {
         super();
         Config controls = mainConfig.separateCategory("controls");
         driveSubsystem = driveSubsystemIn;
         armSubsystem = armSubsystemIn;
         shooterSubsystem = shooterSubsystemIn;
+        pickupSubsystem = pickupSubsystemIn;
         
         controller = new Joystick(controls.getIntValue("controller port"));
         
@@ -97,14 +100,16 @@ public class ControlSubsystem extends SubsystemBase {
             driveSubsystem.getDriveBase().arcadeDrive(getZAxis(), getYAxis(), true);
         }
         
-        // TEMPORARY MAG CONTROLS
-        Motors.intake.set(0);
-        Motors.magazine.set(0);
-        
+        // Controls for Mag & Intake
+        // TODO: Make intake and magazine automatic
+        pickupSubsystem.setIntakeSpeed(0);
+        Motors.magazine.set(0); //TEMP
+
         if(controller.getRawButton(intakeButton)) {
-            Motors.intake.set(0.5);
+            pickupSubsystem.setIntakeSpeed(0.2);
         }
-        
+
+        //TEMP
         if(controller.getRawButton(magButton)) {
             Motors.magazine.set(0.5);
         }
