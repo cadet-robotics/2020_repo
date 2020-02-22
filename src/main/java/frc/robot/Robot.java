@@ -109,23 +109,25 @@ public class Robot extends TimedRobot {
      * @param mainConfig
      */
     private void setupCrosshairsVision(Config mainConfig) {
+        Config cross = mainConfig.separateCategory("crosshairs");
         textOverlay = new TextOverlay("parabola data", 5, Constants.IMAGE_HEIGHT - 10, new Scalar(0, 255, 0));
-        camHeight = mainConfig.getDoubleValue("crosshairs", "camera height");
-        shooterHeight = mainConfig.getDoubleValue("crosshairs", "shooter height");
+        camHeight = cross.getDoubleValue("camera y");
+        shooterHeight = cross.getDoubleValue("shooter y");
         
         // Create the crosshairs object
-        crosshairs = new CrosshairsOverlay(camHeight, //Constants.CAMERA_HEIGHT,
-                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "camera angle")), //Math.toRadians(20),
+        crosshairs = new CrosshairsOverlay(cross.getDoubleValue("camera x"),
+                                           camHeight, //Constants.CAMERA_HEIGHT,
+                                           Math.toRadians(cross.getIntValue("camera angle")), //Math.toRadians(20),
                                            Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
                                            shooterHeight, //Constants.SHOOTER_HEIGHT,
                                            Constants.TARGET_HEIGHT,
                                            Constants.GRAVITY_ACCEL,
                                            0,
-                                           Math.toRadians(mainConfig.getIntValue("crosshairs", "shooter angle")),
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color a")), //Constants.CROSSHAIR_A_COLOR,
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "color b")), //Constants.CROSSHAIR_B_COLOR,
-                                           Util.csvToScalar(mainConfig.getValue("crosshairs", "center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
+                                           Math.toRadians(cross.getIntValue("shooter angle")),
+                                           Util.csvToScalar(cross.getValue("color a")), //Constants.CROSSHAIR_A_COLOR,
+                                           Util.csvToScalar(cross.getValue("color b")), //Constants.CROSSHAIR_B_COLOR,
+                                           Util.csvToScalar(cross.getValue("center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
         
         // Create the thread to process stuff
         VisionThread vt = new VisionThread("uwu feed", 320, 240);
