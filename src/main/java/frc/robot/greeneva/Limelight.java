@@ -11,6 +11,7 @@ public class Limelight {
     private NetworkTableEntry hAng;
     private NetworkTableEntry vAng;
     private NetworkTableEntry camMode;
+    private NetworkTableEntry lightMode;
 
     public Limelight(NetworkTableInstance ntI) {
         NetworkTable lim = ntI.getTable("limelight");
@@ -18,6 +19,7 @@ public class Limelight {
         hAng = lim.getEntry("tx");
         vAng = lim.getEntry("ty");
         camMode = lim.getEntry("camMode");
+        lightMode = lim.getEntry("ledMode");
     }
 
     public boolean hasTarget() {
@@ -55,10 +57,16 @@ public class Limelight {
         switch (mode) {
             case Vision:
                 camMode.setNumber(0);
+                setLed(true);
                 break;
             case Driver:
                 camMode.setNumber(1);
+                setLed(false);
                 break;
         }
+    }
+
+    public void setLed(boolean on) {
+        lightMode.setNumber(on ? 0 : 1);
     }
 }

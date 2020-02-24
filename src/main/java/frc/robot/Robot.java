@@ -191,6 +191,11 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         //System.out.println("SPEED TOP: " + Sensors.bottomFlyEncoder.getVelocity());
         //System.out.println("SPEED BOTTOM: " + Sensors.bottomFlyEncoder.getVelocity());
+        if (((System.currentTimeMillis() / 1000) % 2) == 0) {
+            limelight.setCamMode(Limelight.CamMode.Driver);
+        } else {
+            limelight.setCamMode(Limelight.CamMode.Vision);
+        }
     }
 
     /**
