@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
 
         limelight = new Limelight(NetworkTableInstance.getDefault());
+        limelight.setCamMode(Limelight.CamMode.Vision);
         
         // Initialize the camera itself
         cam = CameraServer.getInstance().startAutomaticCapture();
