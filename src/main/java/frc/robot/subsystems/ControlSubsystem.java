@@ -25,8 +25,10 @@ public class ControlSubsystem extends SubsystemBase {
 
     //Controls
     private Joystick controller;
-    private JoystickButton spinButton;
-    private JoystickButton shootButton;
+    private JoystickButton spinButton,
+                           shootButton,
+                           winchUpButton,
+                           winchDownButton;
     
     // Axes
     private int xAxis,
@@ -57,7 +59,7 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, WinchSubsystem winchSubsystemIn) {
         super();
         Config controls = mainConfig.separateCategory("controls");
         driveSubsystem = driveSubsystemIn;
@@ -74,6 +76,8 @@ public class ControlSubsystem extends SubsystemBase {
         // Buttons
         spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
         shootButton = new JoystickButton(controller, controls.getIntValue("shoot button"));
+        winchUpButton = new JoystickButton(controller, controls.getIntValue("winch up button"));
+        winchDownButton = new JoystickButton(controller, controls.getIntValue("winch down button"));
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -84,6 +88,15 @@ public class ControlSubsystem extends SubsystemBase {
         shootButton.whenPressed(() -> {
             System.out.println("WORKING");
             new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
+        });
+        
+        // Winch
+        winchUpButton.whileHeld(() -> {
+            winchSubsystemIn.runUp();
+        });
+        
+        winchDownButton.whileHeld(() -> {
+            winchSubsystemIn.runDown();
         });
     }
     
@@ -115,22 +128,6 @@ public class ControlSubsystem extends SubsystemBase {
             Motors.magazine.set(0.75);
         } else if(controller.getRawButton(6)) {
             Motors.magazine.set(-0.75);
-        }
-        
-        // run winch uwu
-        Motors.winch.set(0);
-        if(controller.getRawButton(11)) {
-            Motors.winch.set(0.75);
-        } else if(controller.getRawButton(12)) {
-            Motors.winch.set(-0.75);
-        }
-        
-        if(controller.getRawButton(10)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kForward);
-        } else if(controller.getRawButton(9)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kOff);
-        } else if(controller.getRawButton(8)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kReverse);
         }
     }
 }  

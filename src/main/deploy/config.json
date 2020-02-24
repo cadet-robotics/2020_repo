@@ -29,6 +29,16 @@
 			"name": "shoot button",
 			"value": "2",
 			"description": "Button ID for the shooter control"
+		},
+		{
+			"name": "winch up button",
+			"value": "3",
+			"description": "Button to run the winch up"
+		},
+		{
+			"name": "winch down button",
+			"value": "4",
+			"description": "Button to run the winch down"
 		}
 	],
 	

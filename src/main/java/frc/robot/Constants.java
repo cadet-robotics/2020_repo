@@ -25,6 +25,12 @@ public final class Constants {
 							   DRIVE_SPEED_MODIFIER = 1;
 	
 	/*
+	 * Winch Constants
+	 */
+	public static final double WINCH_UP_SPEED = 0.75,
+	                           WINCH_DOWN_SPEED = -0.75;
+	
+	/*
 	 * Crosshairs Constants
 	 */
 	public static final boolean CROSSHAIRS_DEBUG = true;
