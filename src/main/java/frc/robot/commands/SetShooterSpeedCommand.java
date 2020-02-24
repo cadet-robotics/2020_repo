@@ -27,12 +27,13 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      * @param shooterSubsystemIn The shooter subsystem instance
      * @param rpm The speed of the motor, in RPM
      * @param seconds The amount of time to run the motor for, in seconds
+     * @param preserve Whether to set the shooter to its previous RPM target instead of zero after the command finishes
      */
-    public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds) {
+    public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds, boolean preserve) {
         super(
                 new SetShooterSpeedCommand(shooterSubsystemIn, rpm),
                 new WaitCommand(seconds),
-                new SetShooterSpeedCommand(shooterSubsystemIn, 0)
+                new SetShooterSpeedCommand(shooterSubsystemIn, preserve ? shooterSubsystemIn.getTargetSpeed() : 0)
         );
     }
 }
