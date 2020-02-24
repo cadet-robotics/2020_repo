@@ -32,14 +32,14 @@ public class BallToMagCommand extends CommandBase {
     }
 
     /**
-     * Finalizes the command if the intake sensor is triggered
+     * Finalizes the command if the magazine sensor is triggered
      *
      * @return The sensor value
      */
     @Override
     public boolean isFinished() {
         //Sensor picks up ball, bring to b2. Stop command.
-        return Sensors.intakeSensor.get();
+        return Sensors.magSensor.get();
     }
 
 
