@@ -36,4 +36,15 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
                 new SetShooterSpeedCommand(shooterSubsystemIn, preserve ? shooterSubsystemIn.getTargetSpeed() : 0)
         );
     }
+
+    /**
+     * Sets the shooter to run at a specific speed for a specific amount of time
+     *
+     * @param shooterSubsystemIn The shooter subsystem instance
+     * @param rpm The speed of the motor, in RPM
+     * @param seconds The amount of time to run the motor for, in seconds
+     */
+    public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds) {
+        this(shooterSubsystemIn, rpm, seconds, true);
+    }
 }
