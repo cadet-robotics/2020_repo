@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
@@ -48,10 +49,26 @@ public class PickupSubsystem extends SubsystemBase {
      */
     public void periodic() {
         //Checks if ball is ready to be entered into mag
-        if (Sensors.intakeSensor.get() && autoIntakeEnabled) {
+        if (isBallInRange(Sensors.intakeSensor, 5.0, 38.0) && autoIntakeEnabled) {
             //Starts mag management command
             new IntakeNewBallCommand(this).schedule();
         }
+    }
+
+    /**
+     * Calculates if the ball is in a certain range in the intake
+     *
+     * @param sensor The analog sensor to detect on
+     * @param low The lowest range value
+     * @param high The highest range value
+     * @return A boolean success result
+     */
+    public boolean isBallInRange(AnalogInput sensor, double low, double high) {
+        double distance = 27.726 * Math.pow(sensor.getAverageVoltage(), -1.2045);
+        if (distance >= low && distance <= high) {
+            return true;
+        }
+        return false;
     }
 
     //Gets automatic intake enabled value
