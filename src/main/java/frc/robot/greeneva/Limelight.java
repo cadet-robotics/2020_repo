@@ -43,20 +43,4 @@ public class Limelight {
     public double getDistance() {
         return (TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(getVAngleRad() + LIMELIGHT_ANGLE);
     }
-
-    // Adjusts the distance because our camera is off center
-    public double getAdjustedDistance() {
-        double oldDist = getDistance();
-        return Math.sqrt(oldDist * oldDist + LIMELIGHT_H_OFFSET_P2 - oldDist * LIMELIGHT_H_OFFSET * Math.cos(getHAngleRad()));
-    }
-
-    // Adjusts the horizontal angle because our camera is off center
-    public double getAdjustedHAngle() {
-        return Math.toDegrees(getAdjustedHAngleRad());
-    }
-
-    public double getAdjustedHAngleRad() {
-        double hAng = PI_2 - getHAngleRad();
-        return Math.asin(Math.sin(hAng) / getAdjustedDistance() * getDistance()) - PI_2;
-    }
 }
