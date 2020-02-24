@@ -29,7 +29,7 @@
 			"name": "intake button",
 			"value": "2",
 			"description": "Button ID for the intake"
-		},
+		}
 	],
 	
 	"codriver controls": [
@@ -54,14 +54,14 @@
 			"description": "Degree to run the winch up"
 		},
 		{
-			"name": "winch down button",
+			"name": "winch down",
 			"value": "180",
 			"description": "Degree to run the winch down"
 		},
 		{
 			"name": "winch lock button",
 			"value": "3",
-			"description": "
+			"description": "Button to toggle if the winch is locked"
 		}
 	],
 	

@@ -107,6 +107,7 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Run winch
         int pov = codriverController.getPOV();
+        
         if(pov == winchUpAngle) {
             winchSubsystem.runUp();
         } else if(pov == winchDownAngle) {
