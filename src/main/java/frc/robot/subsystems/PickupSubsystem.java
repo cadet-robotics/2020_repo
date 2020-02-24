@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.io.Motors;
@@ -15,6 +14,8 @@ import frc.robot.io.Sensors;
 public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX intake;
     PWMVictorSPX mag;
+
+    boolean autoIntakeEnabled = true;
 
     /**
      * Constructor for subsystem
@@ -47,9 +48,14 @@ public class PickupSubsystem extends SubsystemBase {
      */
     public void periodic() {
         //Checks if ball is ready to be entered into mag
-        if (Sensors.intakeSensor.get()) {
+        if (Sensors.intakeSensor.get() && autoIntakeEnabled) {
             //Starts mag management command
             new IntakeNewBallCommand(this).schedule();
         }
+    }
+
+    //Gets automatic intake enabled value
+    public boolean getAutoIntakeEnabled() {
+        return autoIntakeEnabled;
     }
 }

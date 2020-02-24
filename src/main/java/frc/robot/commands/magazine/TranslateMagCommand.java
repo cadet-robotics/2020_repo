@@ -1,7 +1,6 @@
 package frc.robot.commands.magazine;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.io.Motors;
 import frc.robot.subsystems.PickupSubsystem;
 
 /**

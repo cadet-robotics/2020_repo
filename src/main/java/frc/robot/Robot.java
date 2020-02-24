@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.SkitterCommand;
@@ -199,6 +200,9 @@ public class Robot extends TimedRobot {
             limelight.setCamMode(Limelight.CamMode.Vision);
         }
         */
+
+        //Debug and Smartdashboard
+        SmartDashboard.putBoolean("Auto Ball Intake", pickupSubsystem.getAutoIntakeEnabled());
     }
 
     /**
