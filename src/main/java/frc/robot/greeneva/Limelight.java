@@ -3,10 +3,13 @@ package frc.robot.greeneva;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
 import static frc.robot.Constants.*;
 
-public class Limelight {
+public class Limelight implements Sendable {
     private NetworkTableEntry hasTarget;
     private NetworkTableEntry hAng;
     private NetworkTableEntry vAng;
@@ -20,6 +23,7 @@ public class Limelight {
         vAng = lim.getEntry("ty");
         camMode = lim.getEntry("camMode");
         lightMode = lim.getEntry("ledMode");
+        SendableRegistry.add(this, "limelight-interface");
     }
 
     public boolean hasTarget() {
@@ -68,5 +72,10 @@ public class Limelight {
 
     public void setLed(boolean on) {
         lightMode.setNumber(on ? 0 : 1);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("distance", Limelight.this::getDistance, (v) -> {});
     }
 }
