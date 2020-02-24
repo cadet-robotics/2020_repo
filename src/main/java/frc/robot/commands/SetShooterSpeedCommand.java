@@ -30,10 +30,13 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      * @param preserve Whether to set the shooter to its previous RPM target instead of zero after the command finishes
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds, boolean preserve) {
-        super(
+        super();
+        double[] oldRPM = new double[1];
+        addCommands(
+                new InstantCommand(() -> oldRPM[0] = preserve ? shooterSubsystemIn.getTargetSpeed() : 0),
                 new SetShooterSpeedCommand(shooterSubsystemIn, rpm),
                 new WaitCommand(seconds),
-                new SetShooterSpeedCommand(shooterSubsystemIn, preserve ? shooterSubsystemIn.getTargetSpeed() : 0)
+                new SetShooterSpeedCommand(shooterSubsystemIn, oldRPM[0])
         );
     }
 
