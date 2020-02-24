@@ -43,26 +43,13 @@ public class PickupSubsystem extends SubsystemBase {
     }
 
     /**
-     * The initial method for the magazine loading.
-     *
-     * B1 - The position of the ball in the intake. Ready to be picked up
-     * B2 - The position of the ball when entering the magazine.
-     * B3 - Some ball above B2. Must be translated upwards.
-     * TODO: WIP
-     */
-    public void intakeBall() {
-        //Ball has been detected and ready to be picked up. Bring ball from B1 to B2
-
-    }
-
-    /**
      * Periodic things aaaaaaaaa
      */
     public void periodic() {
         //Checks if ball is ready to be entered into mag
         if (Sensors.intakeSensor.get()) {
             //Starts mag management command
-            new IntakeNewBallCommand().schedule();
+            new IntakeNewBallCommand(this).schedule();
         }
     }
 }

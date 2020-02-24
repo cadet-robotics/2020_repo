@@ -11,23 +11,37 @@ import frc.robot.subsystems.PickupSubsystem;
  * @author Matt Robinson
  */
 public class BallToMagCommand extends CommandBase {
-    boolean isComplete = false;
     PickupSubsystem pickupSubsystem;
 
+    /**
+     * Constructor requires pickupSubsystem
+     *
+     * @param pickupSubsystemIn The pickup subsystem instance
+     */
     public BallToMagCommand(PickupSubsystem pickupSubsystemIn) {
         pickupSubsystem = pickupSubsystemIn;
         addRequirements(pickupSubsystem);
     }
 
+    /**
+     * Enables motors
+     */
     @Override
     public void execute() {
         //Enables motors
-        Motors.intake.set(0.2);
+        pickupSubsystem.setIntakeSpeed(0.2);
     }
 
+    /**
+     * Finalizes the command if the intake sensor is triggered
+     *
+     * @return The sensor value
+     */
     @Override
     public boolean isFinished() {
         //Sensor picks up ball, bring to b2. Stop command.
         return Sensors.intakeSensor.get();
     }
+
+
 }
