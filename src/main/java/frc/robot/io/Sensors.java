@@ -3,6 +3,7 @@ package frc.robot.io;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.EncoderType;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -17,18 +18,17 @@ public class Sensors {
     public static Gyro gyro;
     
     // Proximity sensors for the magazine
-    public static DigitalInput topBallSensor,
-                               middleBallSensor,
-                               bottomBallSensor;
+    public static AnalogInput intakeSensor; //Ball at intake entry sensor. TODO: Sensor on Analog Pin 6
+    public static DigitalInput magSensor; //Ball at mag entry sensor
 
     public static void loadConfig(Config c) {
+        // TODO: Change config to match with names of sensors
         // *jojo's noises*
-        Config dioSensors = c.separateCategory("sensors");
+        Config sensors = c.separateCategory("sensors");
         
         // Magazine prox sensors
-        topBallSensor = new DigitalInput(dioSensors.getIntValue("top ball sensor"));
-        middleBallSensor = new DigitalInput(dioSensors.getIntValue("middle ball sensor"));
-        bottomBallSensor = new DigitalInput(dioSensors.getIntValue("bottom ball sensor"));
+        magSensor = new DigitalInput(sensors.getIntValue("top ball sensor"));
+        intakeSensor = new AnalogInput(sensors.getIntValue("middle ball sensor"));
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);
