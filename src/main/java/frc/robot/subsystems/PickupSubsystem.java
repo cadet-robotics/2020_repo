@@ -59,8 +59,8 @@ public class PickupSubsystem extends SubsystemBase {
      * Calculates if the ball is in a certain range in the intake
      *
      * @param sensor The analog sensor to detect on
-     * @param low The lowest range value
-     * @param high The highest range value
+     * @param low The lowest range value, in cm
+     * @param high The highest range value, in cm
      * @return A boolean success result
      */
     public boolean isBallInRange(AnalogInput sensor, double low, double high) {
