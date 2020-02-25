@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.io.Motors;
@@ -24,6 +26,12 @@ public class PickupSubsystem extends SubsystemBase {
     public PickupSubsystem() {
         intake = Motors.intake;
         mag = Motors.magazine;
+        setDefaultCommand(new PerpetualCommand(new InstantCommand(() -> {
+            if (isBallInRange(Sensors.intakeSensor, 5.0, 38.0) && autoIntakeEnabled) {
+                //Starts mag management command
+                new IntakeNewBallCommand(this).schedule();
+            }
+        }, this)));
     }
 
     /**
@@ -48,11 +56,6 @@ public class PickupSubsystem extends SubsystemBase {
      * Periodic things aaaaaaaaa
      */
     public void periodic() {
-        //Checks if ball is ready to be entered into mag
-        if (isBallInRange(Sensors.intakeSensor, 5.0, 38.0) && autoIntakeEnabled) {
-            //Starts mag management command
-            new IntakeNewBallCommand(this).schedule();
-        }
     }
 
     /**
