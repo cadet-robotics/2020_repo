@@ -24,28 +24,32 @@ import frc6868.config.api.Config;
 public class ControlSubsystem extends SubsystemBase {
 
     //Controls
-    private Joystick controller;
-    private JoystickButton spinButton;
-    private JoystickButton shootButton;
+    private Joystick driverController,
+                     codriverController;
+    private JoystickButton spinButton,
+                           shootButton;
     
     // Axes
     private int xAxis,
                 yAxis,
                 zAxis;
     
+    // Winch stuff
+    private int winchUpAngle,
+                winchDownAngle;
+    
 
     //Private Subsystem instances
     private DriveSubsystem driveSubsystem;
     private ArmSubsystem armSubsystem;
     private ShooterSubsystem shooterSubsystem;
+    private WinchSubsystem winchSubsystem;
 
     // Axis getters
-    public double getXAxis() { return controller.getRawAxis(xAxis); }
-    public double getYAxis() { return controller.getRawAxis(yAxis); }
-    public double getZAxis() { return controller.getRawAxis(zAxis); }
+    public double getXAxis() { return driverController.getRawAxis(xAxis); }
+    public double getYAxis() { return driverController.getRawAxis(yAxis); }
+    public double getZAxis() { return driverController.getRawAxis(zAxis); }
     
-    // Raw getters
-    public Joystick getController() { return controller; }
     
     private double rpm = 6000 / 2;
     
@@ -57,23 +61,30 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, WinchSubsystem winchSubsystemIn) {
         super();
-        Config controls = mainConfig.separateCategory("controls");
+        Config driverControls = mainConfig.separateCategory("driver controls"),
+               codriverControls = mainConfig.separateCategory("codriver controls");
         driveSubsystem = driveSubsystemIn;
         armSubsystem = armSubsystemIn;
         shooterSubsystem = shooterSubsystemIn;
+        winchSubsystem = winchSubsystemIn;
         
-        controller = new Joystick(controls.getIntValue("controller port"));
+        driverController = new Joystick(driverControls.getIntValue("controller port"));
+        codriverController = new Joystick(codriverControls.getIntValue("controller port"));
         
         // Axes
-        xAxis = controls.getIntValue("x axis");
-        yAxis = controls.getIntValue("y axis");
-        zAxis = controls.getIntValue("z axis");
+        xAxis = driverControls.getIntValue("x axis");
+        yAxis = driverControls.getIntValue("y axis");
+        zAxis = driverControls.getIntValue("z axis");
         
         // Buttons
-        spinButton = new JoystickButton(controller, controls.getIntValue("spin button"));
-        shootButton = new JoystickButton(controller, controls.getIntValue("shoot button"));
+        spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
+        shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
+        
+        // Winch
+        winchUpAngle = codriverControls.getIntValue("winch up");
+        winchDownAngle = codriverControls.getIntValue("winch down");
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -94,43 +105,36 @@ public class ControlSubsystem extends SubsystemBase {
         //Drive Movement
         driveSubsystem.getDriveBase().arcadeDrive(-getZAxis(), getYAxis(), true);
         
-        double r = rpm * (-controller.getRawAxis(3) + 1);
-        System.out.println(r);
-        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
-        Robot.crosshairs.setVelocityRPM(r);
+        // Run winch
+        int pov = codriverController.getPOV();
+        
+        if(pov == winchUpAngle) {
+            winchSubsystem.runUp();
+        } else if(pov == winchDownAngle) {
+            winchSubsystem.runDown();
+        }
         
         /*
          * TEMPORARY MANUAL CONTROLS
          */
+        double r = rpm * (-driverController.getRawAxis(3) + 1);
+        System.out.println(r);
+        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
+        Robot.crosshairs.setVelocityRPM(r);
+        
         Motors.intake.set(0);
         Motors.magazine.set(0);
         
-        if(controller.getRawButton(3)) {
+        if(driverController.getRawButton(3)) {
             Motors.intake.set(0.75);
-        } else if(controller.getRawButton(5)) {
+        } else if(driverController.getRawButton(5)) {
             Motors.intake.set(-0.75);
         }
         
-        if(controller.getRawButton(4)) {
+        if(driverController.getRawButton(4)) {
             Motors.magazine.set(0.75);
-        } else if(controller.getRawButton(6)) {
+        } else if(driverController.getRawButton(6)) {
             Motors.magazine.set(-0.75);
-        }
-        
-        // run winch uwu
-        Motors.winch.set(0);
-        if(controller.getRawButton(11)) {
-            Motors.winch.set(0.75);
-        } else if(controller.getRawButton(12)) {
-            Motors.winch.set(-0.75);
-        }
-        
-        if(controller.getRawButton(10)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kForward);
-        } else if(controller.getRawButton(9)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kOff);
-        } else if(controller.getRawButton(8)) {
-            OtherIO.lockingPiston.set(DoubleSolenoid.Value.kReverse);
         }
     }
 }  

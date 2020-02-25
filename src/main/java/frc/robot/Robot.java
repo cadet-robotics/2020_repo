@@ -27,6 +27,7 @@ import frc.robot.io.Sensors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.WinchSubsystem;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
@@ -65,10 +66,12 @@ public class Robot extends TimedRobot {
     LineOverlay intersectLineA, // These two are debug
                 intersectLineB;
 
+    // Subsystems
     public ControlSubsystem controlSubsystem;
     public DriveSubsystem driveSubsystem;
     public ShooterSubsystem shooterSubsystem;
     public ArmSubsystem armSubsystem;
+    public WinchSubsystem winchSubsystem;
     public Limelight limelight;
 
     /**
@@ -95,8 +98,9 @@ public class Robot extends TimedRobot {
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(new Pose2d(new Translation2d(), new Rotation2d()));
         shooterSubsystem = new ShooterSubsystem();
+        winchSubsystem = new WinchSubsystem();
 
-        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem);
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, winchSubsystem);
 
         limelight = new Limelight(NetworkTableInstance.getDefault());
         limelight.setCamMode(Limelight.CamMode.Vision);
