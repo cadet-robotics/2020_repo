@@ -314,8 +314,11 @@ public class Robot extends TimedRobot {
     	right *= Constants.DRIVE_SPEED_MODIFIER;
     	
     	// Set motor values
+        /*
     	Motors.leftDrive.set(left);
     	Motors.rightDrive.set(right);
+         */
+        driveSubsystem.getDriveBase().tankDrive(left, right, false);
     }
     
     

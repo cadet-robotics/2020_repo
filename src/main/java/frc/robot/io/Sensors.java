@@ -40,7 +40,12 @@ public class Sensors {
         bottomFlyEncoder.setVelocityConversionFactor(1 / 3.0);
 
         driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 1024);
+        driveEncoderLeft.setPositionConversionFactor(Math.PI * 6 * 0.0254 / 7.56);
+        driveEncoderLeft.setVelocityConversionFactor(Math.PI * 6 * 0.0254 / 7.56);
+
         driveEncoderRight = new CANEncoder(Motors.rightDriveB, EncoderType.kQuadrature, 1024);
+        driveEncoderRight.setPositionConversionFactor(Math.PI * 6 * 0.0254 / 7.56);
+        driveEncoderRight.setVelocityConversionFactor(Math.PI * 6 * 0.0254 / 7.56);
 
         /*
         // Sets up drive encoders to report rate as m/s for each side of the robot

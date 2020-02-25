@@ -82,7 +82,7 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Shoot
         shootButton.whenPressed(() -> {
-            System.out.println("WORKING");
+            //System.out.println("WORKING");
             new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
         });
     }
@@ -95,7 +95,7 @@ public class ControlSubsystem extends SubsystemBase {
         driveSubsystem.getDriveBase().arcadeDrive(-getZAxis(), getYAxis(), true);
         
         double r = rpm * (-controller.getRawAxis(3) + 1);
-        System.out.println(r);
+        //System.out.println(r);
         new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
         Robot.crosshairs.setVelocityRPM(r);
         

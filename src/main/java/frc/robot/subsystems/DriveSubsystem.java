@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANEncoder;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -50,8 +51,8 @@ public class DriveSubsystem extends SubsystemBase {
         leftEncoder = eLeft;
         rightEncoder = eRight;
 
-        leftController = new PIDController(1, 0, 0);
-        rightController = new PIDController(1, 0, 0);
+        leftController = new PIDController(1e-2, 0, 0);
+        rightController = new PIDController(1e-2, 0, 0);
 
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
@@ -81,8 +82,8 @@ public class DriveSubsystem extends SubsystemBase {
                 leftController,
                 rightController,
                 (vLeft, vRight) -> {
-                    Motors.leftDrive.setVoltage(vLeft);
-                    Motors.rightDrive.setVoltage(vRight);
+                    double v = RobotController.getBatteryVoltage();
+                    driveBase.tankDrive(vLeft / v, vRight / v, false);
                 },
                 this
         );
