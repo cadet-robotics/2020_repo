@@ -23,7 +23,7 @@ public class Limelight implements Sendable {
         vAng = lim.getEntry("ty");
         camMode = lim.getEntry("camMode");
         lightMode = lim.getEntry("ledMode");
-        SendableRegistry.add(this, "limelight-interface");
+        SendableRegistry.addLW(this, "limelight-interface");
     }
 
     public boolean hasTarget() {
@@ -77,5 +77,6 @@ public class Limelight implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("distance", Limelight.this::getDistance, (v) -> {});
+        builder.addBooleanProperty("hasTarget", Limelight.this::hasTarget, (v) -> {});
     }
 }

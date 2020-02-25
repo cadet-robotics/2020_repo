@@ -131,7 +131,7 @@ public class ControlSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
         SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
-        
+
         // Run winch
         int pov = codriverController.getPOV();
         
