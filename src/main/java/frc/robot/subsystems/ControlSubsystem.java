@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
@@ -39,6 +40,12 @@ public class ControlSubsystem extends SubsystemBase {
     // Winch stuff
     private int winchUpAngle,
                 winchDownAngle;
+    
+    // Misc buttons
+    private int manualIntakeIn,
+                manualIntakeOut,
+                manualMagazineUp,
+                manualMagazineDown;
     
 
     //Private Subsystem instances
@@ -90,6 +97,12 @@ public class ControlSubsystem extends SubsystemBase {
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
         winchDownAngle = codriverControls.getIntValue("winch down");
+        
+        // Other
+        manualMagazineUp = driverControls.getIntValue("manual mag up");
+        manualMagazineDown = driverControls.getIntValue("manual mag down");
+        manualIntakeIn = driverControls.getIntValue("manual intake in");
+        manualIntakeOut = driverControls.getIntValue("manual intake out");
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -102,8 +115,10 @@ public class ControlSubsystem extends SubsystemBase {
             new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
         });
         
-        // Take in balls
-        //intakeButton.whenPressed(new IntakeNewBallCommand(pickupSubsystem));
+        // Toggle intake
+        intakeButton.whenPressed(() -> {
+            pickupSubsystem.toggleAutoIntake();
+        });
     }
     
     /**
@@ -129,39 +144,26 @@ public class ControlSubsystem extends SubsystemBase {
         //System.out.println(r);
         new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
         Robot.crosshairs.setVelocityRPM(r);
-
-        //Motors.intake.set(0);
-        //Motors.magazine.set(0);
-
-        if(driverController.getRawButton(3)) {
-            pickupSubsystem.setIntakeSpeed(0.75);
-        } else if(driverController.getRawButton(5)) {
-            pickupSubsystem.setIntakeSpeed(-0.75);
+        
+        // Run intake manually
+        if(!pickupSubsystem.getAutoIntakeEnabled()) {
+            Motors.intake.set(0);
+            Motors.magazine.set(0);
+            
+            if(driverController.getRawButton(manualIntakeIn)) {
+                System.out.println("INTAKE IN");
+                Motors.intake.set(Constants.INTAKE_SPEED);
+            } else if(driverController.getRawButton(manualIntakeOut)) {
+                Motors.intake.set(-Constants.INTAKE_SPEED);
+            }
+            
+            if(driverController.getRawButton(manualMagazineUp)) {
+                System.out.println("MAGAZINE UP");
+                Motors.magazine.set(Constants.MAGAZINE_SPEED);
+            } else if(driverController.getRawButton(manualMagazineDown)) {
+                Motors.magazine.set(-Constants.MAGAZINE_SPEED);
+            }
         }
-
-        if(driverController.getRawButton(4)) {
-            pickupSubsystem.setMagazineSpeed(0.75);
-        } else if(driverController.getRawButton(6)) {
-            pickupSubsystem.setMagazineSpeed(-0.75);
-        }
-        // Controls for Mag & Intake
-        // TODO: Make intake and magazine automatic
-        /*
-        pickupSubsystem.setIntakeSpeed(0);
-        Motors.magazine.set(0); //TEMP
-
-        if(driverController.getRawButton(inta)) {
-            pickupSubsystem.setIntakeSpeed(0.2);
-        } else {
-            pickupSubsystem.setIntakeSpeed(0);
-        }
-
-        if(controller.getRawButton(magButton)) {
-            pickupSubsystem.setMagazineSpeed(0.5);
-        } else {
-            pickupSubsystem.setMagazineSpeed(0);
-        }
-        */
     }
 }  
 

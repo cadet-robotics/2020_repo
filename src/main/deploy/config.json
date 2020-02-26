@@ -29,6 +29,26 @@
 			"name": "intake button",
 			"value": "2",
 			"description": "Button ID for the intake"
+		},
+		{
+			"name": "manual mag up",
+			"value": "5",
+			"description": "Runs magazine up manually"
+		},
+		{
+			"name": "manual mag down",
+			"value": "6",
+			"description": "Runs magazine down manually"
+		},
+		{
+			"name": "manual intake in",
+			"value": "3",
+			"description": "Runs intake in manually"
+		},
+		{
+			"name": "manual intake out",
+			"value": "4",
+			"description": "Runs intake out manually"
 		}
 	],
 	
@@ -82,12 +102,12 @@
 	"pwm motors": [
 		{
 			"name": "intake",
-			"value": "3",
+			"value": "2",
 			"description": "Runs the intake"
 		},
 		{
 			"name": "magazine",
-			"value": "2",
+			"value": "3",
 			"description": "Runs the magazine"
 		},
 		{

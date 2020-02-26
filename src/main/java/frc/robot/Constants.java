@@ -34,7 +34,7 @@ public final class Constants {
      * Intake & Magazine Constants
      */
     public static final double INTAKE_SPEED = 0.5,
-                               MAGAZINE_SPEED = 0.3,
+                               MAGAZINE_SPEED = -0.3,
                                MAGAZINE_COUNT = 20;
     
     /*
