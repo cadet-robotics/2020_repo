@@ -52,7 +52,7 @@ public class PickupSubsystem extends SubsystemBase {
      */
     public void periodic() {
     	SmartDashboard.putNumber("frick", 27.726 * Math.pow(Sensors.intakeSensor.getAverageVoltage(), -1.2045));
-    	if (this.getCurrentCommand() == null && isBallInRange(Sensors.intakeSensor, 5.0, 20.0) && autoIntakeEnabled) {
+    	if (this.getCurrentCommand() == null && isBallInRange(Sensors.intakeSensor, 5.0, 22.54) && autoIntakeEnabled) {
     		//Starts mag management command
             new IntakeNewBallCommand(this).schedule();
     	}

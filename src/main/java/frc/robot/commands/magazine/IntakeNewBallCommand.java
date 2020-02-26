@@ -22,7 +22,7 @@ public class IntakeNewBallCommand extends SequentialCommandGroup {
     public IntakeNewBallCommand(PickupSubsystem pickupSubsystemIn) {
         super(
                 new BallToMagCommand(pickupSubsystemIn),
-                new TranslateMagCommand(pickupSubsystemIn)
+                new TranslateMagCommand(pickupSubsystemIn).deadlineWith()
         );
         pickupSubsystem = pickupSubsystemIn;
     }

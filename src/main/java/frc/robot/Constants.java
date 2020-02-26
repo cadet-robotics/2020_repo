@@ -35,7 +35,7 @@ public final class Constants {
      */
     public static final double INTAKE_SPEED = 0.5,
                                MAGAZINE_SPEED = -0.3,
-                               MAGAZINE_COUNT = 20;
+                               MAGAZINE_COUNT = 30;
     
     /*
      * Crosshairs Constants

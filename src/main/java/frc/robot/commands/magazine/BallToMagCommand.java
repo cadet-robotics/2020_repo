@@ -29,6 +29,7 @@ public class BallToMagCommand extends CommandBase {
     @Override
     public void execute() {
         //Enables motors
+        System.out.println("BallToMag Running: " + System.currentTimeMillis());
         pickupSubsystem.setIntakeSpeed(Constants.INTAKE_SPEED);
     }
 
@@ -40,8 +41,6 @@ public class BallToMagCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         //Sensor picks up ball, bring to b2. Stop command.
-        return Sensors.magSensor.get();
+        return !Sensors.magSensor.get();
     }
-
-
 }

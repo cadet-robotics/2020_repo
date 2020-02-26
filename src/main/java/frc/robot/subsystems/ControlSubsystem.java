@@ -147,6 +147,7 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {
+            pickupSubsystem.getCurrentCommand().cancel();
             Motors.intake.set(0);
             Motors.magazine.set(0);
             
