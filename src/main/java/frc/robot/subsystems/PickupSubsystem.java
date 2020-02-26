@@ -19,7 +19,7 @@ public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX intake;
     PWMVictorSPX mag;
 
-    boolean autoIntakeEnabled = true;
+    private boolean autoIntakeEnabled = true;
 
     /**
      * Constructor for subsystem
@@ -77,5 +77,12 @@ public class PickupSubsystem extends SubsystemBase {
     //Gets automatic intake enabled value
     public boolean getAutoIntakeEnabled() {
         return autoIntakeEnabled;
+    }
+    
+    /**
+     * Toggles if autointake is enabled
+     */
+    public void toggleAutoIntake() {
+        autoIntakeEnabled = !autoIntakeEnabled;
     }
 }
