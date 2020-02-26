@@ -50,6 +50,6 @@ public class Sensors {
         driveEncoderRight.setDistancePerPulse(DIST_DRIVE);
          */
 
-        gyro = new AHRS(SerialPort.Port.kMXP);
+        gyro = new AHRS();
     }
 }
