@@ -9,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
+import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.subsystems.ArmSubsystem;
@@ -27,7 +28,8 @@ public class ControlSubsystem extends SubsystemBase {
     private Joystick driverController,
                      codriverController;
     private JoystickButton spinButton,
-                           shootButton;
+                           shootButton,
+                           intakeButton;
 
     // Axes
     private int xAxis,
@@ -82,6 +84,7 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Buttons
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
+        intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
         
         // Winch
@@ -95,9 +98,12 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Shoot
         shootButton.whenPressed(() -> {
-            System.out.println("WORKING");
+            //System.out.println("WORKING");
             new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
         });
+        
+        // Take in balls
+        //intakeButton.whenPressed(new IntakeNewBallCommand(pickupSubsystem));
     }
     
     /**
@@ -120,12 +126,12 @@ public class ControlSubsystem extends SubsystemBase {
          * TEMPORARY MANUAL CONTROLS
          */
         double r = rpm * (-driverController.getRawAxis(3) + 1);
-        System.out.println(r);
+        //System.out.println(r);
         new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
         Robot.crosshairs.setVelocityRPM(r);
 
-        Motors.intake.set(0);
-        Motors.magazine.set(0);
+        //Motors.intake.set(0);
+        //Motors.magazine.set(0);
 
         if(driverController.getRawButton(3)) {
             pickupSubsystem.setIntakeSpeed(0.75);

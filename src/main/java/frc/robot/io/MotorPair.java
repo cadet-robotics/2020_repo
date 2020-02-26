@@ -54,8 +54,8 @@ public class MotorPair implements SpeedController {
     }
     
     // We have to implement deprecated stuff because interfaces
-    @SuppressWarnings("deprecation")
-    @Override
+	@Override
+	@SuppressWarnings({"deprecation","removal"})
     public void pidWrite(double output) {
         motorA.pidWrite(output);
         motorB.pidWrite(output);
@@ -65,6 +65,12 @@ public class MotorPair implements SpeedController {
     public void set(double speed) {
         motorA.set(speed);
         motorB.set(speed);
+    }
+    
+    @Override
+    public void setVoltage(double outputVolts) {
+    	motorA.setVoltage(outputVolts);
+    	motorB.setVoltage(outputVolts);
     }
 
     @Override

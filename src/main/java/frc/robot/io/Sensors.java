@@ -27,8 +27,8 @@ public class Sensors {
         Config sensors = c.separateCategory("sensors");
         
         // Magazine prox sensors
-        magSensor = new DigitalInput(sensors.getIntValue("top ball sensor"));
-        intakeSensor = new AnalogInput(sensors.getIntValue("middle ball sensor"));
+        magSensor = new DigitalInput(sensors.getIntValue("magazine sensor"));
+        intakeSensor = new AnalogInput(sensors.getIntValue("intake sensor"));
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);

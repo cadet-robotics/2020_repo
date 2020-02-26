@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,12 +27,6 @@ public class PickupSubsystem extends SubsystemBase {
     public PickupSubsystem() {
         intake = Motors.intake;
         mag = Motors.magazine;
-        setDefaultCommand(new PerpetualCommand(new InstantCommand(() -> {
-            if (isBallInRange(Sensors.intakeSensor, 5.0, 38.0) && autoIntakeEnabled) {
-                //Starts mag management command
-                new IntakeNewBallCommand(this).schedule();
-            }
-        }, this)));
     }
 
     /**
@@ -56,6 +51,11 @@ public class PickupSubsystem extends SubsystemBase {
      * Periodic things aaaaaaaaa
      */
     public void periodic() {
+    	SmartDashboard.putNumber("frick", 27.726 * Math.pow(Sensors.intakeSensor.getAverageVoltage(), -1.2045));
+    	if (this.getCurrentCommand() == null && isBallInRange(Sensors.intakeSensor, 5.0, 20.0) && autoIntakeEnabled) {
+    		//Starts mag management command
+            new IntakeNewBallCommand(this).schedule();
+    	}
     }
 
     /**

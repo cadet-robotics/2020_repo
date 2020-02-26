@@ -155,7 +155,7 @@ public class CrosshairsOverlay implements VisionProcessor {
     public void setVelocityRPM(double rpm) {
         shooterVelocity = (wheelDiameter * Math.PI * rpm) / 60;
         shooterVelocity *= 0.95; // adjust it a bit
-        System.out.println("v: " + shooterVelocity);
+        //System.out.println("v: " + shooterVelocity);
     }
     
     /**

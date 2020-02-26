@@ -1,6 +1,7 @@
 package frc.robot.commands.magazine;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.io.Sensors;
 import frc.robot.subsystems.PickupSubsystem;
 
@@ -28,7 +29,7 @@ public class BallToMagCommand extends CommandBase {
     @Override
     public void execute() {
         //Enables motors
-        pickupSubsystem.setIntakeSpeed(0.2);
+        pickupSubsystem.setIntakeSpeed(Constants.INTAKE_SPEED);
     }
 
     /**

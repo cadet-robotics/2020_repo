@@ -68,19 +68,14 @@
 	
 	"sensors": [
 		{
-			"name": "top ball sensor",
+			"name": "magazine sensor",
 			"value": "0",
 			"description": "Top proximity sensor for the magazine"
 		},
 		{
-			"name": "middle ball sensor",
-			"value": "1",
+			"name": "intake sensor",
+			"value": "3",
 			"description": "Middle proximity sensor for the magazine"
-		},
-		{
-			"name": "bottom ball sensor",
-			"value": "2",
-			"description": "Bottom proximity sensor for the magazine"
 		}
 	],
 	

@@ -1,6 +1,7 @@
 package frc.robot.commands.magazine;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.PickupSubsystem;
 
 /**
@@ -26,7 +27,7 @@ public class TranslateMagCommand extends CommandBase {
      * Translates by a given amount
      */
     public void execute() {
-        pickupSubsystem.setMagazineSpeed(0.2);
+        pickupSubsystem.setMagazineSpeed(Constants.MAGAZINE_SPEED);
         count++;
     }
 
@@ -36,7 +37,7 @@ public class TranslateMagCommand extends CommandBase {
      * @return If the intervals exceeds or equals a given amount
      */
     public boolean isFinished() {
-        return count >= 20;
+        return count >= Constants.MAGAZINE_COUNT;
     }
 
 }
