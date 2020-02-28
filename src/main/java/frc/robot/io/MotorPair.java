@@ -75,13 +75,7 @@ public class MotorPair implements SpeedController {
 
     @Override
     public double get() {
-        double a = motorA.get(),
-               b = motorB.get();
-        
-        // Motors, theoretically, should return the same value
-        if(a != b) throw new IllegalStateException(String.format("Motors in pair got different values (%s != %s)", a, b));
-        
-        return a;
+        return (motorA.get() + motorB.get()) / 2;
     }
 
     @Override

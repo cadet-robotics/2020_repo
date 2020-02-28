@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -88,6 +89,8 @@ public class Robot extends TimedRobot {
         // Initialize the configurations
         Motors.loadConfiguration(mainConfig);
         Sensors.loadConfig(mainConfig);
+        Sensors.driveEncoderLeft.setPosition(0);
+        Sensors.driveEncoderRight.setPosition(0);
         OtherIO.loadConfig(mainConfig);
         
         // Initialize subsystems
@@ -203,6 +206,12 @@ public class Robot extends TimedRobot {
 
         //Debug and Smartdashboard
         SmartDashboard.putBoolean("Auto Ball Intake", pickupSubsystem.getAutoIntakeEnabled());
+
+        SmartDashboard.putNumber("Gyro", Sensors.getGyro());
+        SmartDashboard.putNumber("Enc Left P", Sensors.driveEncoderLeft.getPosition());
+        SmartDashboard.putNumber("Enc Right P", Sensors.driveEncoderRight.getPosition());
+        SmartDashboard.putNumber("Enc Left V", Sensors.driveEncoderLeft.getVelocity());
+        SmartDashboard.putNumber("Enc Right V", Sensors.driveEncoderRight.getVelocity());
     }
 
     /**
@@ -249,8 +258,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-        
-        
+        Sensors.driveEncoderLeft.setPosition(0);
+        Sensors.driveEncoderRight.setPosition(0);
     }
     
     /**

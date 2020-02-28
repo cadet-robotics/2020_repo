@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 
+import com.revrobotics.EncoderType;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -15,28 +17,28 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
 public class DriveSubsystem extends SubsystemBase {
     private static final double MAX_SPEED = 2;
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
+    private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
+
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.76);
 
     private DifferentialDrive driveBase;
-    private DifferentialDriveOdometry odometry;
 
     private CANEncoder leftEncoder;
     private CANEncoder rightEncoder;
 
-    private PIDController leftController;
-    private PIDController rightController;
+    private PIDController leftController = new PIDController(1e-4, 0, 0);
+    private PIDController rightController = new PIDController(1e-4, 0, 0);
+
+    private DifferentialDriveOdometry odometry;
 
     private Gyro gyro;
-
-    private DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.76);
 
     public DriveSubsystem(Pose2d initialPosMeters) {
         this(Motors.leftDrive, Motors.rightDrive, Sensors.driveEncoderLeft, Sensors.driveEncoderRight, Sensors.gyro, initialPosMeters);
@@ -50,15 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
         leftEncoder = eLeft;
         rightEncoder = eRight;
 
-        leftController = new PIDController(1, 0, 0);
-        rightController = new PIDController(1, 0, 0);
-
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
-
         gyro = gyroIn;
-
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-gyro.getAngle()), initialPosMeters);
     }
 
     public DifferentialDrive getDriveBase() {
@@ -67,13 +61,27 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(-gyro.getAngle()), leftEncoder.getPosition(), rightEncoder.getPosition());
+        if (odometry != null) {
+            odometry.update(Rotation2d.fromDegrees(Sensors.getGyro()), leftEncoder.getPosition(), rightEncoder.getPosition());
+        }
     }
 
-    public RamseteCommand ramseteCommandBuilder(Trajectory t) {
-        return new RamseteCommand(
+    public Command trajectoryCommandBuilder(Trajectory t, Pose2d initialPosMeters) {
+
+
+        t.getStates().forEach(System.out::println);
+
+        return new InstantCommand(() -> {
+            leftEncoder.setPosition(0);
+            rightEncoder.setPosition(0);
+
+            leftController.reset();
+            rightController.reset();
+
+            odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(Sensors.getGyro()), initialPosMeters);
+        }).andThen(new RamseteCommand(
                 t,
-                odometry::getPoseMeters,
+                () -> odometry.getPoseMeters(),
                 new RamseteController(),
                 feedforward,
                 kin,
@@ -81,10 +89,16 @@ public class DriveSubsystem extends SubsystemBase {
                 leftController,
                 rightController,
                 (vLeft, vRight) -> {
-                    Motors.leftDrive.setVoltage(vLeft);
-                    Motors.rightDrive.setVoltage(vRight);
+                    double vMain = RobotController.getBatteryVoltage();
+                    //System.out.println("->" + vMain);
+                    //System.out.println(vLeft + ":::" + vRight);
+                    //System.out.println(leftController.getPositionError() + " ||| " + rightController.getPositionError());
+                    driveBase.tankDrive(vLeft / vMain, vRight / vMain, false);
                 },
                 this
-        );
+        )).andThen(new InstantCommand(() -> {
+            System.out.println("End Pos: " + odometry.getPoseMeters());
+            odometry = null;
+        }));
     }
 }
