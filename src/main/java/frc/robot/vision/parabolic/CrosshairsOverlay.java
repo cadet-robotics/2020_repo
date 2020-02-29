@@ -6,6 +6,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import frc.robot.greeneva.Limelight;
 import frc.robot.vision.VisionProcessor;
 
 /**
@@ -132,6 +133,7 @@ public class CrosshairsOverlay implements VisionProcessor {
     public double getQuadraticC() { return quadC; }
     public double getAngleA() { return angleA; }
     public double getAngleB() { return angleB; }
+    public double getVelocity() { return shooterVelocity; }
     public Scalar getColorA() { return colorA; }
     public Scalar getColorB() { return colorB; }
     
@@ -169,6 +171,43 @@ public class CrosshairsOverlay implements VisionProcessor {
                y = targetY - shooterY;
         
         shooterVelocity = (Math.sqrt(gravity) * dist * Math.sqrt((tanTheta * tanTheta) + 1)) / Math.sqrt((2 * dist * tanTheta) - (2 * y));
+        
+        
+    }
+    
+    /*
+     * Method: Apply linePositions and compare to limelight angles of AngleA and AngleB
+     */
+    
+    /**
+     * Sets the velocity via trial-and-error calculation
+     * 
+     * @param ll
+     */
+    public void setVelocityLimelight(Limelight ll) { 
+        // Start with large step, half it each time until we're close enough
+        double step = 2, // in m/s
+               error = 0.01,
+               angle = angleA - cameraAngle;
+        int stepsTaken = 0;
+        
+        shooterVelocity = 5;
+        calculateLinePositions();
+        System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
+        
+        // Until its close enough or we've tried too hard
+        while(Math.abs((angle = (angleA - cameraAngle)) - ll.getVAngleRad()) > error && stepsTaken++ < 30) {
+            if(angle > ll.getVAngleRad()) { // Line is above target
+                shooterVelocity -= step;
+            } else {
+                shooterVelocity += step;
+            }
+            
+            System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
+            
+            step /= 1.5;
+            calculateLinePositions();
+        }
     }
     
     /**
@@ -177,7 +216,7 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @return Shooter RPM
      */
     public double getRPM() {
-        return shooterVelocity / (wheelDiameter * Math.PI * 60);
+        return (shooterVelocity * 60) / (wheelDiameter * Math.PI);
     }
     
     
@@ -188,7 +227,7 @@ public class CrosshairsOverlay implements VisionProcessor {
         // Start by calculating the quadratic trajectory
         double secTheta = 1.0d / Math.cos(shooterAngle);
         
-        quadA = (gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
+        quadA = -(gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
         quadB = Math.tan(shooterAngle);
         quadC = shooterY - targetY;
         
@@ -257,10 +296,10 @@ public class CrosshairsOverlay implements VisionProcessor {
             // Draw lines based off of lineAY and lineBY
             Imgproc.line(source, new Point(0, lineAY), new Point(width, lineAY), colorA);
             Imgproc.line(source, new Point(0, lineBY), new Point(width, lineBY), colorB);
-            
-            // Draw vertical crosshair
-            Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         }
+        
+        // Draw vertical crosshair
+        Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         
         source.copyTo(dest);
     }

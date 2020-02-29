@@ -101,18 +101,19 @@ public class Robot extends TimedRobot {
         pickupSubsystem = new PickupSubsystem();
         winchSubsystem = new WinchSubsystem();
 
-        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem);
-
         limelight = new Limelight(NetworkTableInstance.getDefault());
         limelight.setCamMode(Limelight.CamMode.Vision);
         
         // Initialize the camera itself
-        cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setResolution(320, 240);
-        cam.setFPS(15);
+        //cam = CameraServer.getInstance().startAutomaticCapture();
+        cam = limelight.getLimelightCam();
+        CameraServer.getInstance().addCamera(cam);
+        //cam.setResolution(320, 240);
+        //cam.setFPS(15);
         
         // Crosshairs vision setup
         setupCrosshairsVision(mainConfig);
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem, crosshairs, limelight);
     }
     
     /**
@@ -130,7 +131,7 @@ public class Robot extends TimedRobot {
         crosshairs = new CrosshairsOverlay(Constants.CAMERA_X,
                                            camHeight,
                                            Constants.CAMERA_ANGLE, 
-                                           Constants.LIFECAM_3000_VERTICAL_FOV,
+                                           Constants.CAMERA_FOV, //Constants.LIFECAM_3000_VERTICAL_FOV,
                                            Constants.IMAGE_HEIGHT,
                                            shooterHeight,
                                            Constants.SHOOTER_WHEELS_DIAMETER,

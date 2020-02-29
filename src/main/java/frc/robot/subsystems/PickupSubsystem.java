@@ -19,7 +19,7 @@ public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX intake;
     PWMVictorSPX mag;
 
-    private boolean autoIntakeEnabled = true;
+    private boolean autoIntakeEnabled = false;
 
     /**
      * Constructor for subsystem

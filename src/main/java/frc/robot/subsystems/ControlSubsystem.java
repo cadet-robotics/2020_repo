@@ -12,9 +12,11 @@ import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
+import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc.robot.wheel.ColorEnum;
 import frc6868.config.api.Config;
 
@@ -72,7 +74,7 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn, WinchSubsystem winchSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn, WinchSubsystem winchSubsystemIn, CrosshairsOverlay crosshairsIn, Limelight limelightIn) {
         super();
         Config driverControls = mainConfig.separateCategory("driver controls"),
                codriverControls = mainConfig.separateCategory("codriver controls");
@@ -120,7 +122,31 @@ public class ControlSubsystem extends SubsystemBase {
         intakeButton.whenPressed(() -> {
             pickupSubsystem.toggleAutoIntake();
         });
+        
+        // Test vision thing
+        new JoystickButton(driverController, 7).whenPressed(() -> {
+            //crosshairsIn.setVelocityDistance(limelightIn.getDistance());
+            crosshairsIn.setVelocityLimelight(limelightIn);
+            new SetShooterSpeedCommand(shooterSubsystem, crosshairsIn.getRPM()).schedule();
+        });
+        
+        new JoystickButton(driverController, 9).whenPressed(() -> {
+            System.out.println("Setting to DRIVER");
+            limelightIn.setCamMode(Limelight.CamMode.Driver);
+        });
+        
+        new JoystickButton(driverController, 10).whenPressed(() -> {
+            System.out.println("Setting to VISION");
+            limelightIn.setCamMode(Limelight.CamMode.Vision);
+        });
+        
+        new JoystickButton(driverController, 12).whenPressed(() -> {
+            manualRPM = !manualRPM;
+            System.out.println(manualRPM);
+        });
     }
+    
+    boolean manualRPM = false;
     
     /**
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
@@ -144,14 +170,16 @@ public class ControlSubsystem extends SubsystemBase {
         /*
          * TEMPORARY MANUAL CONTROLS
          */
-        double r = rpm * (-driverController.getRawAxis(3) + 1);
-        //System.out.println(r);
-        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
-        Robot.crosshairs.setVelocityRPM(r);
+        if(manualRPM) {
+            double r = rpm * (-driverController.getRawAxis(3) + 1);
+            //System.out.println(r);
+            new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
+            Robot.crosshairs.setVelocityRPM(r);
+        }
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {
-            pickupSubsystem.getCurrentCommand().cancel();
+            //pickupSubsystem.getCurrentCommand().cancel();
             Motors.intake.set(0);
             Motors.magazine.set(0);
             
