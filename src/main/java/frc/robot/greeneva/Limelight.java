@@ -1,5 +1,10 @@
 package frc.robot.greeneva;
 
+import edu.wpi.cscore.AxisCamera;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.HttpCamera;
+import edu.wpi.cscore.VideoSource;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -10,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import static frc.robot.Constants.*;
 
 public class Limelight implements Sendable {
+    private NetworkTableInstance nt;
     private NetworkTableEntry hasTarget;
     private NetworkTableEntry hAng;
     private NetworkTableEntry vAng;
@@ -17,7 +23,8 @@ public class Limelight implements Sendable {
     private NetworkTableEntry lightMode;
 
     public Limelight(NetworkTableInstance ntI) {
-        NetworkTable lim = ntI.getTable("limelight");
+        nt = ntI;
+        NetworkTable lim = nt.getTable("limelight");
         hasTarget = lim.getEntry("tv");
         hAng = lim.getEntry("tx");
         vAng = lim.getEntry("ty");
@@ -72,6 +79,10 @@ public class Limelight implements Sendable {
 
     public void setLed(boolean on) {
         lightMode.setNumber(on ? 0 : 1);
+    }
+
+    public HttpCamera getLimelightCam() {
+        return new HttpCamera("limelight", "10.68.68.66:5800");
     }
 
     @Override
