@@ -56,6 +56,7 @@ public final class Constants {
     
     
     // Limelight constants
-    public static final double LIMELIGHT_ANGLE = Math.toRadians(50),
-                               LIMELIGHT_HEIGHT = 44 * 0.0254;
+    public static final double LIMELIGHT_ANGLE = Math.toRadians(28),
+                               LIMELIGHT_HEIGHT = 44 * 0.0254,
+                               LIMELIGHT_TARGET_HEIGHT = 90 * 0.0254;
 }

@@ -16,10 +16,11 @@ public class LimelightFacer extends CommandBase {
         lime = limeIn;
         driveSubsystem = driveSubsystemIn;
         addRequirements(driveSubsystem);
-        pid = new PIDController(1 / 54.0, 0, 0);
+        pid = new PIDController(1 / 20.0, 0, 0);
+        pid.setSetpoint(0);
     }
 
-    private static final SimpleMotorFeedforward feed = new SimpleMotorFeedforward(0.2, 0.8);
+    private static final SimpleMotorFeedforward feed = new SimpleMotorFeedforward(0.4, 0.8);
 
     private boolean isDone = false;
 
@@ -29,7 +30,7 @@ public class LimelightFacer extends CommandBase {
         double ang = lime.hasTarget() ? lime.getHAngle() : -27;
         double speed = pid.calculate(ang);
         if (pid.atSetpoint()) {
-            isDone = true;
+            //isDone = true;
         } else {
             speed = feed.calculate(speed);
             driveSubsystem.getDriveBase().tankDrive(speed, -speed);

@@ -56,7 +56,7 @@ public class Limelight implements Sendable {
     // Uses vertical angle to estimate distance
     // Limelight recommends this, and it does seem like it would work well
     public double getDistance() {
-        return (TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(getVAngleRad() + LIMELIGHT_ANGLE);
+        return (LIMELIGHT_TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(getVAngleRad() + LIMELIGHT_ANGLE);
     }
 
     public enum CamMode {
@@ -88,6 +88,7 @@ public class Limelight implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("distance", Limelight.this::getDistance, (v) -> {});
+        builder.addDoubleProperty("vangle", () -> (Limelight.this.getVAngleRad() + LIMELIGHT_ANGLE) * 180 / Math.PI, (v) -> {});
         builder.addBooleanProperty("hasTarget", Limelight.this::hasTarget, (v) -> {});
     }
 }
