@@ -29,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
 
-    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(/*0.76*/1.2);
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.64);
 
     private DifferentialDrive driveBase;
 

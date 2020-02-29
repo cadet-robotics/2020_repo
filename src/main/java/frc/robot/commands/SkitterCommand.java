@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -28,11 +29,13 @@ public class SkitterCommand extends SequentialCommandGroup {
         }
         TRAJECTORY_AGREEMENT = tt;
         */
+        TrajectoryConfig config = new TrajectoryConfig(1, 0.7);
+        config.addConstraint(new CentripetalAccelerationConstraint(0.15));
         ArrayList<Pose2d> ls = new ArrayList<>();
         ls.add(new Pose2d());
         ls.add(new Pose2d(new Translation2d(1, 0), new Rotation2d()));
         ls.add(new Pose2d(new Translation2d(3, 2), Rotation2d.fromDegrees(210)/*new Rotation2d()*/));
-        TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, new TrajectoryConfig(1, 0.7));
+        TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, config);
     }
 
     public SkitterCommand(Trajectory t, DriveSubsystem drive) {
