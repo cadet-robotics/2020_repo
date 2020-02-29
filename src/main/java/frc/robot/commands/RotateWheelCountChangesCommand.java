@@ -10,6 +10,7 @@ public class RotateWheelCountChangesCommand extends CommandBase {
     private static final double SPEED = 0.2;
 
     public RotateWheelCountChangesCommand(ArmSubsystem armIn, int changesIn) {
+        super();
         arm = armIn;
         addRequirements(arm);
         changes = changesIn;

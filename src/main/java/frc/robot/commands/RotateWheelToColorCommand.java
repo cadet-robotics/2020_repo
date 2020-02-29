@@ -10,6 +10,7 @@ public class RotateWheelToColorCommand extends CommandBase {
     private ColorEnum target;
 
     public RotateWheelToColorCommand(ArmSubsystem armIn, ColorEnum targetIn) {
+        super();
         arm = armIn;
         addRequirements(arm);
         target = targetIn;

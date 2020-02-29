@@ -39,6 +39,7 @@ public class SkitterCommand extends SequentialCommandGroup {
     }
 
     public SkitterCommand(Trajectory t, DriveSubsystem drive) {
+        super();
         addCommands(drive.trajectoryCommandBuilder(t, new Pose2d()));
     }
 
