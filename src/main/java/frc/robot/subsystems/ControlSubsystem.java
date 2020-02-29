@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
@@ -126,7 +127,10 @@ public class ControlSubsystem extends SubsystemBase {
      */
     public void periodicTeleop() {
         //Drive Movement
-        driveSubsystem.getDriveBase().arcadeDrive(-getZAxis(), getYAxis(), true);
+        driveSubsystem.getDriveBase().arcadeDrive(-getYAxis(), getZAxis(), true);
+
+        SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
+        SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
         
         // Run winch
         int pov = codriverController.getPOV();

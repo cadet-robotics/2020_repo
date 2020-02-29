@@ -276,6 +276,7 @@ public class Robot extends TimedRobot {
         
         // Run controls subsystem periodic
         controlSubsystem.periodicTeleop();
+        //driveSubsystem.getDriveBase().tankDrive(0.3, 0.3, false);
     }
     
     double debugVelocity = 0,
@@ -318,8 +319,8 @@ public class Robot extends TimedRobot {
     	left += controlSubsystem.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
     	right += controlSubsystem.getYAxis() * Constants.DRIVE_Y_AXIS_MODIFIER;
     	
-    	// Add left/right turning based on the x-axis, opposite per side
-    	left -= controlSubsystem.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
+    	// Add left/right turning based on the x-axis
+    	left += controlSubsystem.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
     	right += controlSubsystem.getXAxis() * Constants.DRIVE_X_AXIS_MODIFIER;
     	
     	// Apply total speed modifier
@@ -327,8 +328,7 @@ public class Robot extends TimedRobot {
     	right *= Constants.DRIVE_SPEED_MODIFIER;
     	
     	// Set motor values
-    	Motors.leftDrive.set(left);
-    	Motors.rightDrive.set(right);
+    	driveSubsystem.getDriveBase().tankDrive(left, right, false);
     }
     
     

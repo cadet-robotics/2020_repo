@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANEncoder;
 
 import com.revrobotics.EncoderType;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.io.Motors;
@@ -26,15 +29,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
 
-    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.76);
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(/*0.76*/1.2);
 
     private DifferentialDrive driveBase;
 
     private CANEncoder leftEncoder;
     private CANEncoder rightEncoder;
 
-    private PIDController leftController = new PIDController(1e-4, 0, 0);
-    private PIDController rightController = new PIDController(1e-4, 0, 0);
+    private PIDController leftController = new PIDController(1e-3, 0, 0);
+    private PIDController rightController = new PIDController(1e-3, 0, 0);
 
     private DifferentialDriveOdometry odometry;
 
@@ -47,6 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
     private DriveSubsystem(SpeedController left, SpeedController right, CANEncoder eLeft, CANEncoder eRight, Gyro gyroIn, Pose2d initialPosMeters) {
         super();
         driveBase = new DifferentialDrive(left, right);
+        //driveBase.setRightSideInverted(true);
 
         // Assumes encoders measure rate as m/s for each side
         leftEncoder = eLeft;
@@ -81,7 +85,13 @@ public class DriveSubsystem extends SubsystemBase {
             odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(Sensors.getGyro()), initialPosMeters);
         }).andThen(new RamseteCommand(
                 t,
-                () -> odometry.getPoseMeters(),
+                () -> {
+                    Pose2d o = odometry.getPoseMeters();
+                    //SmartDashboard.putNumber("Gyro 2 Electric Boogaloo", o.getRotation().getDegrees());
+                    SmartDashboard.putString("Position 2 Electric Boogaloo", o.toString());
+                    //System.out.println(":> " + o);
+                    return o;
+                },
                 new RamseteController(),
                 feedforward,
                 kin,
@@ -91,7 +101,8 @@ public class DriveSubsystem extends SubsystemBase {
                 (vLeft, vRight) -> {
                     double vMain = RobotController.getBatteryVoltage();
                     //System.out.println("->" + vMain);
-                    //System.out.println(vLeft + ":::" + vRight);
+                    SmartDashboard.putNumber("Motor Left Volt", vLeft);
+                    SmartDashboard.putNumber("Motor Right Volt", vRight);
                     //System.out.println(leftController.getPositionError() + " ||| " + rightController.getPositionError());
                     driveBase.tankDrive(vLeft / vMain, vRight / vMain, false);
                 },

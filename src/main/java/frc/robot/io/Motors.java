@@ -52,15 +52,17 @@ public class Motors {
         leftDriveA = new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
         leftDriveB = new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
         leftDrive = new MotorPair(leftDriveA, leftDriveB);
+        leftDrive.setInverted(true);
 
         rightDriveA = new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
         rightDriveB = new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
         rightDrive = new MotorPair(rightDriveA, rightDriveB);
+        rightDrive.setInverted(true);
 
         winch = new MotorPair(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));
         
-        leftDrive.setInverted(false);
-        rightDrive.setInverted(true);
+        //leftDrive.setInverted(false);
+        //rightDrive.setInverted(true);
 
         // init flywheels
         topFly = new CANSparkMax(canMotors.getIntValue("top flywheel motor"), CANSparkMaxLowLevel.MotorType.kBrushless);

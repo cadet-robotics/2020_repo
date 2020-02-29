@@ -30,8 +30,9 @@ public class SkitterCommand extends SequentialCommandGroup {
         */
         ArrayList<Pose2d> ls = new ArrayList<>();
         ls.add(new Pose2d());
-        ls.add(new Pose2d(new Translation2d(5, 0), new Rotation2d()));
-        TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, new TrajectoryConfig(1, 0.5));
+        ls.add(new Pose2d(new Translation2d(1, 0), new Rotation2d()));
+        ls.add(new Pose2d(new Translation2d(3, 2), Rotation2d.fromDegrees(210)/*new Rotation2d()*/));
+        TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, new TrajectoryConfig(1, 0.7));
     }
 
     public SkitterCommand(Trajectory t, DriveSubsystem drive) {

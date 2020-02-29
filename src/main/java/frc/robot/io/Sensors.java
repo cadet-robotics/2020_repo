@@ -63,6 +63,6 @@ public class Sensors {
     }
 
     public static double getGyro() {
-        return Sensors.gyro.getAngle();/*JavaIs1eneg6xerChangeMyMind.mod(*///-gyro.getAngle();/*, 360);*/
+        return -Sensors.gyro.getAngle();/*JavaIs1eneg6xerChangeMyMind.mod(*///-gyro.getAngle();/*, 360);*/
     }
 }
