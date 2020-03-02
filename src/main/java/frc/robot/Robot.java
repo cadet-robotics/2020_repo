@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.LimelightFacer;
+import frc.robot.commands.RotateToCommand;
 import frc.robot.commands.SkitterCommand;
 import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
@@ -236,7 +237,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         //m_autonomousCommand = new SkitterCommand(driveSubsystem);
-        m_autonomousCommand = new LimelightFacer(limelight, driveSubsystem);
+        m_autonomousCommand = new RotateToCommand(90, driveSubsystem);
         m_autonomousCommand.schedule();
     }
 

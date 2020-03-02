@@ -17,6 +17,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SkitterCommand extends SequentialCommandGroup {
+    public static final TrajectoryConfig config;
+    static {
+        config = new TrajectoryConfig(1, 0.7);
+        config.addConstraint(new CentripetalAccelerationConstraint(0.15));
+    }
+
     private static final Trajectory TRAJECTORY_AGREEMENT;
     static {
         /*
@@ -29,8 +35,6 @@ public class SkitterCommand extends SequentialCommandGroup {
         }
         TRAJECTORY_AGREEMENT = tt;
         */
-        TrajectoryConfig config = new TrajectoryConfig(1, 0.7);
-        config.addConstraint(new CentripetalAccelerationConstraint(0.15));
         ArrayList<Pose2d> ls = new ArrayList<>();
         ls.add(new Pose2d());
         ls.add(new Pose2d(new Translation2d(1, 0), new Rotation2d()));

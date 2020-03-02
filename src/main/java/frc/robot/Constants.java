@@ -16,6 +16,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final double MAX_SPEED = 2;
     
     /*
      * Drive Constants
