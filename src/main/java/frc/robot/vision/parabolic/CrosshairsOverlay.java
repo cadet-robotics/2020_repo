@@ -6,7 +6,9 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import frc.robot.commands.SetShooterSpeedCommand;
 import frc.robot.greeneva.Limelight;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.vision.VisionProcessor;
 
 /**
@@ -179,35 +181,67 @@ public class CrosshairsOverlay implements VisionProcessor {
      * Method: Apply linePositions and compare to limelight angles of AngleA and AngleB
      */
     
+    // These are relevant constants for organization
+    private static final double AUTO_STEP = 2.5,    // in m/s
+                                START_VEL = 5,
+                                ERROR_MAX = 0.01,   // angle difference in rad
+                                CENTER_THRESH = -0.155,
+                                CENTER_MOD = 0.125;   // in rad
+    private static final int MAX_STEPS = 50;
+    
     /**
-     * Sets the velocity via trial-and-error calculation
+     * Sets the velocity via trial-and-error calculation. Make sure velocity isn't being recalculated by any external source
+     * Use this to auto-shoot!
      * 
-     * @param ll
+     * @param ll Limelight
+     * @param ss Shooter subsystem to set velocity
      */
-    public void setVelocityLimelight(Limelight ll) { 
-        // Start with large step, half it each time until we're close enough
-        double step = 2, // in m/s
-               error = 0.01,
-               angle = angleA - cameraAngle;
-        int stepsTaken = 0;
+    public void runAutoVelocityLimelight(Limelight ll, ShooterSubsystem ss) { 
+        System.out.println("LIMELIGHT RUN");
         
-        shooterVelocity = 5;
-        calculateLinePositions();
-        System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
-        
-        // Until its close enough or we've tried too hard
-        while(Math.abs((angle = (angleA - cameraAngle)) - ll.getVAngleRad()) > error && stepsTaken++ < 30) {
-            if(angle > ll.getVAngleRad()) { // Line is above target
-                shooterVelocity -= step;
-            } else {
-                shooterVelocity += step;
-            }
+        // Run it in a thread to show what it's doing
+        new Thread(() -> {
+            System.out.println("SETTING UP");
+            double step = AUTO_STEP,
+                   error = ERROR_MAX,
+                   angle = angleA - cameraAngle;
+            int stepsTaken = 0;
             
+            // Distance based on region of the screen
+            boolean targetCenter = ll.getVAngleRad() < CENTER_THRESH;
+            System.out.println(targetCenter ? "CENTER" : "BOTTOM");
+            
+            shooterVelocity = START_VEL;
+            calculateLinePositions();
             System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
             
-            step /= 1.5;
-            calculateLinePositions();
-        }
+            // Until its close or we've tried too hard
+            // This bit also sets the angle really low if the lines don't exist yet              if long range, aim higher
+            while(Math.abs((angle = hasLines ? (angleA - cameraAngle) : -2) - (ll.getVAngleRad() + (targetCenter ? CENTER_MOD : 0))) > error && stepsTaken++ < MAX_STEPS) {
+                //System.out.println(step);
+                if(angle > (ll.getVAngleRad() + (targetCenter ? CENTER_MOD : 0))) { // Line above target
+                    shooterVelocity -= step;
+                } else {                        // Line below target
+                    shooterVelocity += step;
+                }
+                
+                System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
+                
+                step /= 1.15;
+                calculateLinePositions();
+                
+                // Delay so we can see it working
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            
+            // Run the shooter
+            new SetShooterSpeedCommand(ss, getRPM()).schedule();
+        }).start();
     }
     
     /**

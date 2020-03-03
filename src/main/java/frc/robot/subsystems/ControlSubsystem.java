@@ -63,9 +63,6 @@ public class ControlSubsystem extends SubsystemBase {
     public double getYAxis() { return driverController.getRawAxis(yAxis); }
     public double getZAxis() { return driverController.getRawAxis(zAxis); }
     
-    
-    private double rpm = 6000 / 2;
-    
     /**
      * Loads the configuration, initializing all controls
      * 
@@ -94,7 +91,8 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Buttons
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
-        intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
+        //intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
+        intakeButton = new JoystickButton(codriverController, 8);
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
         
         // Winch
@@ -123,11 +121,14 @@ public class ControlSubsystem extends SubsystemBase {
             pickupSubsystem.toggleAutoIntake();
         });
         
+        
+        // MANUAL TO BE FORMALIZED LATER
         // Test vision thing
-        new JoystickButton(driverController, 7).whenPressed(() -> {
+        new JoystickButton(codriverController, 4).whenPressed(() -> {
             //crosshairsIn.setVelocityDistance(limelightIn.getDistance());
-            crosshairsIn.setVelocityLimelight(limelightIn);
-            new SetShooterSpeedCommand(shooterSubsystem, crosshairsIn.getRPM()).schedule();
+            limelightIn.setCamMode(Limelight.CamMode.Vision);
+            manualRPM = false;
+            crosshairsIn.runAutoVelocityLimelight(limelightIn, shooterSubsystemIn);
         });
         
         new JoystickButton(driverController, 9).whenPressed(() -> {
@@ -146,6 +147,7 @@ public class ControlSubsystem extends SubsystemBase {
         });
     }
     
+    private double rpm = 2500 / 2;
     boolean manualRPM = false;
     
     /**
@@ -183,17 +185,17 @@ public class ControlSubsystem extends SubsystemBase {
             Motors.intake.set(0);
             Motors.magazine.set(0);
             
-            if(driverController.getRawButton(manualIntakeIn)) {
+            if(codriverController.getRawAxis(3) > 0.9) {  //driverController.getRawButton(manualIntakeIn)) {
                 System.out.println("INTAKE IN");
                 Motors.intake.set(Constants.INTAKE_SPEED);
-            } else if(driverController.getRawButton(manualIntakeOut)) {
+            } else if(codriverController.getRawAxis(2) > 0.9) {  //driverController.getRawButton(manualIntakeOut)) {
                 Motors.intake.set(-Constants.INTAKE_SPEED);
             }
             
-            if(driverController.getRawButton(manualMagazineUp)) {
+            if(codriverController.getRawButton(6)) {  //driverController.getRawButton(manualMagazineUp)) {
                 System.out.println("MAGAZINE UP");
                 Motors.magazine.set(Constants.MAGAZINE_SPEED);
-            } else if(driverController.getRawButton(manualMagazineDown)) {
+            } else if(codriverController.getRawButton(5)) {  //driverController.getRawButton(manualMagazineDown)) {
                 Motors.magazine.set(-Constants.MAGAZINE_SPEED);
             }
         }
