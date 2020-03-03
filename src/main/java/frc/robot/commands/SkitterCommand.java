@@ -1,25 +1,21 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class SkitterCommand extends SequentialCommandGroup {
     public static final TrajectoryConfig config;
     static {
-        config = new TrajectoryConfig(1, 0.7);
+        config = new TrajectoryConfig(0.8, 0.7);
         config.addConstraint(new CentripetalAccelerationConstraint(0.15));
     }
 
@@ -37,8 +33,10 @@ public class SkitterCommand extends SequentialCommandGroup {
         */
         ArrayList<Pose2d> ls = new ArrayList<>();
         ls.add(new Pose2d());
-        ls.add(new Pose2d(new Translation2d(1, 0), new Rotation2d()));
-        ls.add(new Pose2d(new Translation2d(3, 2), Rotation2d.fromDegrees(210)/*new Rotation2d()*/));
+        //ls.add(new Pose2d(new Translation2d(0.5, 0), Rotation2d.fromDegrees(45)));
+        //ls.add(new Pose2d(new Translation2d(0.5, 2), new Rotation2d()));
+        //ls.add(new Pose2d(new Translation2d(0.8, 2), Rotation2d.fromDegrees(90)));
+        ls.add(new Pose2d(new Translation2d(0.5, 2), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
         TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, config);
     }
 

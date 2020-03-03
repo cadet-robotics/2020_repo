@@ -27,7 +27,7 @@ import frc.robot.io.Sensors;
 import static frc.robot.Constants.MAX_SPEED;
 
 public class DriveSubsystem extends SubsystemBase {
-    private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 12 / MAX_SPEED);
+    private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(3 / MAX_SPEED, 12 / MAX_SPEED);
 
     private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.64);
 

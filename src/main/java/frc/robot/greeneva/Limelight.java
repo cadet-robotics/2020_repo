@@ -34,7 +34,7 @@ public class Limelight implements Sendable {
     }
 
     public boolean hasTarget() {
-        return hasTarget.getBoolean(false);
+        return Math.abs(hasTarget.getDouble(0)) > 1e-6;
     }
 
     public double getHAngle() {
