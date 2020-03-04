@@ -19,17 +19,18 @@ public class Sensors {
     public static AHRS gyro;
     
     // Proximity sensors for the magazine
-    public static AnalogInput intakeSensor; //Ball at intake entry sensor. TODO: Sensor on Analog Pin 6
-    public static DigitalInput magSensor; //Ball at mag entry sensor
+    public static AnalogInput intakeSensor; //Ball at intake entry sensor.
+    public static DigitalInput magSensor, //Ball at mag entry sensor
+                               shooterSensor; //Detects when ball leaves shooter TODO: Config
 
     public static void loadConfig(Config c) {
-        // TODO: Change config to match with names of sensors
         // *jojo's noises*
         Config sensors = c.separateCategory("sensors");
         
         // Magazine prox sensors
         magSensor = new DigitalInput(sensors.getIntValue("magazine sensor"));
         intakeSensor = new AnalogInput(sensors.getIntValue("intake sensor"));
+        shooterSensor = new DigitalInput(sensors.getIntValue("shooter sensor"));
 
         // Encoders
         topFlyEncoder = new CANEncoder(Motors.topFly, EncoderType.kHallSensor, 0);

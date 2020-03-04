@@ -96,6 +96,11 @@
 			"name": "intake sensor",
 			"value": "3",
 			"description": "Middle proximity sensor for the magazine"
+		},
+		{
+			"name": "shooter sensor",
+			"value": "1",
+			"description": "Proximity Sensor for detecting ball being shot"
 		}
 	],
 	

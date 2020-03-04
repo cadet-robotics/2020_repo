@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.*;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
@@ -113,7 +113,7 @@ public class ControlSubsystem extends SubsystemBase {
         //Shoot
         shootButton.whenPressed(() -> {
             //System.out.println("WORKING");
-            new SetShooterSpeedCommand(shooterSubsystem, 2500, 2).schedule();
+            shooterSubsystem.triggerAutoShooter(false);
         });
         
         // Toggle intake

@@ -29,7 +29,6 @@ public class BallToMagCommand extends CommandBase {
     @Override
     public void execute() {
         //Enables motors
-        System.out.println("BallToMag Running: " + System.currentTimeMillis());
         pickupSubsystem.setIntakeSpeed(Constants.INTAKE_SPEED);
     }
 

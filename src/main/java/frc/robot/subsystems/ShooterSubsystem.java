@@ -2,7 +2,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
@@ -13,12 +17,16 @@ public class ShooterSubsystem extends SubsystemBase {
         topPid.setSetpoint(0);
         botPid.setSetpoint(0);
     }
+
+    PickupSubsystem pickupSubsystem;
+
     private static final double FF = /*1.5*/19e-5 * 3;
 
     private double currentRPM = 0;
 
-    public ShooterSubsystem() {
+    public ShooterSubsystem(PickupSubsystem pickupSubsystemIn) {
         super();
+        pickupSubsystem = pickupSubsystemIn;
     }
 
     public void setSpeed(double rpm) {
@@ -52,5 +60,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private static double motorFilter(double d) {
         return Math.max(Math.min(d, 1), -1);
+    }
+
+    /**
+     * Runs the auto command for shooting ball, or cancels if it already exists
+     *
+     * @param fireOne If the shooter should fire one ball or fire until a certain amount of time between balls shot is reached.
+     */
+    public void triggerAutoShooter(boolean fireOne) {
+        Command c = pickupSubsystem.getCurrentCommand();
+        if (c == null) {
+            new ShooterCommand(pickupSubsystem, fireOne).schedule();
+        } else {
+            c.cancel();
+        }
     }
 }
