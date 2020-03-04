@@ -107,7 +107,11 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Spin wheel
         spinButton.whenPressed(() -> {
-            //new RotateWheelToColorCommand(arm, ColorEnum.BLUE).schedule(false);
+            System.out.println("*eva power up noises*");
+            new RotateWheelCountChangesCommand(armSubsystem)
+                    .andThen(new WaitCommand(5))
+                    .andThen(new RotateWheelToColorCommand(armSubsystem, ColorEnum.YELLOW))
+                    .schedule();
         });
 
         //Shoot
@@ -151,7 +155,10 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {
-            pickupSubsystem.getCurrentCommand().cancel();
+            {
+                Command c = pickupSubsystem.getCurrentCommand();
+                if (c != null) c.cancel();
+            }
             Motors.intake.set(0);
             Motors.magazine.set(0);
             

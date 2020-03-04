@@ -116,6 +116,11 @@
 			"description": "Runs the magazine"
 		},
 		{
+			"name": "wheel",
+			"value": "4",
+			"description": "Spins the wheel"
+		},
+		{
 			"name": "winch a",
 			"value": "0",
 			"description": "Drives the winch (a)"
