@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
@@ -19,6 +20,7 @@ public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX intake;
     PWMVictorSPX mag;
 
+    public int magBallCount = Constants.INITIAL_BALL_COUNT;
     private boolean autoIntakeEnabled = true;
 
     /**
