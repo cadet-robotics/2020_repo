@@ -17,8 +17,7 @@ public class Motors {
     // TODO: Configure encoders, setDistancePerPulse
     
     // Spark MAXes
-    public static CANSparkMax wheelSpinner,
-                              leftDriveA,
+    public static CANSparkMax leftDriveA,
                               leftDriveB,
                               rightDriveA,
                               rightDriveB;
@@ -31,7 +30,8 @@ public class Motors {
                               bottomFly;
     
     public static PWMVictorSPX intake,
-                               magazine;
+                               magazine,
+                               wheelSpinner;
     
     /**
      * Loads the configuration, initializing motor objects
@@ -74,5 +74,7 @@ public class Motors {
         // init others
         intake = new PWMVictorSPX(pwmMotors.getIntValue("intake"));
         magazine = new PWMVictorSPX(pwmMotors.getIntValue("magazine"));
+
+        wheelSpinner = new PWMVictorSPX(pwmMotors.getIntValue("wheel"));
     }
 }

@@ -20,9 +20,14 @@ public class RotateWheelCountChangesCommand extends CommandBase {
         this(arm, 26);
     }
 
+    private int old = Integer.MIN_VALUE;
+
     @Override
     public void execute() {
-        int cnt = arm.getColorWheel().getCount();
+        if (old == Integer.MIN_VALUE) {
+            old = arm.getColorWheel().getCount();
+        }
+        int cnt = arm.getColorWheel().getCount() - old;
         if (cnt >= changes) {
             arm.stopWheelSpinner();
         } else {

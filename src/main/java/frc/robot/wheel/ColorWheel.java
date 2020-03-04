@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.ColorShim;
 
 public class ColorWheel {
-    ColorSensorV3 sensor;
-    ColorChangeTracker tracker;
+    private ColorSensorV3 sensor;
+    private ColorChangeTracker tracker;
 
     public ColorWheel() {
         sensor = new ColorSensorV3(I2C.Port.kOnboard);
