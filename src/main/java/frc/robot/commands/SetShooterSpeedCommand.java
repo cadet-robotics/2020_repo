@@ -8,9 +8,22 @@ import frc.robot.subsystems.ShooterSubsystem;
 /**
  * Command for setting shooter speed and running the shooter
  *
- * @author Matt Robinson
+ * @author Matt Robinson + Owen
  */
 public class SetShooterSpeedCommand extends SequentialCommandGroup {
+    /**
+     * shouldReset is set to true if the shooter speed should be set to old on termination
+     *
+     * Remains false if using the constructor that doesn't reset shooter speed
+     */
+    private double old;
+    private boolean shouldReset = false;
+
+    /**
+     * Remains null if using the constructor that doesn't reset shooter speed
+     */
+    private ShooterSubsystem shooterSubsystem;
+
     /**
     * Sets the shooter speed
      *
@@ -31,12 +44,14 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds, boolean preserve) {
         super();
-        double[] oldRPM = new double[1];
+        shooterSubsystem = shooterSubsystemIn;
         addCommands(
-                new InstantCommand(() -> oldRPM[0] = preserve ? shooterSubsystemIn.getTargetSpeed() : 0),
-                new SetShooterSpeedCommand(shooterSubsystemIn, rpm),
-                new WaitCommand(seconds),
-                new SetShooterSpeedCommand(shooterSubsystemIn, oldRPM[0])
+                new InstantCommand(() -> {
+                    old = preserve ? shooterSubsystem.getTargetSpeed() : 0;
+                    shooterSubsystem.setSpeed(rpm);
+                    shouldReset = true;
+                }),
+                new WaitCommand(seconds)
         );
     }
 
@@ -49,5 +64,13 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds) {
         this(shooterSubsystemIn, rpm, seconds, true);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        if (shouldReset) {
+            shooterSubsystem.setSpeed(old);
+        }
     }
 }
