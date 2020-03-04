@@ -235,7 +235,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         //m_autonomousCommand = new SkitterCommand(driveSubsystem);
-        m_autonomousCommand = new AutoCommand(limelight, driveSubsystem, shooterSubsystem);
+        m_autonomousCommand = new AutoCommand(limelight, driveSubsystem, shooterSubsystem, pickupSubsystem);
         m_autonomousCommand.schedule();
     }
 
