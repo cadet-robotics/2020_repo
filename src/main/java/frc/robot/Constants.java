@@ -35,7 +35,12 @@ public final class Constants {
      */
     public static final double INTAKE_SPEED = 0.5,
                                MAGAZINE_SPEED = -0.3,
-                               MAGAZINE_COUNT = 30;
+                               MAGAZINE_COUNT = 21;
+
+    /*
+     * Shooter Constants
+     */
+    public static final int SHOOTER_COMMAND_END = 50;
     
     /*
      * Crosshairs Constants

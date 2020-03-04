@@ -97,8 +97,8 @@ public class Robot extends TimedRobot {
         // Initialize subsystems
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(new Pose2d(new Translation2d(), new Rotation2d()));
-        shooterSubsystem = new ShooterSubsystem();
         pickupSubsystem = new PickupSubsystem();
+        shooterSubsystem = new ShooterSubsystem(pickupSubsystem);
         winchSubsystem = new WinchSubsystem();
 
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem);
