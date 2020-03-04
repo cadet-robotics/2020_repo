@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.JavaIs1eneg6xerChangeMyMind;
+import frc.robot.vision.parabolic.TFMini;
 import frc6868.config.api.Config;
 
 public class Sensors {
@@ -21,6 +22,9 @@ public class Sensors {
     // Proximity sensors for the magazine
     public static AnalogInput intakeSensor; //Ball at intake entry sensor. TODO: Sensor on Analog Pin 6
     public static DigitalInput magSensor; //Ball at mag entry sensor
+    
+    // Distance sensor
+    public static TFMini tfm;
 
     public static void loadConfig(Config c) {
         // TODO: Change config to match with names of sensors
@@ -58,8 +62,11 @@ public class Sensors {
         driveEncoderLeft.setDistancePerPulse(DIST_DRIVE);
         driveEncoderRight.setDistancePerPulse(DIST_DRIVE);
          */
-
-        gyro = new AHRS();
+        
+        // Get gyro and tell NavX to use the UART
+        gyro = new AHRS(SerialPort.Port.kMXP);
+        
+        tfm = new TFMini();
     }
 
     public static double getGyro() {

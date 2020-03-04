@@ -168,14 +168,25 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param dist
      */
     public void setVelocityDistance(double dist) {
-        // v = (sqrt(gravity) * x * sqrt((tan(angle)^2) + 1)) / sqrt((2 * x * tan(angle)) - (2 * y))
-        double tanTheta = Math.tan(shooterAngle),
-               y = targetY - shooterY;
+        // Includes i because fuck you, get NaNd bitch
+        // v = (i * sqrt(g) * x * (1 / cos(theta))) / (sqrt(2) * sqrt(y - (x * tan(theta))))
+        // We gotta do this in steps so i can find the goddamn NaN
+        double sqrtGrav = Math.sqrt(gravity),
+               secTheta = 1 / Math.cos(shooterAngle),
+               root2 = Math.sqrt(2),
+               tanTheta = Math.tan(shooterAngle),
+               largeRoot = Math.sqrt((targetY - shooterY) - (dist * tanTheta)),
+               value = (sqrtGrav * dist * secTheta) / (root2 * largeRoot);
         
-        shooterVelocity = (Math.sqrt(gravity) * dist * Math.sqrt((tanTheta * tanTheta) + 1)) / Math.sqrt((2 * dist * tanTheta) - (2 * y));
+        System.out.println(String.format("sqg: %s  sect: %s  r2: %s  tant: %s  lr: %s  v: %s", sqrtGrav, secTheta, root2, tanTheta, largeRoot, value));
         
-        
+        shooterVelocity = value;
+        calculateLinePositions();
     }
+    
+    /*
+     * Method: Apply distance sensor distance to equations solved for v
+     */
     
     /*
      * Method: Apply linePositions and compare to limelight angles of AngleA and AngleB
@@ -183,11 +194,13 @@ public class CrosshairsOverlay implements VisionProcessor {
     
     // These are relevant constants for organization
     private static final double AUTO_STEP = 2.5,    // in m/s
+                                STEP_CHANGE = 1.15, // Multiplier
                                 START_VEL = 5,
                                 ERROR_MAX = 0.01,   // angle difference in rad
                                 CENTER_THRESH = -0.155,
                                 CENTER_MOD = 0.125;   // in rad
-    private static final int MAX_STEPS = 50;
+    private static final int MAX_STEPS = 50,
+                             SLEEP_TIME = 500;
     
     /**
      * Sets the velocity via trial-and-error calculation. Make sure velocity isn't being recalculated by any external source
@@ -199,7 +212,7 @@ public class CrosshairsOverlay implements VisionProcessor {
     public void runAutoVelocityLimelight(Limelight ll, ShooterSubsystem ss) { 
         System.out.println("LIMELIGHT RUN");
         
-        // Run it in a thread to show what it's doing
+        // Run it in a thread so that we can slow it down to see it work
         new Thread(() -> {
             System.out.println("SETTING UP");
             double step = AUTO_STEP,
@@ -217,9 +230,9 @@ public class CrosshairsOverlay implements VisionProcessor {
             
             // Until its close or we've tried too hard
             // This bit also sets the angle really low if the lines don't exist yet              if long range, aim higher
-            while(Math.abs((angle = hasLines ? (angleA - cameraAngle) : -2) - (ll.getVAngleRad() + (targetCenter ? CENTER_MOD : 0))) > error && stepsTaken++ < MAX_STEPS) {
+            while(Math.abs((angle = hasLines ? (angleA - cameraAngle) : -2) - calculateAdjustedAngle(ll.getVAngleRad(), targetCenter)) > error && stepsTaken++ < MAX_STEPS) {
                 //System.out.println(step);
-                if(angle > (ll.getVAngleRad() + (targetCenter ? CENTER_MOD : 0))) { // Line above target
+                if(angle > calculateAdjustedAngle(ll.getVAngle(), targetCenter)) { // Line above target
                     shooterVelocity -= step;
                 } else {                        // Line below target
                     shooterVelocity += step;
@@ -227,12 +240,12 @@ public class CrosshairsOverlay implements VisionProcessor {
                 
                 System.out.println(String.format("v: %s  a: %s  d: %s", shooterVelocity, angle, angle - ll.getVAngleRad()));
                 
-                step /= 1.15;
+                step /= STEP_CHANGE;
                 calculateLinePositions();
                 
                 // Delay so we can see it working
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -242,6 +255,25 @@ public class CrosshairsOverlay implements VisionProcessor {
             // Run the shooter
             new SetShooterSpeedCommand(ss, getRPM()).schedule();
         }).start();
+    }
+    
+    /**
+     * Calculates an adjusted angle for difference-getting
+     * 
+     * @param v
+     * @param center
+     * @return
+     */
+    private double calculateAdjustedAngle(double v, boolean center) {
+        // Hmm...
+        
+        
+        // Old version
+        if(center) {
+            return v + CENTER_MOD;
+        } else {
+            return v;
+        }
     }
     
     /**

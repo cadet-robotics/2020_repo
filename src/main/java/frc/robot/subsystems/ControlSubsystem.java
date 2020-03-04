@@ -128,7 +128,9 @@ public class ControlSubsystem extends SubsystemBase {
             //crosshairsIn.setVelocityDistance(limelightIn.getDistance());
             limelightIn.setCamMode(Limelight.CamMode.Vision);
             manualRPM = false;
-            crosshairsIn.runAutoVelocityLimelight(limelightIn, shooterSubsystemIn);
+            
+            //crosshairsIn.runAutoVelocityLimelight(limelightIn, shooterSubsystemIn);
+            
         });
         
         new JoystickButton(driverController, 9).whenPressed(() -> {
