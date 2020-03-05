@@ -108,6 +108,7 @@ public class Robot extends TimedRobot {
         //cam = CameraServer.getInstance().startAutomaticCapture();
         cam = limelight.getLimelightCam();
         CameraServer.getInstance().addCamera(cam);
+        //CameraServer.getInstance().startAutomaticCapture(); // USB Camera
         //cam.setResolution(320, 240);
         //cam.setFPS(15);
         
@@ -214,6 +215,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Enc Right P", Sensors.driveEncoderRight.getPosition());
         SmartDashboard.putNumber("Enc Left V", Sensors.driveEncoderLeft.getVelocity());
         SmartDashboard.putNumber("Enc Right V", Sensors.driveEncoderRight.getVelocity());
+        
+        SmartDashboard.putNumber("Sensor Distance", Sensors.tfm.getDistance());
+        SmartDashboard.putNumber("Sensor Strength", Sensors.tfm.getStrength());
     }
 
     /**

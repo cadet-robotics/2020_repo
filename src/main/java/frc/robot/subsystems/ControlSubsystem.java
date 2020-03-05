@@ -33,7 +33,8 @@ public class ControlSubsystem extends SubsystemBase {
                      codriverController;
     private JoystickButton spinButton,
                            shootButton,
-                           intakeButton;
+                           intakeButton,
+                           winchLockButton;
 
     // Axes
     private int xAxis,
@@ -94,6 +95,7 @@ public class ControlSubsystem extends SubsystemBase {
         //intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
         intakeButton = new JoystickButton(codriverController, 8);
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
+        winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -119,6 +121,11 @@ public class ControlSubsystem extends SubsystemBase {
         // Toggle intake
         intakeButton.whenPressed(() -> {
             pickupSubsystem.toggleAutoIntake();
+        });
+        
+        // Toggle winch lock
+        winchLockButton.whenPressed(() -> {
+            winchSubsystem.toggleLockedState();
         });
         
         

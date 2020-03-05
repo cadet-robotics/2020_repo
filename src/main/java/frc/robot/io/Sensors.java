@@ -64,8 +64,7 @@ public class Sensors {
          */
         
         // Get gyro and tell NavX to use the UART
-        gyro = new AHRS(SerialPort.Port.kMXP);
-        
+        gyro = new AHRS();
         tfm = new TFMini();
     }
 

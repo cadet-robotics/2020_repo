@@ -25,163 +25,113 @@ import edu.wpi.first.wpilibj.SerialPort;
  */
 public class TFMini implements Runnable {
     
+    private static final byte HEADER = 0x59;
+    
     // Interface to UART through the NavX
     private SerialPort uartPort;
     
     // Values
     private int distance,
-                strength,
-                time;
+                strength;
     
     /**
      * Initializes the TFMini
      */
     public TFMini() {
         // Initialize the uart according to datasheet
-        uartPort = new SerialPort(115200, SerialPort.Port.kMXP, 8, SerialPort.Parity.kEven, SerialPort.StopBits.kOne);
+        uartPort = new SerialPort(115200, SerialPort.Port.kMXP, 8, SerialPort.Parity.kNone, SerialPort.StopBits.kOne);
         
         // Run our management stuff
         new Thread(this).start();
     }
     
+    /**
+     * Gets distance in meters
+     * @return
+     */
     public int getDistance() { return distance; }
+    
+    /**
+     * Gets signal strength in
+     * @return
+     */
     public int getStrength() { return strength; }
-    public int getIntegrationTime() { return time; }
 
     @Override
     public void run() {
         // Flush serial port buffers
         uartPort.reset();
         
-        byte[] frameData = new byte[9], // 9 bytes per frame
-               dataBuffer = new byte[0];// Initialized later
+        byte[] frame = new byte[9];
         
-        int bytesReceivedSinceHeader = 0;
-        
-        boolean hasHeader = false; // If we have a header and are looking to complete the data
-        
-        // Forever
-        outerLoop:
+        mainLoop:
         while(true) {
-            // Wait until we have enough bytes to fill a frame
-            if(uartPort.getBytesReceived() + bytesReceivedSinceHeader < 9) {
-                System.out.println("TFMINI: Waiting for more bytes");
-                continue;
-            }
+            // Grab a byte
+            waitForByte();
             
-            // Get new bytes
-            // Merge old and new data
-            System.out.println("TFMINI: Getting new data");
-            byte[] uartBuffer = uartPort.read(uartPort.getBytesReceived()),
-                   mergeBuffer = new byte[dataBuffer.length + uartBuffer.length];
+            byte b = uartPort.read(1)[0];               //0xFF casts to int without sign-extension
+            System.out.println("TFMini: Got byte: 0x" + Integer.toHexString(b & 0xFF).toUpperCase());
             
-            System.arraycopy(dataBuffer, 0, mergeBuffer, 0, dataBuffer.length);                 // Put the old data in
-            System.arraycopy(uartBuffer, 0, mergeBuffer, dataBuffer.length, uartBuffer.length); // Append the new data
-            
-            
-            // Scan for a header if we don't have one
-            if(!hasHeader) {
-                // Loop over combined data
-                for(int i = 0; i < mergeBuffer.length; i++) {
-                    if(mergeBuffer[i] == 0x59) { // We found a header
-                        System.out.println("TFMINI: Found header");
-                        hasHeader = true;
-                        bytesReceivedSinceHeader = mergeBuffer.length - i;
-                        
-                        // Get new data buffer with data since header
-                        dataBuffer = new byte[bytesReceivedSinceHeader];
-                        System.arraycopy(mergeBuffer, i, dataBuffer, 0, dataBuffer.length);
-                        break;
-                    }
-                }
+            // Header start found
+            if(b == HEADER) {
+                System.out.println("TFMini: Started frame");
                 
-                // Didn't find a header
-                if(!hasHeader) {
-                    System.out.println("TFMINI: No header");
-                    continue;
-                }
-            }
-            
-            // Get data until we have a full frame
-            for(int i = 0; i < 9; i++) {
-                // Continue the outer loop if we run out of data
-                if(i >= dataBuffer.length) {
-                    System.out.println("TFMINI: Too little data found");
-                    continue outerLoop;
-                }
+                frame = new byte[9];
+                frame[0] = HEADER;
                 
-                frameData[i] = dataBuffer[i];
-            }
-            
-            // If we're here, frameData is full with a buffer
-            // Check that we have a correct buffer
-            if(frameData[1] != 0x59) {
-                if(dataBuffer.length < 10) {
-                    // If we don't have enough data for a full frame with the off-by-one, abandon it
-                    System.out.println("TFMINI: ERROR TOO LITTLE DATA");
+                // Get next bytes
+                for(int i = 1; i < 9; i++) {
+                    waitForByte();
+                    b = uartPort.read(1)[0];
                     
-                    hasHeader = false;
-                    makeNewDataBuffer(dataBuffer);
-                    continue;
+                    // Make sure the header is proper
+                    if(i == 1 && b != HEADER) {
+                        System.out.println("TFMini: Header failed");
+                        continue mainLoop;
+                    }
+                    
+                    frame[i] = b;
                 }
                 
-                // Off-by-1 error, we need to shift right
-                frameData = shiftArray(frameData);
-            }
-            
-            // Validate the frame, if we're here we have one
-            int sum = 0;
-            for(int i = 0; i < 8; i++) sum++;
-            
-            if(frameData[8] != (sum & 0xFF)) {
-                System.out.println("TFMINI: ERROR CHECKSUM WRONG");
+                // Checksum
+                int sum = 0;
+                for(int i = 0; i < 8; i++) sum += frame[i];
                 
-                // Checksum doesn't match, get new frame
-                makeNewDataBuffer(dataBuffer);
-                hasHeader = false;
-                continue;
+                if(sum != frame[8]) {
+                    System.out.println("TFMini: Checksum failed");
+                    continue mainLoop;
+                }
+                
+                System.out.println("TFMini: Updating values");
+                
+                // Update values
+                distance = ((frame[3] << 8) | frame[2]) / 100;
+                strength = (frame[5] << 8) | frame[4];
             }
-            
-            // Valid, update values
-            distance = (frameData[2] << 8) | frameData[3];
-            strength = (frameData[4] << 8) | frameData[5];
-            time = frameData[6];
-            
-            // Tell it to wait for new data
-            makeNewDataBuffer(dataBuffer);
-            hasHeader = false;
-            continue;
         }
     }
     
     /**
-     * Eliminates a frame's worth of bytes from the data buffer
-     * 
-     * @param dataBuffer
-     * @return
+     * Waits until a byte is available
      */
-    private byte[] makeNewDataBuffer(byte[] dataBuffer) {
-        int len = (dataBuffer.length - 9 < 0) ? 0 : (dataBuffer.length - 9);
-        byte[] newData = new byte[len];
+    private void waitForByte() {
+        int msgTimer = 0;
         
-        System.arraycopy(dataBuffer, dataBuffer.length - len, newData, 0, len);
-        
-        return newData;
-    }
-    
-    /**
-     * Returns a new array of arr shifted right by 1
-     * 
-     * @param arr
-     * @return
-     */
-    private byte[] shiftArray(byte[] arr) {
-        byte[] newArr = new byte[arr.length + 1];
-        
-        System.arraycopy(arr, 0, newArr, 1, arr.length);
-        newArr[0] = arr[0];
-        
-        return newArr;
+        while(uartPort.getBytesReceived() == 0) {
+            if(msgTimer++ % 1_000 == 0) {
+                if(msgTimer == 100_000) {
+                    System.out.println("TFMini: Wating. (100k)");
+                    msgTimer = 1;
+                } else {
+                    System.out.println("TFMini: Waiting.");
+                }
+            }
+            
+            try {
+                // nice us
+                Thread.sleep(0, 690_000);
+            } catch(InterruptedException e) {}
+        }
     }
 }
 

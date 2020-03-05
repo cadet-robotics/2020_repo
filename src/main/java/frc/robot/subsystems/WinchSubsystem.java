@@ -15,13 +15,21 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public class WinchSubsystem extends SubsystemBase {
     
+    private static final Value LOCKED = Value.kForward,
+                               UNLOCKED = Value.kReverse;
+    
     private boolean motorRunning = false;
+    
+    private Value currentValue;
     
     /**
      * uwu
      */
     public WinchSubsystem() {
         super();
+        
+        currentValue = UNLOCKED;
+        OtherIO.lockingPiston.set(currentValue);
     }
     
     /**
@@ -32,10 +40,25 @@ public class WinchSubsystem extends SubsystemBase {
     public void setLockedState(boolean locked) {
         // Slap the pneumatics in place
         if(locked) {
-            OtherIO.lockingPiston.set(Value.kForward);
+            currentValue = LOCKED;
         } else {
-            OtherIO.lockingPiston.set(Value.kReverse);
+            currentValue = UNLOCKED;
         }
+        
+        OtherIO.lockingPiston.set(currentValue);
+    }
+    
+    /**
+     * Toggles if the winch is locked
+     */
+    public void toggleLockedState() {
+        if(currentValue == LOCKED || currentValue == Value.kOff) {
+            currentValue = UNLOCKED;
+        } else {
+            currentValue = LOCKED;
+        }
+        
+        OtherIO.lockingPiston.set(currentValue);
     }
     
     /**
