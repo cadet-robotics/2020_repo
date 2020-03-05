@@ -43,7 +43,7 @@ public final class Constants {
     /*
      * Shooter Constants
      */
-    public static final int SHOOTER_COMMAND_END = 50;
+    public static final int SHOOTER_COMMAND_END = 500;
     
     /*
      * Crosshairs Constants

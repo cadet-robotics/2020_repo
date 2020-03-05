@@ -17,7 +17,7 @@ public class RotateToLightCommand extends CommandBase {
 
     public RotateToLightCommand(Limelight limeIn, DriveSubsystem driveIn) {
         super();
-        pid = new PIDController(2e-1, 5e-1, 0);
+        pid = new PIDController(15e-2, 1e-2, 0);
         drive = driveIn;
         addRequirements(driveIn);
         lime = limeIn;
