@@ -8,6 +8,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoCommand extends SequentialCommandGroup {
     public AutoCommand(Limelight lime, DriveSubsystem drive, ShooterSubsystem shooter, PickupSubsystem pick) {
-        super(new SkitterCommand(drive), new RotateToLightCommand(lime, drive), new ShooterCommand(pick, false).alongWith(new SetShooterSpeedCommand(shooter, 2000)));
+        super(new SkitterCommand(drive), new RotateToLightCommand(lime, drive), FDriverFactory.produce(shooter, pick, 2000));
     }
 }

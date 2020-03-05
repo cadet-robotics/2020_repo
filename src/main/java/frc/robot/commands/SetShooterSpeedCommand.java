@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /**
@@ -40,7 +41,9 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      * @param shooterSubsystemIn The shooter subsystem instance
      * @param rpm The speed of the motor, in RPM
      * @param seconds The amount of time to run the motor for, in seconds
-     * @param preserve Whether to set the shooter to its previous RPM target instead of zero after the command finishes
+     *                if negative, waits until the command is terminated
+     * @param preserve Whether to set the shooter to its previous RPM target
+     *                 instead of zero after the command finishes
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds, boolean preserve) {
         super();
@@ -51,7 +54,7 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
                     shooterSubsystem.setSpeed(rpm);
                     shouldReset = true;
                 }),
-                new WaitCommand(seconds)
+                (seconds < 0) ? new WaitUntilCommand(() -> false) : new WaitCommand(seconds)
         );
     }
 
@@ -61,6 +64,7 @@ public class SetShooterSpeedCommand extends SequentialCommandGroup {
      * @param shooterSubsystemIn The shooter subsystem instance
      * @param rpm The speed of the motor, in RPM
      * @param seconds The amount of time to run the motor for, in seconds
+     *                if negative, waits until the command is terminated
      */
     public SetShooterSpeedCommand(ShooterSubsystem shooterSubsystemIn, double rpm, double seconds) {
         this(shooterSubsystemIn, rpm, seconds, true);
