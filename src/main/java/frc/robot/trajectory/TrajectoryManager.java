@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.trajectory;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -7,19 +7,28 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.ArrayList;
 
-public class SkitterCommand extends SequentialCommandGroup {
-    public static final TrajectoryConfig config;
+/**
+ * Stores trajectories
+ * Currently, factories are generated statically without pathweaver
+ *
+ * -----
+ *
+ * DESTINATION
+ * AGREEMENT
+ * TRAJECTORY
+ * AGREEMENT
+ */
+public class TrajectoryManager {
+    private static final TrajectoryConfig config;
     static {
         config = new TrajectoryConfig(0.8, 0.7);
         config.addConstraint(new CentripetalAccelerationConstraint(0.15));
     }
 
-    private static final Trajectory TRAJECTORY_AGREEMENT;
+    public static final Trajectory BASE_TRAJECTORY;
     static {
         /*
         Trajectory tt;
@@ -37,15 +46,6 @@ public class SkitterCommand extends SequentialCommandGroup {
         //ls.add(new Pose2d(new Translation2d(0.5, 2), new Rotation2d()));
         //ls.add(new Pose2d(new Translation2d(0.8, 2), Rotation2d.fromDegrees(90)));
         ls.add(new Pose2d(new Translation2d(0.5, 2), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
-        TRAJECTORY_AGREEMENT = TrajectoryGenerator.generateTrajectory(ls, config);
-    }
-
-    public SkitterCommand(Trajectory t, DriveSubsystem drive) {
-        super();
-        addCommands(drive.trajectoryCommandBuilder(t, new Pose2d()));
-    }
-
-    public SkitterCommand(DriveSubsystem drive) {
-        this(TRAJECTORY_AGREEMENT, drive);
+        BASE_TRAJECTORY = TrajectoryGenerator.generateTrajectory(ls, config);
     }
 }
