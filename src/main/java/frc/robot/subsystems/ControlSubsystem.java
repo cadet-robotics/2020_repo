@@ -11,6 +11,7 @@ import frc.robot.*;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
@@ -31,7 +32,8 @@ public class ControlSubsystem extends SubsystemBase {
                      codriverController;
     private JoystickButton spinButton,
                            shootButton,
-                           intakeButton;
+                           intakeButton,
+                           fireOnceButton;
 
     // Axes
     private int xAxis,
@@ -94,6 +96,7 @@ public class ControlSubsystem extends SubsystemBase {
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
         intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
+        fireOnceButton = new JoystickButton(driverController, driverControls.getIntValue("fire once"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -124,6 +127,8 @@ public class ControlSubsystem extends SubsystemBase {
         intakeButton.whenPressed(() -> {
             pickupSubsystem.toggleAutoIntake();
         });
+
+        fireOnceButton.whenPressed(() -> new ShooterCommand(pickupSubsystem, true).schedule());
     }
     
     /**

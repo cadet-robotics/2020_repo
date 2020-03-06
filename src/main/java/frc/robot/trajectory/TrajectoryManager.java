@@ -24,8 +24,8 @@ import java.util.ArrayList;
 public class TrajectoryManager {
     private static final TrajectoryConfig config;
     static {
-        config = new TrajectoryConfig(0.8, 0.7);
-        config.addConstraint(new CentripetalAccelerationConstraint(0.15));
+        config = new TrajectoryConfig(1.2, 0.5);
+        //config.addConstraint(new CentripetalAccelerationConstraint(0.15));
     }
 
     public static final Trajectory BASE_TRAJECTORY;
@@ -42,10 +42,10 @@ public class TrajectoryManager {
         */
         ArrayList<Pose2d> ls = new ArrayList<>();
         ls.add(new Pose2d());
-        //ls.add(new Pose2d(new Translation2d(0.5, 0), Rotation2d.fromDegrees(45)));
+        //ls.add(new Pose2d(new Translation2d(-1, 1), Rotation2d.fromDegrees(90)));
         //ls.add(new Pose2d(new Translation2d(0.5, 2), new Rotation2d()));
         //ls.add(new Pose2d(new Translation2d(0.8, 2), Rotation2d.fromDegrees(90)));
-        ls.add(new Pose2d(new Translation2d(0.5, 2), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
+        ls.add(new Pose2d(new Translation2d(1, 2), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
         BASE_TRAJECTORY = TrajectoryGenerator.generateTrajectory(ls, config);
     }
 }

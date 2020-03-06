@@ -49,6 +49,11 @@
 			"name": "manual intake out",
 			"value": "4",
 			"description": "Runs intake out manually"
+		},
+		{
+			"name": "fire once",
+			"value": "11",
+			"description": "Passes one ball into the shooter from the magazine"
 		}
 	],
 	
