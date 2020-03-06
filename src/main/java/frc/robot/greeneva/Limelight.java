@@ -73,7 +73,16 @@ public class Limelight implements Sendable {
             case Driver:
                 camMode.setNumber(1);
                 setLed(false);
+        }
+    }
+
+    public void toggleCamMode() {
+        switch (camMode.getNumber(1).intValue()) {
+            case 0:
+                setCamMode(CamMode.Driver);
                 break;
+            default:
+                setCamMode(CamMode.Vision);
         }
     }
 

@@ -54,6 +54,11 @@
 			"name": "fire once",
 			"value": "11",
 			"description": "Passes one ball into the shooter from the magazine"
+		},
+		{
+			"name": "toggle lime",
+			"value": "12",
+			"description": "Toggles the limelight mode"
 		}
 	],
 	

@@ -100,10 +100,10 @@ public class Robot extends TimedRobot {
         shooterSubsystem = new ShooterSubsystem(pickupSubsystem);
         winchSubsystem = new WinchSubsystem();
 
-        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem);
-
         limelight = new Limelight(NetworkTableInstance.getDefault());
         limelight.setCamMode(Limelight.CamMode.Vision);
+
+        controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem, limelight);
         
         // Initialize the camera itself
         cam = CameraServer.getInstance().startAutomaticCapture();

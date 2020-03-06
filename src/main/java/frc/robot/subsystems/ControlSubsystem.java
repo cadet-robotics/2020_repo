@@ -13,6 +13,7 @@ import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.magazine.IntakeNewBallCommand;
+import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.subsystems.ArmSubsystem;
@@ -33,7 +34,8 @@ public class ControlSubsystem extends SubsystemBase {
     private JoystickButton spinButton,
                            shootButton,
                            intakeButton,
-                           fireOnceButton;
+                           fireOnceButton,
+                           toggleLimeButton;
 
     // Axes
     private int xAxis,
@@ -74,7 +76,7 @@ public class ControlSubsystem extends SubsystemBase {
      * @param armSubsystemIn The arm subsystem instance
      * @param shooterSubsystemIn The shooter subsystem instance
      */
-    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn, WinchSubsystem winchSubsystemIn) {
+    public ControlSubsystem(Config mainConfig, DriveSubsystem driveSubsystemIn, ArmSubsystem armSubsystemIn, ShooterSubsystem shooterSubsystemIn, PickupSubsystem pickupSubsystemIn, WinchSubsystem winchSubsystemIn, Limelight lime) {
         super();
         Config driverControls = mainConfig.separateCategory("driver controls"),
                codriverControls = mainConfig.separateCategory("codriver controls");
@@ -97,6 +99,7 @@ public class ControlSubsystem extends SubsystemBase {
         intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
         fireOnceButton = new JoystickButton(driverController, driverControls.getIntValue("fire once"));
+        toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -129,6 +132,8 @@ public class ControlSubsystem extends SubsystemBase {
         });
 
         fireOnceButton.whenPressed(() -> new ShooterCommand(pickupSubsystem, true).schedule());
+
+        toggleLimeButton.whenPressed(lime::toggleCamMode);
     }
     
     /**

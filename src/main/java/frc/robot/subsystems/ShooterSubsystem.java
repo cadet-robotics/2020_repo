@@ -12,14 +12,14 @@ import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private PIDController topPid = new PIDController(6e-5 * 3, 1e-6 * 3, 0);
-    private PIDController botPid = new PIDController(6e-5 * 3, 1e-6 * 3, 0);
+    private PIDController topPid = new PIDController(5e-4, 3e-6, 0);
+    private PIDController botPid = new PIDController(5e-4, 3e-6, 0);
     {
         topPid.setSetpoint(0);
         botPid.setSetpoint(0);
     }
 
-    PickupSubsystem pickupSubsystem;
+    private PickupSubsystem pickupSubsystem;
 
     private static final double FF = /*1.5*/19e-5 * 3;
 
