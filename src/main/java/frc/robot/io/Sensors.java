@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.JavaIs1eneg6xerChangeMyMind;
-import frc.robot.vision.parabolic.TFMini;
 import frc6868.config.api.Config;
 
 public class Sensors {
@@ -24,7 +23,7 @@ public class Sensors {
     public static DigitalInput magSensor; //Ball at mag entry sensor
     
     // Distance sensor
-    public static TFMini tfm;
+    public static MB1013 ultraDistance;
 
     public static void loadConfig(Config c) {
         // TODO: Change config to match with names of sensors
@@ -65,7 +64,10 @@ public class Sensors {
         
         // Get gyro and tell NavX to use the UART
         gyro = new AHRS();
-        tfm = new TFMini();
+        
+        // Aaaaaaaaaaaaaaaaaaaaaaaaaaa
+        ultraDistance = new MB1013(sensors.getIntValue("distance sensor"));
+        
     }
 
     public static double getGyro() {

@@ -15,6 +15,7 @@ import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
+import frc.robot.io.Sensors;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc.robot.wheel.ColorEnum;
@@ -112,6 +113,8 @@ public class ControlSubsystem extends SubsystemBase {
             //new RotateWheelToColorCommand(arm, ColorEnum.BLUE).schedule(false);
         });
 
+        // THIS BUTTON will be converted to setup, aim, and shoot fully, combining the systems we've made
+        // But I'll figure that out *after* we merge
         //Shoot
         shootButton.whenPressed(() -> {
             //System.out.println("WORKING");
@@ -137,7 +140,8 @@ public class ControlSubsystem extends SubsystemBase {
             manualRPM = false;
             
             //crosshairsIn.runAutoVelocityLimelight(limelightIn, shooterSubsystemIn);
-            
+            crosshairsIn.setVelocityDistance(Sensors.ultraDistance.getDistance());
+            new SetShooterSpeedCommand(shooterSubsystem, crosshairsIn.getRPM()).schedule();
         });
         
         new JoystickButton(driverController, 9).whenPressed(() -> {

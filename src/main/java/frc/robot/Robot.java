@@ -189,6 +189,7 @@ public class Robot extends TimedRobot {
      * <p>This runs after the mode specific periodic functions, but before
      * LiveWindow and SmartDashboard integrated updating.
      */
+    long oldTime = 0;
 
     @Override
     public void robotPeriodic() {
@@ -216,8 +217,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Enc Left V", Sensors.driveEncoderLeft.getVelocity());
         SmartDashboard.putNumber("Enc Right V", Sensors.driveEncoderRight.getVelocity());
         
-        SmartDashboard.putNumber("Sensor Distance", Sensors.tfm.getDistance());
-        SmartDashboard.putNumber("Sensor Strength", Sensors.tfm.getStrength());
+        SmartDashboard.putNumber("Sensor Distance", Sensors.ultraDistance.getDistance());
     }
 
     /**
