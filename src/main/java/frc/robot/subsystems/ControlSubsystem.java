@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.FDriverFactory;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
@@ -32,7 +33,8 @@ public class ControlSubsystem extends SubsystemBase {
                            intakeButton,
                            toggleLimeButton,
                            winchUnlockButton,
-                           winchLockButton;
+                           winchLockButton,
+                           magicShootButton;
 
     // Axes
     private int xAxis,
@@ -98,6 +100,7 @@ public class ControlSubsystem extends SubsystemBase {
         toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
+        magicShootButton = new JoystickButton(driverController, driverControls.getIntValue("magic shoot"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -137,6 +140,10 @@ public class ControlSubsystem extends SubsystemBase {
 
         winchUnlockButton.whenPressed(() -> winchSubsystem.setLockedState(false));
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
+
+        magicShootButton.whenPressed(() -> {
+            FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+        });
     }
     
     /**

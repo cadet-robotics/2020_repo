@@ -12,6 +12,6 @@ import static frc.robot.trajectory.TrajectoryManager.BASE_TRAJECTORY;
 
 public class AutoCommand extends SequentialCommandGroup {
     public AutoCommand(Limelight lime, DriveSubsystem drive, ShooterSubsystem shooter, PickupSubsystem pick) {
-        super(drive.trajectoryCommandBuilder(BASE_TRAJECTORY, new Pose2d()), new RotateToLightCommand(lime, drive), new WaitCommand(0.5), FDriverFactory.produce(shooter, pick, lime::getDistance));
+        super(drive.trajectoryCommandBuilder(BASE_TRAJECTORY, new Pose2d()), new RotateToLightCommand(lime, drive), new WaitCommand(0.5), FDriverFactory.produce(shooter, pick, lime::getDistance, false));
     }
 }

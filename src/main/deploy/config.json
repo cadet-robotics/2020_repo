@@ -56,6 +56,11 @@
 			"description": "Runs intake out manually"
 		},
 		{
+			"name": "magic shoot",
+			"value": "11",
+			"description": "Shoots using distance calculations"
+		},
+		{
 			"name": "toggle lime",
 			"value": "12",
 			"description": "Toggles the limelight mode"
