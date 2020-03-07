@@ -37,7 +37,8 @@ public class ControlSubsystem extends SubsystemBase {
     // Axes
     private int xAxis,
                 yAxis,
-                zAxis;
+                zAxis,
+                sliderAxis;
     
     // Winch stuff
     private int winchUpAngle,
@@ -61,9 +62,7 @@ public class ControlSubsystem extends SubsystemBase {
     public double getXAxis() { return driverController.getRawAxis(xAxis); }
     public double getYAxis() { return driverController.getRawAxis(yAxis); }
     public double getZAxis() { return driverController.getRawAxis(zAxis); }
-    
-    
-    private double rpm = 6000 / 2;
+    public double getSliderAxis() { return driverController.getRawAxis(sliderAxis); }
     
     /**
      * Loads the configuration, initializing all controls
@@ -90,6 +89,7 @@ public class ControlSubsystem extends SubsystemBase {
         xAxis = driverControls.getIntValue("x axis");
         yAxis = driverControls.getIntValue("y axis");
         zAxis = driverControls.getIntValue("z axis");
+        sliderAxis = driverControls.getIntValue("slider axis");
         
         // Buttons
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
@@ -154,14 +154,6 @@ public class ControlSubsystem extends SubsystemBase {
         } else if(pov == winchDownAngle) {
             winchSubsystem.runDown();
         }
-
-        /*
-         * TEMPORARY MANUAL CONTROLS
-         */
-        double r = rpm * (-driverController.getRawAxis(3) + 1);
-        //System.out.println(r);
-        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
-        Robot.crosshairs.setVelocityRPM(r);
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {

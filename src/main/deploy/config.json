@@ -21,6 +21,11 @@
 			"description": "Axis ID for the Z-Axis"
 		},
 		{
+			"name": "slider axis",
+			"value": "3",
+			"description": "Axis ID for the slider"
+		},
+		{
 			"name": "spin button",
 			"value": "1",
 			"description": "Button ID for the spinner control (A)"

@@ -9,7 +9,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 /**
  * Command for setting shooter speed and running the shooter
  *
- * @author Matt Robinson + Owen
+ * @author Matt Robinson
+ * @author Owen
  */
 public class SetShooterSpeedCommand extends SequentialCommandGroup {
     /**

@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
+/**
+ * Command for driving the robot during teleop
+ *
+ * @author Owen
+ */
 public class TeleDriveCommand extends CommandBase {
     private DriveSubsystem drive;
     private ControlSubsystem controls;
