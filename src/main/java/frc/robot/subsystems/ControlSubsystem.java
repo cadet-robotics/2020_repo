@@ -1,21 +1,19 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.*;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.commands.FDriverFactory;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
-import frc.robot.io.OtherIO;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.wheel.ColorEnum;
 import frc6868.config.api.Config;
 
@@ -37,11 +35,13 @@ public class ControlSubsystem extends SubsystemBase {
                            winchUnlockButton,
                            winchLockButton,
                            cycleBallCountButton;
+                           magicShootButton;
 
     // Axes
     private int xAxis,
                 yAxis,
-                zAxis;
+                zAxis,
+                sliderAxis;
     
     // Winch stuff
     private int winchUpAngle,
@@ -65,9 +65,7 @@ public class ControlSubsystem extends SubsystemBase {
     public double getXAxis() { return driverController.getRawAxis(xAxis); }
     public double getYAxis() { return driverController.getRawAxis(yAxis); }
     public double getZAxis() { return driverController.getRawAxis(zAxis); }
-    
-    
-    private double rpm = 6000 / 2;
+    public double getSliderAxis() { return driverController.getRawAxis(sliderAxis); }
     
     /**
      * Loads the configuration, initializing all controls
@@ -94,6 +92,7 @@ public class ControlSubsystem extends SubsystemBase {
         xAxis = driverControls.getIntValue("x axis");
         yAxis = driverControls.getIntValue("y axis");
         zAxis = driverControls.getIntValue("z axis");
+        sliderAxis = driverControls.getIntValue("slider axis");
         
         // Buttons
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
@@ -104,6 +103,8 @@ public class ControlSubsystem extends SubsystemBase {
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
         cycleBallCountButton = new JoystickButton(codriverController, codriverControls.getIntValue("cycle ball count"));
 
+        magicShootButton = new JoystickButton(driverController, driverControls.getIntValue("magic shoot"));
+        
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
         winchDownAngle = codriverControls.getIntValue("winch down");
@@ -146,15 +147,16 @@ public class ControlSubsystem extends SubsystemBase {
 
         winchUnlockButton.whenPressed(() -> winchSubsystem.setLockedState(false));
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
+
+        magicShootButton.whenPressed(() -> {
+            FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+        });
     }
     
     /**
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
      */
     public void periodicTeleop() {
-        //Drive Movement
-        driveSubsystem.getDriveBase().arcadeDrive(-getYAxis(), getZAxis(), true);
-
         SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
         SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
 
@@ -166,14 +168,6 @@ public class ControlSubsystem extends SubsystemBase {
         } else if(pov == winchDownAngle) {
             winchSubsystem.runDown();
         }
-
-        /*
-         * TEMPORARY MANUAL CONTROLS
-         */
-        double r = rpm * (-driverController.getRawAxis(3) + 1);
-        //System.out.println(r);
-        new SetShooterSpeedCommand(shooterSubsystem, r).schedule();
-        Robot.crosshairs.setVelocityRPM(r);
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {

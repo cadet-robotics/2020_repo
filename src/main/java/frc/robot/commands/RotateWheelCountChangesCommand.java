@@ -39,4 +39,9 @@ public class RotateWheelCountChangesCommand extends CommandBase {
     public boolean isFinished() {
         return arm.isWheelSpinnerStopped();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        arm.stopWheelSpinner();
+    }
 }

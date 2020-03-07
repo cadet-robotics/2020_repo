@@ -29,4 +29,9 @@ public class RotateWheelToColorCommand extends CommandBase {
     public boolean isFinished() {
         return arm.getColorWheel().getColor() == target && arm.isWheelSpinnerStopped();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        arm.stopWheelSpinner();
+    }
 }
