@@ -12,6 +12,7 @@ import frc.robot.subsystems.PickupSubsystem;
  */
 public class BallToMagCommand extends CommandBase {
     PickupSubsystem pickupSubsystem;
+    int pInt = 0;
 
     /**
      * Constructor requires pickupSubsystem
@@ -30,6 +31,7 @@ public class BallToMagCommand extends CommandBase {
     public void execute() {
         //Enables motors
         pickupSubsystem.setIntakeSpeed(Constants.INTAKE_SPEED);
+        pInt++;
     }
 
     /**
@@ -39,6 +41,11 @@ public class BallToMagCommand extends CommandBase {
      */
     @Override
     public boolean isFinished() {
+        //After 3 balls are inside of the magazine, the bot attempts to store 2 in the intake
+        if (pickupSubsystem.magBallCount < 3) {
+            return pInt >= Constants.INTAKE_COUNT_GR3;
+        }
+
         //Sensor picks up ball, bring to b2. Stop command.
         return !Sensors.magSensor.get();
     }

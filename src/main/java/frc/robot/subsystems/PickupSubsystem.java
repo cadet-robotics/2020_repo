@@ -27,6 +27,7 @@ public class PickupSubsystem extends SubsystemBase {
      * Constructor for subsystem
      */
     public PickupSubsystem() {
+        super();
         intake = Motors.intake;
         mag = Motors.magazine;
     }
@@ -58,6 +59,7 @@ public class PickupSubsystem extends SubsystemBase {
     		//Starts mag management command
             new IntakeNewBallCommand(this).schedule();
     	}
+    	SmartDashboard.putNumber("Magazine Ball Count",  magBallCount);
     }
 
     /**
@@ -86,5 +88,17 @@ public class PickupSubsystem extends SubsystemBase {
      */
     public void toggleAutoIntake() {
         autoIntakeEnabled = !autoIntakeEnabled;
+    }
+
+    /**
+     * Used to cycle through the amount of balls in the intake. Useful for debug
+     * <p>Increments by 1 in a range of 0-3
+     */
+    public void cycleBallCount() {
+        magBallCount++;
+
+        if (magBallCount == 4) {
+            magBallCount = 0;
+        }
     }
 }

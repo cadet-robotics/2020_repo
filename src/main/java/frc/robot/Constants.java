@@ -35,10 +35,11 @@ public final class Constants {
      * Intake & Magazine Constants
      */
     public static final double INTAKE_SPEED = 0.5,
-                               MAGAZINE_SPEED = -0.3,
-                               MAGAZINE_COUNT = 21;
+                               MAGAZINE_SPEED = -0.3;
 
-    public static final int INITIAL_BALL_COUNT = 3;
+    public static final int INITIAL_BALL_COUNT = 3,
+                            MAGAZINE_COUNT = 19,
+                            INTAKE_COUNT_GR3 = 10;
 
     /*
      * Shooter Constants

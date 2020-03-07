@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants;
 import frc.robot.*;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
@@ -36,7 +35,8 @@ public class ControlSubsystem extends SubsystemBase {
                            intakeButton,
                            toggleLimeButton,
                            winchUnlockButton,
-                           winchLockButton;
+                           winchLockButton,
+                           cycleBallCountButton;
 
     // Axes
     private int xAxis,
@@ -102,11 +102,12 @@ public class ControlSubsystem extends SubsystemBase {
         toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
-        
+        cycleBallCountButton = new JoystickButton(codriverController, codriverControls.getIntValue("cycle ball count"));
+
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
         winchDownAngle = codriverControls.getIntValue("winch down");
-        
+
         // Other
         manualMagazineUp = driverControls.getIntValue("manual mag up");
         manualMagazineDown = driverControls.getIntValue("manual mag down");
@@ -135,6 +136,10 @@ public class ControlSubsystem extends SubsystemBase {
         // Toggle intake
         intakeButton.whenPressed(() -> {
             pickupSubsystem.toggleAutoIntake();
+        });
+
+        cycleBallCountButton.whenPressed(() -> {
+           pickupSubsystem.cycleBallCount();
         });
 
         toggleLimeButton.whenPressed(lime::toggleCamMode);
