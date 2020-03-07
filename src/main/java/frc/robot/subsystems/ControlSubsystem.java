@@ -34,7 +34,7 @@ public class ControlSubsystem extends SubsystemBase {
                            toggleLimeButton,
                            winchUnlockButton,
                            winchLockButton,
-                           cycleBallCountButton;
+                           cycleBallCountButton,
                            magicShootButton;
 
     // Axes

@@ -17,16 +17,10 @@ public class RotateToLightCommand extends CommandBase {
 
     public RotateToLightCommand(Limelight limeIn, DriveSubsystem driveIn) {
         super();
-        pid = new PIDController(2e-1, 3e-2, 0);
+        pid = new PIDController(2e-1, 3e-2, 1e-2);
         drive = driveIn;
         addRequirements(driveIn);
         lime = limeIn;
-    }
-
-    private double past = 0.2;
-
-    private static double maxAdjust(double old, double n, double maxDelta) {
-        return absMin(n - old, maxDelta) + old;
     }
 
     private static double absMin(double v1, double clamp) {
@@ -41,9 +35,8 @@ public class RotateToLightCommand extends CommandBase {
         SmartDashboard.putNumber("pid-val", r);
         r = absMin(r, 0.45);
         r *= 12 / RobotController.getBatteryVoltage();
-        past = r;//maxAdjust(past, r, 1);
-        SmartDashboard.putNumber("past", past);
-        drive.getDriveBase().tankDrive(-past, past, false);
+        SmartDashboard.putNumber("past", r);
+        drive.getDriveBase().tankDrive(-r, r, false);
     }
 
     @Override
