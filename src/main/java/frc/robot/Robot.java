@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.RotateToLightCommand;
+import frc.robot.commands.TeleDriveCommand;
 import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
@@ -104,6 +105,7 @@ public class Robot extends TimedRobot {
         limelight.setCamMode(Limelight.CamMode.Vision);
 
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem, limelight);
+        driveSubsystem.setDefaultCommand(new TeleDriveCommand(driveSubsystem, controlSubsystem));
         
         // Initialize the camera itself
         cam = CameraServer.getInstance().startAutomaticCapture();

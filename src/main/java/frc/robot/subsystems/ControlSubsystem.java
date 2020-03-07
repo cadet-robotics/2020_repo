@@ -1,22 +1,18 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
-import frc.robot.*;
+import frc.robot.Robot;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.magazine.IntakeNewBallCommand;
 import frc.robot.greeneva.Limelight;
 import frc.robot.io.Motors;
-import frc.robot.io.OtherIO;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.wheel.ColorEnum;
 import frc6868.config.api.Config;
 
@@ -147,9 +143,6 @@ public class ControlSubsystem extends SubsystemBase {
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
      */
     public void periodicTeleop() {
-        //Drive Movement
-        driveSubsystem.getDriveBase().arcadeDrive(-getYAxis(), getZAxis(), true);
-
         SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
         SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
 
