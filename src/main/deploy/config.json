@@ -51,11 +51,6 @@
 			"description": "Runs intake out manually"
 		},
 		{
-			"name": "fire once",
-			"value": "11",
-			"description": "Passes one ball into the shooter from the magazine"
-		},
-		{
 			"name": "toggle lime",
 			"value": "12",
 			"description": "Toggles the limelight mode"
@@ -89,8 +84,13 @@
 			"description": "Degree to run the winch down"
 		},
 		{
-			"name": "winch lock button",
+			"name": "winch unlock button",
 			"value": "3",
+			"description": "Button to toggle if the winch is locked"
+		},
+		{
+			"name": "winch lock button",
+			"value": "4",
 			"description": "Button to toggle if the winch is locked"
 		}
 	],

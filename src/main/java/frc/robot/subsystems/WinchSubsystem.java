@@ -32,9 +32,9 @@ public class WinchSubsystem extends SubsystemBase {
     public void setLockedState(boolean locked) {
         // Slap the pneumatics in place
         if(locked) {
-            OtherIO.lockingPiston.set(Value.kForward);
-        } else {
             OtherIO.lockingPiston.set(Value.kReverse);
+        } else {
+            OtherIO.lockingPiston.set(Value.kForward);
         }
     }
     

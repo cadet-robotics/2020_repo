@@ -1,6 +1,7 @@
 package frc.robot.vision;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.opencv.core.Mat;
 
@@ -58,12 +59,7 @@ public class VisionThread implements Runnable {
      * @param height The height of the output video
      */
     public VisionThread(VisionProcessor processor, String name, int width, int height) {
-        this.name = name;
-        this.width = width;
-        this.height = height;
-        
-        processors = new ArrayList<>();
-        processors.add(processor);
+        this(new ArrayList<>(Collections.singleton(processor)), name, width, height);
     }
     
     /**

@@ -34,8 +34,9 @@ public class ControlSubsystem extends SubsystemBase {
     private JoystickButton spinButton,
                            shootButton,
                            intakeButton,
-                           fireOnceButton,
-                           toggleLimeButton;
+                           toggleLimeButton,
+                           winchUnlockButton,
+                           winchLockButton;
 
     // Axes
     private int xAxis,
@@ -98,8 +99,9 @@ public class ControlSubsystem extends SubsystemBase {
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
         intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
-        fireOnceButton = new JoystickButton(driverController, driverControls.getIntValue("fire once"));
         toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
+        winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
+        winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -113,11 +115,15 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Spin wheel
         spinButton.whenPressed(() -> {
-            System.out.println("*eva power up noises*");
-            new RotateWheelCountChangesCommand(armSubsystem)
-                    .andThen(new WaitCommand(5))
-                    .andThen(new RotateWheelToColorCommand(armSubsystem, ColorEnum.YELLOW))
-                    .schedule();
+            Command c = armSubsystem.getCurrentCommand();
+            if (c == null) {
+                new RotateWheelCountChangesCommand(armSubsystem)
+                        .andThen(new WaitCommand(5))
+                        .andThen(new RotateWheelToColorCommand(armSubsystem, ColorEnum.YELLOW))
+                        .schedule();
+            } else {
+                c.cancel();
+            }
         });
 
         //Shoot
@@ -131,9 +137,10 @@ public class ControlSubsystem extends SubsystemBase {
             pickupSubsystem.toggleAutoIntake();
         });
 
-        fireOnceButton.whenPressed(() -> new ShooterCommand(pickupSubsystem, true).schedule());
-
         toggleLimeButton.whenPressed(lime::toggleCamMode);
+
+        winchUnlockButton.whenPressed(() -> winchSubsystem.setLockedState(false));
+        winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
     }
     
     /**
