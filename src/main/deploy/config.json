@@ -31,31 +31,6 @@
 			"description": "Button ID for the spinner control (A)"
 		},
 		{
-			"name": "intake button",
-			"value": "2",
-			"description": "Button ID for the intake"
-		},
-		{
-			"name": "manual mag up",
-			"value": "5",
-			"description": "Runs magazine up manually"
-		},
-		{
-			"name": "manual mag down",
-			"value": "6",
-			"description": "Runs magazine down manually"
-		},
-		{
-			"name": "manual intake in",
-			"value": "3",
-			"description": "Runs intake in manually"
-		},
-		{
-			"name": "manual intake out",
-			"value": "4",
-			"description": "Runs intake out manually"
-		},
-		{
 			"name": "magic shoot",
 			"value": "11",
 			"description": "Shoots using distance calculations"
@@ -66,7 +41,7 @@
 			"description": "Toggles the limelight mode"
 		}
 	],
-	
+
 	"codriver controls": [
 		{
 			"name": "controller port",
@@ -107,10 +82,35 @@
 			"name": "cycle ball count",
 			"value": "9",
 			"description": "Button to cycle the amount of balls in the mag (Debug & Safe Guard)"
+		},
+		{
+			"name": "manual mag up",
+			"value": "8",
+			"description": "Runs magazine up manually"
+		},
+		{
+			"name": "manual mag down",
+			"value": "7",
+			"description": "Runs magazine down manually"
+		},
+		{
+			"name": "manual intake in",
+			"value": "6",
+			"description": "Runs intake in manually"
+		},
+		{
+			"name": "manual intake out",
+			"value": "5",
+			"description": "Runs intake out manually"
+		},
+		{
+			"name": "intake button",
+			"value": "10",
+			"description": "Button ID for the intake"
 		}
 	],
-	
-	
+
+
 	"sensors": [
 		{
 			"name": "magazine sensor",
@@ -128,7 +128,7 @@
 			"description": "Proximity Sensor for detecting ball being shot"
 		}
 	],
-	
+
 	"pwm motors": [
 		{
 			"name": "intake",
@@ -156,7 +156,7 @@
 			"description": "Drives the winch (b)"
 		}
 	],
-	
+
 	"can motors": [
 		{
 			"name": "wheel spinner",
@@ -194,7 +194,7 @@
 			"description": "Lower shooter flywheel motor"
 		}
 	],
-	
+
 	"crosshairs": [
 		{
 			"name": "center color",
@@ -212,7 +212,7 @@
 			"description": "hellfire red"
 		}
 	],
-	
+
 	"other": [
 		{
 			"name": "piston solenoid",
@@ -225,7 +225,7 @@
 			"description": "PCM Port with the unused part"
 		}
 	],
-	
+
 	"unknown": [
 		{
 			"name": "shooter a",

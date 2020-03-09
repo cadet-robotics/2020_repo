@@ -97,7 +97,7 @@ public class PickupSubsystem extends SubsystemBase {
     public void cycleBallCount() {
         magBallCount++;
 
-        if (magBallCount == 4) {
+        if (magBallCount <= 6) {
             magBallCount = 0;
         }
     }

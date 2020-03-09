@@ -96,7 +96,7 @@ public class ControlSubsystem extends SubsystemBase {
         
         // Buttons
         spinButton = new JoystickButton(driverController, driverControls.getIntValue("spin button"));
-        intakeButton = new JoystickButton(driverController, driverControls.getIntValue("intake button"));
+        intakeButton = new JoystickButton(codriverController, codriverControls.getIntValue("intake button"));
         shootButton = new JoystickButton(codriverController, codriverControls.getIntValue("shoot button"));
         toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
@@ -110,10 +110,10 @@ public class ControlSubsystem extends SubsystemBase {
         winchDownAngle = codriverControls.getIntValue("winch down");
 
         // Other
-        manualMagazineUp = driverControls.getIntValue("manual mag up");
-        manualMagazineDown = driverControls.getIntValue("manual mag down");
-        manualIntakeIn = driverControls.getIntValue("manual intake in");
-        manualIntakeOut = driverControls.getIntValue("manual intake out");
+        manualMagazineUp = codriverControls.getIntValue("manual mag up");
+        manualMagazineDown = codriverControls.getIntValue("manual mag down");
+        manualIntakeIn = codriverControls.getIntValue("manual intake in");
+        manualIntakeOut = codriverControls.getIntValue("manual intake out");
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -178,17 +178,17 @@ public class ControlSubsystem extends SubsystemBase {
             Motors.intake.set(0);
             Motors.magazine.set(0);
             
-            if(driverController.getRawButton(manualIntakeIn)) {
+            if(codriverController.getRawButton(manualIntakeIn)) {
                 System.out.println("INTAKE IN");
                 Motors.intake.set(Constants.INTAKE_SPEED);
-            } else if(driverController.getRawButton(manualIntakeOut)) {
+            } else if(codriverController.getRawButton(manualIntakeOut)) {
                 Motors.intake.set(-Constants.INTAKE_SPEED);
             }
             
-            if(driverController.getRawButton(manualMagazineUp)) {
+            if(codriverController.getRawButton(manualMagazineUp)) {
                 System.out.println("MAGAZINE UP");
                 Motors.magazine.set(Constants.MAGAZINE_SPEED);
-            } else if(driverController.getRawButton(manualMagazineDown)) {
+            } else if(codriverController.getRawButton(manualMagazineDown)) {
                 Motors.magazine.set(-Constants.MAGAZINE_SPEED);
             }
         }

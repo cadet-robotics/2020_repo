@@ -27,7 +27,7 @@ public class TranslateMagCommand extends CommandBase {
      * Translates by a given amount
      */
     public void execute() {
-        if (pickupSubsystem.magBallCount <= 3) {
+        if (pickupSubsystem.magBallCount <= 99999) {
             count = 69420; //Just needs to be higher than the constants value "MAGAZINE_SPEED"
             return;
         }
