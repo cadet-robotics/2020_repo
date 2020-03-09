@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
-import frc.robot.commands.ManualShooterSpeedCommand;
 import frc.robot.commands.RotateToLightCommand;
 import frc.robot.commands.TeleDriveCommand;
 import frc.robot.greeneva.Limelight;
@@ -108,15 +107,16 @@ public class Robot extends TimedRobot {
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem, limelight);
 
         driveSubsystem.setDefaultCommand(new TeleDriveCommand(driveSubsystem, controlSubsystem));
-        shooterSubsystem.setDefaultCommand(new ManualShooterSpeedCommand(shooterSubsystem, controlSubsystem));
         
-        // Initialize the camera itself
+        // Crosshairs vision setup
+        cam = limelight.getLimelightCam();
+        CameraServer.getInstance().addCamera(cam);
+        setupCrosshairsVision(mainConfig);
+        
+        // Initialize the climb camera
         cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setResolution(320, 240);
         cam.setFPS(15);
-        
-        // Crosshairs vision setup
-        setupCrosshairsVision(mainConfig);
     }
     
     /**
@@ -134,7 +134,7 @@ public class Robot extends TimedRobot {
         crosshairs = new CrosshairsOverlay(Constants.CAMERA_X,
                                            camHeight,
                                            Constants.CAMERA_ANGLE, 
-                                           Constants.LIFECAM_3000_VERTICAL_FOV,
+                                           Constants.CAMERA_FOV,
                                            Constants.IMAGE_HEIGHT,
                                            shooterHeight,
                                            Constants.SHOOTER_WHEELS_DIAMETER,

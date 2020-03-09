@@ -153,6 +153,9 @@ public class ControlSubsystem extends SubsystemBase {
         });
     }
     
+    private boolean manualRPM = true;
+    int maxRPM = 3000;
+    
     /**
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
      */
@@ -167,6 +170,13 @@ public class ControlSubsystem extends SubsystemBase {
             winchSubsystem.runUp();
         } else if(pov == winchDownAngle) {
             winchSubsystem.runDown();
+        }
+        
+        // Sets the RPM manually. This is final, and will not be made a command due to pain, suffering, and hours wasted.
+        if(manualRPM) {
+            double rpm = (-driverController.getRawAxis(sliderAxis) + 1) * (maxRPM / 2);
+            new SetShooterSpeedCommand(shooterSubsystem, rpm).schedule();
+            Robot.crosshairs.setVelocityRPM(rpm);
         }
         
         // Run intake manually
