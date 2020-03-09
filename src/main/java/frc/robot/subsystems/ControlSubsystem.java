@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.FDriverFactory;
+import frc.robot.commands.ManualShooterSpeedCommand;
 import frc.robot.commands.RotateWheelCountChangesCommand;
 import frc.robot.commands.RotateWheelToColorCommand;
 import frc.robot.commands.SetShooterSpeedCommand;
@@ -149,9 +150,20 @@ public class ControlSubsystem extends SubsystemBase {
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
 
         magicShootButton.whenPressed(() -> {
-            FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+            //FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+            System.out.println(":(");
+            
+            manualRPM = false;
+            if(shooterSubsystem.getCurrentCommand() != null) shooterSubsystem.getCurrentCommand().cancel();
+            Robot.crosshairs.setVelocityDistance(lime.getDistance());
+            new SetShooterSpeedCommand(shooterSubsystem, Robot.crosshairs.getRPM(), 5).schedule();
         });
+        
+        ll = lime;
     }
+    
+    Limelight ll;
+    boolean manualRPM = true;
     
     /**
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
@@ -159,6 +171,10 @@ public class ControlSubsystem extends SubsystemBase {
     public void periodicTeleop() {
         SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
         SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
+        if(shooterSubsystem.getCurrentCommand() != null) SmartDashboard.putString("command", shooterSubsystem.getCurrentCommand().getClass().getName());
+        else SmartDashboard.putString("command", "null");
+        SmartDashboard.putBoolean("manualRPM", manualRPM);
+        SmartDashboard.putNumber("lld", ll.getDistance());
 
         // Run winch
         int pov = codriverController.getPOV();
@@ -169,8 +185,16 @@ public class ControlSubsystem extends SubsystemBase {
             winchSubsystem.runDown();
         }
         
+        // their systems sucked
+        if(driverController.getRawButton(10)) manualRPM = true;
+        if(manualRPM) {
+            new ManualShooterSpeedCommand(shooterSubsystem, this).schedule();
+        }
+        
         // Run intake manually
+        SmartDashboard.putBoolean("auto intake", pickupSubsystem.getAutoIntakeEnabled());
         if(!pickupSubsystem.getAutoIntakeEnabled()) {
+            
             {
                 Command c = pickupSubsystem.getCurrentCommand();
                 if (c != null) c.cancel();

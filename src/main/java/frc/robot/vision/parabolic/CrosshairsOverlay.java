@@ -6,6 +6,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.vision.VisionProcessor;
 
 /**
@@ -164,11 +165,16 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param dist
      */
     public void setVelocityDistance(double dist) {
-        // v = (sqrt(gravity) * x * sqrt((tan(angle)^2) + 1)) / sqrt((2 * x * tan(angle)) - (2 * y))
-        double tanTheta = Math.tan(shooterAngle),
+        
+        // v = (sqrt(g) * x * sec(t)) / (sqrt(2) * sqrt((x * tan(t)) - y))
+        double secTheta = 1.0d / Math.cos(shooterAngle),
                y = targetY - shooterY;
         
-        shooterVelocity = (Math.sqrt(gravity) * dist * Math.sqrt((tanTheta * tanTheta) + 1)) / Math.sqrt((2 * dist * tanTheta) - (2 * y));
+        shooterVelocity = (Math.sqrt(gravity) * dist * secTheta) / (Math.sqrt(2) * Math.sqrt((dist * Math.tan(shooterAngle)) - y));
+        
+        // Apply adjustment function
+        double xAdj = dist - 3.45;
+        shooterVelocity += ((xAdj * xAdj) / 10) + 0.05;
     }
     
     /**
@@ -177,7 +183,7 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @return Shooter RPM
      */
     public double getRPM() {
-        return shooterVelocity / (wheelDiameter * Math.PI * 60);
+        return (shooterVelocity * 60) / (wheelDiameter * Math.PI);
     }
     
     
@@ -188,7 +194,8 @@ public class CrosshairsOverlay implements VisionProcessor {
         // Start by calculating the quadratic trajectory
         double secTheta = 1.0d / Math.cos(shooterAngle);
         
-        quadA = (gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
+        // y = ((-g * sec^2(theta)) / (2 * v^2)) * x^2 + tan(theta) * x
+        quadA = (-gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
         quadB = Math.tan(shooterAngle);
         quadC = shooterY - targetY;
         
@@ -250,6 +257,7 @@ public class CrosshairsOverlay implements VisionProcessor {
 
     @Override
     public void process(Mat source, Mat dest, int width, int height) {
+        
         // Speed too low
         if(!hasLines) {
             Imgproc.putText(source, "Velocity too low", new Point(10, 25), Core.FONT_HERSHEY_PLAIN, 1, new Scalar(0, 255, 0));
@@ -257,10 +265,10 @@ public class CrosshairsOverlay implements VisionProcessor {
             // Draw lines based off of lineAY and lineBY
             Imgproc.line(source, new Point(0, lineAY), new Point(width, lineAY), colorA);
             Imgproc.line(source, new Point(0, lineBY), new Point(width, lineBY), colorB);
-            
-            // Draw vertical crosshair
-            Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         }
+
+        // Draw vertical crosshair
+        Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         
         source.copyTo(dest);
     }
