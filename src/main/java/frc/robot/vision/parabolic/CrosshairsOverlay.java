@@ -1,5 +1,13 @@
 package frc.robot.vision.parabolic;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -42,6 +50,8 @@ public class CrosshairsOverlay implements VisionProcessor {
                    angleA,  // These too
                    angleB;
     
+    HashMap<Double, Double> rpmTable;	// Table of RPM values for various distances
+    
     /**
      * Creates the overlay, calculating line positions automatically
      * <p> Distance units don't matter as long as they're consistent
@@ -76,6 +86,8 @@ public class CrosshairsOverlay implements VisionProcessor {
         this.colorA = colorA;
         this.colorB = colorB;
         this.colorC = colorC;
+        
+        rpmTable = new HashMap<>();
         
         // This will init the other stuff
         calculateLinePositions();
@@ -121,6 +133,8 @@ public class CrosshairsOverlay implements VisionProcessor {
         quadC = 0;
         angleA = 0;
         angleB = 0;
+        
+        rpmTable = new HashMap<>();
     }
     
     /*
@@ -148,6 +162,50 @@ public class CrosshairsOverlay implements VisionProcessor {
      */
     
     /**
+     * Loads a table of RPM values
+     * 
+     * @param f
+     */
+    public void loadRPMTable(File f) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(f));
+        
+        // Loop over all lines
+        for(String ln = ""; (ln = br.readLine()) != null;) {
+            ln = ln.trim();
+            if(ln.equals("")) continue; // ignore blank lines
+            
+            // Format is (min distance):(rpm)
+            String[] separated = ln.split(":");
+            
+            rpmTable.put(Double.parseDouble(separated[0]), Double.parseDouble(separated[1]));
+        }
+        
+        br.close();
+    }
+    
+    /**
+     * Sets the RPM based on a table of limelight distances
+     * 
+     * @param dist
+     */
+    public void setRPMFromTable(double dist) {
+        
+        // Find distance in table
+        ArrayList<Double> maxes = new ArrayList<>(rpmTable.keySet());
+        Collections.sort(maxes);
+        
+        // Loop from greatest to least minimum distance
+        for(int i = maxes.size() - 1; i >= 0; i--) {
+            // In range, apply
+            if(dist >= maxes.get(i)) {
+                setVelocityRPM(rpmTable.get(maxes.get(i)));
+                calculateLinePositions();
+                return;
+            }
+        }
+    }
+    
+    /**
      * Sets the velocity based on rpm
      * 
      * @param rpm
@@ -164,13 +222,13 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @param dist
      */
     public void setVelocityDistance(double dist) {
-        /* TO BE REPLACED WITH SOMETHING WORKING LATER
+        
         // v = (sqrt(gravity) * x * sqrt((tan(angle)^2) + 1)) / sqrt((2 * x * tan(angle)) - (2 * y))
         double tanTheta = Math.tan(shooterAngle),
                y = targetY - shooterY;
         
         shooterVelocity = (Math.sqrt(gravity) * dist * Math.sqrt((tanTheta * tanTheta) + 1)) / Math.sqrt((2 * dist * tanTheta) - (2 * y));
-        */
+        
     }
     
     /**

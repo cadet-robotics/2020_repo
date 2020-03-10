@@ -34,6 +34,7 @@ import frc.robot.vision.parabolic.CrosshairsOverlay;
 import frc6868.config.api.Config;
 import org.opencv.core.Scalar;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
@@ -145,6 +146,13 @@ public class Robot extends TimedRobot {
                                            Util.csvToScalar(cross.getValue("color a")), //Constants.CROSSHAIR_A_COLOR,
                                            Util.csvToScalar(cross.getValue("color b")), //Constants.CROSSHAIR_B_COLOR,
                                            Util.csvToScalar(cross.getValue("center color"))); //Constants.CROSSHAIR_CENTER_COLOR);
+        
+        // Load RPM table because its the most effective solution, unfortunately
+        try {
+            crosshairs.loadRPMTable(new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/rpms.txt"));
+		} catch (IOException e) {
+		    System.out.println("Could not load RPM table:\n" + e.getMessage());
+		}
         
         // Create the thread to process stuff
         VisionThread vt = new VisionThread("uwu feed", 320, 240);

@@ -130,8 +130,16 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Shoot
         shootButton.whenPressed(() -> {
-            //System.out.println("WORKING");
-            shooterSubsystem.triggerAutoShooter(false);
+            System.out.println("SETTING SPEED");
+            manualRPM = false;
+            //Robot.crosshairs.setRPMFromTable(lime.getDistance());
+            //shooterSubsystem.triggerAutoShooter(false);
+            Robot.crosshairs.setVelocityDistance(lime.getDistance());
+            new SetShooterSpeedCommand(shooterSubsystem, Robot.crosshairs.getRPM()).schedule();
+        });
+        
+        new JoystickButton(driverController, 10).whenPressed(() -> {
+            manualRPM = true;
         });
         
         // Toggle intake
