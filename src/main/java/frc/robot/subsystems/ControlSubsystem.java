@@ -34,7 +34,6 @@ public class ControlSubsystem extends SubsystemBase {
                            toggleLimeButton,
                            winchUnlockButton,
                            winchLockButton,
-                           cycleBallCountButton,
                            magicShootButton;
 
     // Axes
@@ -101,7 +100,6 @@ public class ControlSubsystem extends SubsystemBase {
         toggleLimeButton = new JoystickButton(driverController, driverControls.getIntValue("toggle lime"));
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
-        cycleBallCountButton = new JoystickButton(codriverController, codriverControls.getIntValue("cycle ball count"));
 
         magicShootButton = new JoystickButton(driverController, driverControls.getIntValue("magic shoot"));
         
@@ -137,10 +135,6 @@ public class ControlSubsystem extends SubsystemBase {
         // Toggle intake
         intakeButton.whenPressed(() -> {
             pickupSubsystem.toggleAutoIntake();
-        });
-
-        cycleBallCountButton.whenPressed(() -> {
-           pickupSubsystem.cycleBallCount();
         });
 
         toggleLimeButton.whenPressed(lime::toggleCamMode);

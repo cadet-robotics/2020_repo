@@ -20,7 +20,6 @@ public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX intake;
     PWMVictorSPX mag;
 
-    public int magBallCount = Constants.INITIAL_BALL_COUNT;
     private boolean autoIntakeEnabled = true;
 
     /**
@@ -59,7 +58,6 @@ public class PickupSubsystem extends SubsystemBase {
     		//Starts mag management command
             new IntakeNewBallCommand(this).schedule();
     	}
-    	SmartDashboard.putNumber("Magazine Ball Count",  magBallCount);
     }
 
     /**
@@ -88,17 +86,5 @@ public class PickupSubsystem extends SubsystemBase {
      */
     public void toggleAutoIntake() {
         autoIntakeEnabled = !autoIntakeEnabled;
-    }
-
-    /**
-     * Used to cycle through the amount of balls in the intake. Useful for debug
-     * <p>Increments by 1 in a range of 0-3
-     */
-    public void cycleBallCount() {
-        magBallCount++;
-
-        if (magBallCount <= 6) {
-            magBallCount = 0;
-        }
     }
 }

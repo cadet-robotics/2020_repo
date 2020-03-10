@@ -27,11 +27,6 @@ public class TranslateMagCommand extends CommandBase {
      * Translates by a given amount
      */
     public void execute() {
-        if (pickupSubsystem.magBallCount <= 99999) {
-            count = 69420; //Just needs to be higher than the constants value "MAGAZINE_SPEED"
-            return;
-        }
-
         pickupSubsystem.setMagazineSpeed(Constants.MAGAZINE_SPEED);
         count++;
     }
@@ -42,12 +37,7 @@ public class TranslateMagCommand extends CommandBase {
      * @return If the intervals exceeds or equals a given amount
      */
     public boolean isFinished() {
-        if (count >= Constants.MAGAZINE_COUNT) {
-            pickupSubsystem.magBallCount += 1;
-            return true;
-        }
-
-        return false;
+        return count >= Constants.MAGAZINE_COUNT;
     }
 
 }

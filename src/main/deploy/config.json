@@ -79,11 +79,6 @@
 			"description": "Button to toggle if the winch is locked"
 		},
 		{
-			"name": "cycle ball count",
-			"value": "9",
-			"description": "Button to cycle the amount of balls in the mag (Debug & Safe Guard)"
-		},
-		{
 			"name": "manual mag up",
 			"value": "8",
 			"description": "Runs magazine up manually"
