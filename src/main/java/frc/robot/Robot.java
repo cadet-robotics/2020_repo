@@ -27,6 +27,7 @@ import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.io.Sensors;
 import frc.robot.subsystems.*;
+import frc.robot.trajectory.TrajectoryManager;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
@@ -240,7 +241,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         //m_autonomousCommand = new SkitterCommand(driveSubsystem);
-        m_autonomousCommand = new AutoCommand(limelight, driveSubsystem, shooterSubsystem, pickupSubsystem);
+        m_autonomousCommand = new AutoCommand(limelight, driveSubsystem, shooterSubsystem, pickupSubsystem, TrajectoryManager.StartPos.Right);
         m_autonomousCommand.schedule();
     }
 

@@ -28,7 +28,7 @@ public class TrajectoryManager {
         //config.addConstraint(new CentripetalAccelerationConstraint(0.15));
     }
 
-    public static final Trajectory BASE_TRAJECTORY;
+    public static final Trajectory[] TRAJECTORIES = new Trajectory[3];
     static {
         /*
         Trajectory tt;
@@ -40,12 +40,40 @@ public class TrajectoryManager {
         }
         TRAJECTORY_AGREEMENT = tt;
         */
-        ArrayList<Pose2d> ls = new ArrayList<>();
-        ls.add(new Pose2d());
-        //ls.add(new Pose2d(new Translation2d(-1, 1), Rotation2d.fromDegrees(90)));
-        //ls.add(new Pose2d(new Translation2d(0.5, 2), new Rotation2d()));
-        //ls.add(new Pose2d(new Translation2d(0.8, 2), Rotation2d.fromDegrees(90)));
-        ls.add(new Pose2d(new Translation2d(1, 2), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
-        BASE_TRAJECTORY = TrajectoryGenerator.generateTrajectory(ls, config);
+        for (int i = 0; i < 3; i++) {
+            ArrayList<Pose2d> ls = new ArrayList<>();
+            ls.add(new Pose2d());
+            //ls.add(new Pose2d(new Translation2d(-1, 1), Rotation2d.fromDegrees(90)));
+            //ls.add(new Pose2d(new Translation2d(0.5, 2), new Rotation2d()));
+            //ls.add(new Pose2d(new Translation2d(0.8, 2), Rotation2d.fromDegrees(90)));
+            /*
+            if (i == 0) {
+                ls.add(new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(-90)));
+            } else if (i == 2) {
+                ls.add(new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(90)));
+            }
+             */
+            ls.add(new Pose2d(new Translation2d(1, 2 /*+ (i - 1) * 1.8288*/), Rotation2d.fromDegrees(180)/*new Rotation2d()*/));
+            TRAJECTORIES[i] = TrajectoryGenerator.generateTrajectory(ls, config);
+        }
+    }
+
+    public enum StartPos {
+        Left,
+        Center,
+        Right;
+
+        public int getIndex() {
+            switch (this) {
+                case Left: return 0;
+                case Center: return 1;
+                case Right: return 2;
+                default: throw new IllegalArgumentException("invalid start pos");
+            }
+        }
+
+        public Trajectory getTrajectory() {
+            return TRAJECTORIES[getIndex()];
+        }
     }
 }
