@@ -32,8 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setSpeed(double rpm) {
         currentRPM = rpm;
-        topPid.setSetpoint(rpm * (179.0 / 180.0));
-        botPid.setSetpoint(rpm * (181.0 / 180.0));
+        topPid.setSetpoint(rpm * (175.0 / 180.0));
+        botPid.setSetpoint(rpm * (185.0 / 180.0));
     }
 
     public double getTargetSpeed() {
