@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -101,7 +102,7 @@ public class ControlSubsystem extends SubsystemBase {
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
 
-        magicShootButton = new JoystickButton(driverController, driverControls.getIntValue("magic shoot"));
+        magicShootButton = new JoystickButton(codriverController, codriverControls.getIntValue("magic shoot"));
         
         // Winch
         winchUpAngle = codriverControls.getIntValue("winch up");
@@ -143,7 +144,12 @@ public class ControlSubsystem extends SubsystemBase {
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
 
         magicShootButton.whenPressed(() -> {
-            FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+            Command c = shooterSubsystem.getCurrentCommand();
+            if (c == null) {
+                FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+            } else {
+                c.cancel();
+            }
         });
     }
     

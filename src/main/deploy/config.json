@@ -31,11 +31,6 @@
 			"description": "Button ID for the spinner control (A)"
 		},
 		{
-			"name": "magic shoot",
-			"value": "11",
-			"description": "Shoots using distance calculations"
-		},
-		{
 			"name": "toggle lime",
 			"value": "12",
 			"description": "Toggles the limelight mode"
@@ -97,6 +92,11 @@
 			"name": "manual intake out",
 			"value": "5",
 			"description": "Runs intake out manually"
+		},
+		{
+			"name": "magic shoot",
+			"value": "9",
+			"description": "Shoots using distance calculations"
 		},
 		{
 			"name": "intake button",

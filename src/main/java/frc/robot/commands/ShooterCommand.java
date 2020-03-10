@@ -65,11 +65,5 @@ public class ShooterCommand extends CommandBase {
     public void end(boolean interrupted) {
         pickupSubsystem.setIntakeSpeed(0);
         pickupSubsystem.setMagazineSpeed(0);
-
-        if (ignoreSensor) {
-            pickupSubsystem.magBallCount = 0;
-        } else if (pickupSubsystem.magBallCount > 0) {
-            pickupSubsystem.magBallCount -= 1;
-        }
     }
 }
