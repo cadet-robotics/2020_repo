@@ -132,9 +132,9 @@ public class ControlSubsystem extends SubsystemBase {
         shootButton.whenPressed(() -> {
             System.out.println("SETTING SPEED");
             manualRPM = false;
-            //Robot.crosshairs.setRPMFromTable(lime.getDistance());
+            Robot.crosshairs.setRPMFromTable(lime.getDistance());
             //shooterSubsystem.triggerAutoShooter(false);
-            Robot.crosshairs.setVelocityDistance(lime.getDistance());
+            //Robot.crosshairs.setVelocityDistance(lime.getDistance());
             new SetShooterSpeedCommand(shooterSubsystem, Robot.crosshairs.getRPM()).schedule();
         });
         
@@ -159,10 +159,14 @@ public class ControlSubsystem extends SubsystemBase {
         magicShootButton.whenPressed(() -> {
             FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
         });
+        
+        this.lime = lime;
     }
     
     private boolean manualRPM = true;
     int maxRPM = 3000;
+    
+    private Limelight lime;
     
     /**
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
@@ -185,6 +189,9 @@ public class ControlSubsystem extends SubsystemBase {
             double rpm = (-driverController.getRawAxis(sliderAxis) + 1) * (maxRPM / 2);
             new SetShooterSpeedCommand(shooterSubsystem, rpm).schedule();
             Robot.crosshairs.setVelocityRPM(rpm);
+            
+            SmartDashboard.putNumber("manRPM", rpm);
+            SmartDashboard.putNumber("limedist", lime.getDistance());
         }
         
         // Run intake manually

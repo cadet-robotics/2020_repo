@@ -237,7 +237,7 @@ public class CrosshairsOverlay implements VisionProcessor {
      * @return Shooter RPM
      */
     public double getRPM() {
-        return shooterVelocity / (wheelDiameter * Math.PI * 60);
+        return (shooterVelocity * 60) / (wheelDiameter * Math.PI);
     }
     
     
