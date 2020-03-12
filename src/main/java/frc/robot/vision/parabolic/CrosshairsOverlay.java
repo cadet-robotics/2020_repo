@@ -188,7 +188,7 @@ public class CrosshairsOverlay implements VisionProcessor {
         // Start by calculating the quadratic trajectory
         double secTheta = 1.0d / Math.cos(shooterAngle);
         
-        quadA = (gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
+        quadA = (-gravity * secTheta * secTheta) / (2 * shooterVelocity * shooterVelocity);
         quadB = Math.tan(shooterAngle);
         quadC = shooterY - targetY;
         
@@ -257,10 +257,10 @@ public class CrosshairsOverlay implements VisionProcessor {
             // Draw lines based off of lineAY and lineBY
             Imgproc.line(source, new Point(0, lineAY), new Point(width, lineAY), colorA);
             Imgproc.line(source, new Point(0, lineBY), new Point(width, lineBY), colorB);
-            
-            // Draw vertical crosshair
-            Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         }
+
+        // Draw vertical crosshair
+        Imgproc.line(source, new Point(width / 2, 0), new Point(width / 2, height), colorC);
         
         source.copyTo(dest);
     }

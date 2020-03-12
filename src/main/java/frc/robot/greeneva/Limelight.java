@@ -91,7 +91,7 @@ public class Limelight implements Sendable {
     }
 
     public HttpCamera getLimelightCam() {
-        return new HttpCamera("limelight", "10.68.68.66:5800");
+        return new HttpCamera("limelight", "http://10.68.68.66:5800");
     }
 
     @Override
