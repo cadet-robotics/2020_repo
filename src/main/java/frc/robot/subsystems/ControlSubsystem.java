@@ -36,6 +36,10 @@ public class ControlSubsystem extends SubsystemBase {
                            winchUnlockButton,
                            winchLockButton,
                            magicShootButton;
+    private JoystickButton shooterPreset1,
+                           shooterPreset2,
+                           shooterPreset3,
+                           shooterPreset4;
 
     // Axes
     private int xAxis,
@@ -102,6 +106,11 @@ public class ControlSubsystem extends SubsystemBase {
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
 
+        shooterPreset1 = new JoystickButton(driverController, driverControls.getIntValue("shooter preset 1"));
+        shooterPreset2 = new JoystickButton(driverController, driverControls.getIntValue("shooter preset 2"));
+        shooterPreset3 = new JoystickButton(driverController, driverControls.getIntValue("shooter preset 3"));
+        shooterPreset4 = new JoystickButton(driverController, driverControls.getIntValue("shooter preset 4"));
+
         magicShootButton = new JoystickButton(codriverController, codriverControls.getIntValue("magic shoot"));
         
         // Winch
@@ -113,6 +122,20 @@ public class ControlSubsystem extends SubsystemBase {
         manualMagazineDown = codriverControls.getIntValue("manual mag down");
         manualIntakeIn = codriverControls.getIntValue("manual intake in");
         manualIntakeOut = codriverControls.getIntValue("manual intake out");
+
+        // Shooter Presets
+        shooterPreset1.whenPressed(() -> {
+            pickupSubsystem.shooterPresetSpeed = 1;
+        });
+        shooterPreset2.whenPressed(() -> {
+            pickupSubsystem.shooterPresetSpeed = 0.75;
+        });
+        shooterPreset3.whenPressed(() -> {
+            pickupSubsystem.shooterPresetSpeed = 0.45;
+        });
+        shooterPreset4.whenPressed(() -> {
+            pickupSubsystem.shooterPresetSpeed = 1;
+        });
 
         //Spin wheel
         spinButton.whenPressed(() -> {
@@ -130,7 +153,7 @@ public class ControlSubsystem extends SubsystemBase {
         //Shoot
         shootButton.whenPressed(() -> {
             //System.out.println("WORKING");
-            shooterSubsystem.triggerAutoShooter(false);
+            shooterSubsystem.triggerAutoShooter(true);
         });
         
         // Toggle intake
@@ -144,12 +167,13 @@ public class ControlSubsystem extends SubsystemBase {
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
 
         magicShootButton.whenPressed(() -> {
-            Command c = shooterSubsystem.getCurrentCommand();
-            if (c == null) {
-                FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
-            } else {
-                c.cancel();
-            }
+            shooterSubsystem.triggerAutoShooter(false);
+            //Command c = shooterSubsystem.getCurrentCommand();
+            //if (c == null) {
+            //    FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
+            //} else {
+            //    c.cancel();
+            //}
         });
     }
     
@@ -157,8 +181,17 @@ public class ControlSubsystem extends SubsystemBase {
      * Run by teleopPeriodic, so that these stay consolidated but this is always during teleop 
      */
     public void periodicTeleop() {
-        SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
-        SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
+        //SmartDashboard.putNumber("LEFT TELE", Motors.leftDrive.get());
+        //SmartDashboard.putNumber("RIGHT TELE", Motors.rightDrive.get());
+
+        // Smart Dashboard stuff for drive team
+        SmartDashboard.putNumber("Shooter %", getSliderAxis());
+
+
+
+        SmartDashboard.putNumber("Shooter Dev.", getSliderAxis() + (pickupSubsystem.shooterPresetSpeed * 2) - 1);
+        SmartDashboard.putNumber("Preset %", pickupSubsystem.shooterPresetSpeed * 100);
+
 
         // Run winch
         int pov = codriverController.getPOV();

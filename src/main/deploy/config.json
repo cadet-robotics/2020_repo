@@ -32,8 +32,28 @@
 		},
 		{
 			"name": "toggle lime",
-			"value": "12",
+			"value": "2",
 			"description": "Toggles the limelight mode"
+		},
+		{
+			"name": "shooter preset 1",
+			"value": "7",
+			"description": "Button for shooter preset 1"
+		},
+		{
+			"name": "shooter preset 2",
+			"value": "8",
+			"description": "Button for shooter preset 2"
+		},
+		{
+			"name": "shooter preset 3",
+			"value": "9",
+			"description": "Button for shooter preset 3"
+		},
+		{
+			"name": "shooter preset 4",
+			"value": "10",
+			"description": "Button for shooter preset 4"
 		}
 	],
 
