@@ -35,6 +35,7 @@ public class ControlSubsystem extends SubsystemBase {
                            winchUnlockButton,
                            winchLockButton,
                            cycleBallCountButton,
+                           grabManualRPMButton,
                            magicShootButton;
 
     // Axes
@@ -102,7 +103,8 @@ public class ControlSubsystem extends SubsystemBase {
         winchUnlockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch unlock button"));
         winchLockButton = new JoystickButton(codriverController, codriverControls.getIntValue("winch lock button"));
         cycleBallCountButton = new JoystickButton(codriverController, codriverControls.getIntValue("cycle ball count"));
-
+        
+        grabManualRPMButton = new JoystickButton(driverController, driverControls.getIntValue("toggle manual rpm"));
         magicShootButton = new JoystickButton(driverController, driverControls.getIntValue("magic shoot"));
         
         // Winch
@@ -138,7 +140,8 @@ public class ControlSubsystem extends SubsystemBase {
             new SetShooterSpeedCommand(shooterSubsystem, Robot.crosshairs.getRPM()).schedule();
         });
         
-        new JoystickButton(driverController, 10).whenPressed(() -> {
+        // Makes RPM manual
+        grabManualRPMButton.whenPressed(() -> {
             manualRPM = true;
         });
         
@@ -155,7 +158,8 @@ public class ControlSubsystem extends SubsystemBase {
 
         winchUnlockButton.whenPressed(() -> winchSubsystem.setLockedState(false));
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
-
+        
+        // Schedules a magic shoot command
         magicShootButton.whenPressed(() -> {
             FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
         });

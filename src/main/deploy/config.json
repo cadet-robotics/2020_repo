@@ -31,6 +31,11 @@
 			"description": "Button ID for the spinner control (A)"
 		},
 		{
+			"name": "toggle manual rpm",
+			"value": "10",
+			"description": "Toggles whether RPM is manually controlled"
+		},
+		{
 			"name": "magic shoot",
 			"value": "11",
 			"description": "Shoots using distance calculations"

@@ -103,7 +103,9 @@ public class Robot extends TimedRobot {
         winchSubsystem = new WinchSubsystem();
 
         limelight = new Limelight(NetworkTableInstance.getDefault());
-        limelight.setCamMode(Limelight.CamMode.Vision);
+        limelight.setCamMode(Limelight.CamMode.Driver); // disable led?
+        //limelight.setCamMode(Limelight.CamMode.Vision);
+        limelight.setLed(false);
 
         controlSubsystem = new ControlSubsystem(mainConfig, driveSubsystem, armSubsystem, shooterSubsystem, pickupSubsystem, winchSubsystem, limelight);
 
