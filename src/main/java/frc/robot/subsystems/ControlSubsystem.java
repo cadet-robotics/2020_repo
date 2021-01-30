@@ -132,7 +132,8 @@ public class ControlSubsystem extends SubsystemBase {
 
         //Shoot
         shootButton.whenPressed(() -> {
-            System.out.println("SETTING SPEED");
+            System.out.println("DISTANCE: " + lime.getDistance());
+            
             manualRPM = false;
             Robot.crosshairs.setRPMFromTable(lime.getDistance());
             //shooterSubsystem.triggerAutoShooter(false);
@@ -195,8 +196,9 @@ public class ControlSubsystem extends SubsystemBase {
             Robot.crosshairs.setVelocityRPM(rpm);
             
             SmartDashboard.putNumber("manRPM", rpm);
-            SmartDashboard.putNumber("limedist", lime.getDistance());
         }
+        
+        SmartDashboard.putNumber("limedist", lime.getDistance());
         
         // Run intake manually
         if(!pickupSubsystem.getAutoIntakeEnabled()) {
@@ -208,14 +210,17 @@ public class ControlSubsystem extends SubsystemBase {
             Motors.magazine.set(0);
             
             if(codriverController.getRawButton(manualIntakeIn)) {
-                System.out.println("INTAKE IN");
+                //System.out.println("INTAKE IN");
+            	
+            	
                 Motors.intake.set(Constants.INTAKE_SPEED);
             } else if(codriverController.getRawButton(manualIntakeOut)) {
                 Motors.intake.set(-Constants.INTAKE_SPEED);
             }
             
             if(codriverController.getRawButton(manualMagazineUp)) {
-                System.out.println("MAGAZINE UP");
+                //System.out.println("MAGAZINE UP");
+            	
                 Motors.magazine.set(Constants.MAGAZINE_SPEED);
             } else if(codriverController.getRawButton(manualMagazineDown)) {
                 Motors.magazine.set(-Constants.MAGAZINE_SPEED);

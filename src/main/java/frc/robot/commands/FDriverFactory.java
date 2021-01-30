@@ -53,7 +53,7 @@ public class FDriverFactory {
      */
     public static Command produce(ShooterSubsystem shooter, PickupSubsystem pick, Supplier<Double> distanceSupplier, boolean fireOne) {
         SelectCommand cmd = new SelectCommand(() -> {
-            Robot.crosshairs.setVelocityDistance(distanceSupplier.get());
+            Robot.crosshairs.setRPMFromTable(distanceSupplier.get());
             return produce(shooter, pick, Robot.crosshairs.getRPM(), fireOne);
         });
         cmd.addRequirements(shooter, pick);

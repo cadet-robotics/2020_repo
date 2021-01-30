@@ -198,6 +198,8 @@ public class CrosshairsOverlay implements VisionProcessor {
         for(int i = maxes.size() - 1; i >= 0; i--) {
             // In range, apply
             if(dist >= maxes.get(i)) {
+            	System.out.println("SPEED: " + rpmTable.get(maxes.get(i)));
+            	
                 setVelocityRPM(rpmTable.get(maxes.get(i)));
                 calculateLinePositions();
                 return;
