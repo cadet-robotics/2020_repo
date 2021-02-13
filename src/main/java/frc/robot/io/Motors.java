@@ -4,8 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.SpeedController;
 import frc6868.config.api.Config;
 
 /**
@@ -19,12 +18,14 @@ public class Motors {
     // Spark MAXes
     public static CANSparkMax leftDriveA,
                               leftDriveB,
+                              leftDriveC,
                               rightDriveA,
-                              rightDriveB;
+                              rightDriveB,
+                              rightDriveC;
     
-    public static MotorPair leftDrive,
-                            rightDrive,
-                            winch;
+    public static SpeedController leftDrive,
+    							  rightDrive,
+    							  winch;
 
     public static CANSparkMax topFly,
                               bottomFly;
@@ -51,12 +52,16 @@ public class Motors {
         // init motor pairs
         leftDriveA = new CANSparkMax(canMotors.getIntValue("left drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
         leftDriveB = new CANSparkMax(canMotors.getIntValue("left drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        leftDrive = new MotorPair(leftDriveA, leftDriveB);
+        leftDriveC = new CANSparkMax(canMotors.getIntValue("left drive c"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        
+        leftDrive = new MotorPair(new MotorPair(leftDriveA, leftDriveB), leftDriveC);
         leftDrive.setInverted(true);
 
         rightDriveA = new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
         rightDriveB = new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
-        rightDrive = new MotorPair(rightDriveA, rightDriveB);
+        rightDriveC = new CANSparkMax(canMotors.getIntValue("right drive c"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        
+        rightDrive = new MotorPair(new MotorPair(rightDriveA, rightDriveB), rightDriveC);
         rightDrive.setInverted(true);
 
         winch = new MotorPair(new PWMVictorSPX(pwmMotors.getIntValue("winch a")), new PWMVictorSPX(pwmMotors.getIntValue("winch b")));

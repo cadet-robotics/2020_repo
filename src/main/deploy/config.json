@@ -179,6 +179,11 @@
 			"description": "Left drive motor (B)"
 		},
 		{
+			"name": "left drive c",
+			"value": "8",
+			"description": "Left drive motor (C)"
+		},
+		{
 			"name": "right drive a",
 			"value": "4",
 			"description": "Right drive motor (A)"
@@ -187,6 +192,11 @@
 			"name": "right drive b",
 			"value": "5",
 			"description": "Right drive motor (B)"
+		},
+		{
+			"name": "right drive c",
+			"value": "9",
+			"description": "Right drive motor (C)"
 		},
 		{
 			"name": "top flywheel motor",
@@ -228,29 +238,6 @@
 			"name": "unused solenoid",
 			"value": "2",
 			"description": "PCM Port with the unused part"
-		}
-	],
-
-	"unknown": [
-		{
-			"name": "shooter a",
-			"value": "--",
-			"description": "Shooter drive motor A"
-		},
-		{
-			"name": "shooter b",
-			"value": "--",
-			"description": "Shooter drive motor B"
-		},
-		{
-			"name": "intake",
-			"value": "--",
-			"description": "Intake drive motor"
-		},
-		{
-			"name": "magazine",
-			"value": "--",
-			"description": "Magazine drive motor"
 		}
 	]
 }
