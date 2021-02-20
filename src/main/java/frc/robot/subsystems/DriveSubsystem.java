@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.TeleDriveCommand;
 import frc.robot.io.Motors;
@@ -30,15 +31,15 @@ import static frc.robot.Constants.MAX_SPEED;
 public class DriveSubsystem extends SubsystemBase {
     private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(3 / MAX_SPEED, 12 / MAX_SPEED);
 
-    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.64);
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(Units.inchesToMeters(28));
 
     private DifferentialDrive driveBase;
 
     private CANEncoder leftEncoder;
     private CANEncoder rightEncoder;
 
-    private PIDController leftController = new PIDController(1e-3, 0, 0);
-    private PIDController rightController = new PIDController(1e-3, 0, 0);
+    private PIDController leftController = new PIDController(2, 0, 0);
+    private PIDController rightController = new PIDController(2, 0, 0);
 
     private DifferentialDriveOdometry odometry;
 

@@ -9,9 +9,10 @@ import frc.robot.subsystems.PickupSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 import static frc.robot.trajectory.TrajectoryManager.BASE_TRAJECTORY;
+import static frc.robot.trajectory.TrajectoryManager.INITIAL_POS;
 
 public class AutoCommand extends SequentialCommandGroup {
     public AutoCommand(Limelight lime, DriveSubsystem drive, ShooterSubsystem shooter, PickupSubsystem pick) {
-        super(drive.trajectoryCommandBuilder(BASE_TRAJECTORY, new Pose2d()), new RotateToLightCommand(lime, drive), new WaitCommand(0.5), FDriverFactory.produce(shooter, pick, lime::getDistance, false));
+        super(drive.trajectoryCommandBuilder(BASE_TRAJECTORY, INITIAL_POS));
     }
 }
