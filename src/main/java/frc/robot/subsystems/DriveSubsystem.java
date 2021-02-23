@@ -38,8 +38,8 @@ public class DriveSubsystem extends SubsystemBase {
     private CANEncoder leftEncoder;
     private CANEncoder rightEncoder;
 
-    private PIDController leftController = new PIDController(2, 0, 0);
-    private PIDController rightController = new PIDController(2, 0, 0);
+    private PIDController leftController = new PIDController(0.5, 0, 0);
+    private PIDController rightController = new PIDController(0.5, 0, 0);
 
     private DifferentialDriveOdometry odometry;
 

@@ -1,5 +1,6 @@
 package frc.robot.trajectory;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -7,11 +8,14 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +33,7 @@ import java.util.function.Consumer;
  * AGREEMENT
  */
 public class TrajectoryManager {
+    /*
     private static final TrajectoryConfig config;
     static {
         config = new TrajectoryConfig(0.5, 1000);
@@ -74,7 +79,28 @@ public class TrajectoryManager {
         }
         return ret;
     }
+     */
 
+    private static Trajectory loadTrajectory(String s) {
+        try {
+            return TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + s + ".wpilib.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static final Trajectory BARREL_TRAJECTORY = loadTrajectory("barrel");
+    public static final Trajectory SLALOM_TRAJECTORY = loadTrajectory("slalom");
+    public static final Trajectory[] BOUNCE_TRAJECTORY_LIST =
+            new Trajectory[] {
+                    loadTrajectory("bounce-1"),
+                    loadTrajectory("bounce-2"),
+                    loadTrajectory("bounce-3"),
+                    loadTrajectory("bounce-4")
+            };
+
+    /*
     public static final Trajectory BASE_TRAJECTORY;
     static {
         ArrayList<Translation2d> ls =
@@ -89,10 +115,7 @@ public class TrajectoryManager {
         ArrayList<Translation2d> ls = getPosListFromString("C2");
         Pose2d end = new Pose2d(getPosFromLabel("E3"), Rotation2d.fromDegrees(270));
         BASE_TRAJECTORY = TrajectoryGenerator.generateTrajectory(start, ls, end, config);
-         */
+         *\/
     }
-
-    static {
-        BASE_TRAJECTORY.
-    }
+    */
 }
