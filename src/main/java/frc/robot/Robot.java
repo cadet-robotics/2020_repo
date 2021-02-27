@@ -250,6 +250,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         //m_autonomousCommand = new SkitterCommand(driveSubsystem);
+        Sensors.gyro.reset();
         m_autonomousCommand = new AutoCommand(driveSubsystem, SmartDashboard.getString("Auto Selector", null));
         m_autonomousCommand.schedule();
     }
@@ -327,6 +328,7 @@ public class Robot extends TimedRobot {
     /**
      * Runs the drive train manually
      */
+    /*
     private void runManualDrive() {
     	// Start with no movement
     	double left = 0, right = 0;
@@ -346,6 +348,7 @@ public class Robot extends TimedRobot {
     	// Set motor values
     	driveSubsystem.getDriveBase().tankDrive(left, right, false);
     }
+     */
     
     
     /*
