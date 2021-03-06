@@ -41,7 +41,7 @@ public class Sensors {
         bottomFlyEncoder.setPositionConversionFactor(1 / 3.0);
         bottomFlyEncoder.setVelocityConversionFactor(1 / 3.0);
 
-        final double DIST_DRIVE = 6.0 * .0254 * Math.PI;
+        final double DIST_DRIVE = 6.0 * Math.PI * 0.0254;
 
         driveEncoderLeft = new CANEncoder(Motors.leftDriveA, EncoderType.kQuadrature, 4096);
         driveEncoderLeft.setInverted(true);

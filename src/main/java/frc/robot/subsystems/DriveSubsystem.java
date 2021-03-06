@@ -25,17 +25,17 @@ import frc.robot.io.Sensors;
 import static frc.robot.Constants.MAX_SPEED;
 
 public class DriveSubsystem extends SubsystemBase {
-    private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(3 / MAX_SPEED, 16 / MAX_SPEED);
+    private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(1.4, 2.03, 0.683);
 
-    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.64);
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.9);
 
     private DifferentialDrive driveBase;
 
     private CANEncoder leftEncoder;
     private CANEncoder rightEncoder;
 
-    private PIDController leftController = new PIDController(0.5, 0, 0);
-    private PIDController rightController = new PIDController(0.5, 0, 0);
+    private PIDController leftController = new PIDController(2.95, 0, 0);
+    private PIDController rightController = new PIDController(2.95, 0, 0);
 
     private DifferentialDriveOdometry odometry;
 
