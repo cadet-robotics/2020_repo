@@ -22,12 +22,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
-import static frc.robot.Constants.MAX_SPEED;
-
 public class DriveSubsystem extends SubsystemBase {
     private static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(1.4, 2.03, 0.683);
 
-    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.9);
+    private static final DifferentialDriveKinematics kin = new DifferentialDriveKinematics(0.775);
 
     private DifferentialDrive driveBase;
 
