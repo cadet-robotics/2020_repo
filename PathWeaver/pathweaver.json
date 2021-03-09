@@ -3,7 +3,7 @@
   "exportUnit": "Always Meters",
   "maxVelocity": 0.7,
   "maxAcceleration": 100.0,
-  "wheelBase": 0.64,
-  "gameName": "Barrel Racing Path",
+  "wheelBase": 0.775,
+  "gameName": "Slalom Path",
   "outputDir": ".."
 }
