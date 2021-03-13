@@ -118,4 +118,7 @@ public class TrajectoryManager {
          *\/
     }
     */
+
+    public static void init() {
+    }
 }

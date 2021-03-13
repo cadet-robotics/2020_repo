@@ -26,6 +26,7 @@ import frc.robot.io.Motors;
 import frc.robot.io.OtherIO;
 import frc.robot.io.Sensors;
 import frc.robot.subsystems.*;
+import frc.robot.trajectory.TrajectoryManager;
 import frc.robot.vision.LineOverlay;
 import frc.robot.vision.ParabolaOverlay;
 import frc.robot.vision.TextOverlay;
@@ -120,6 +121,8 @@ public class Robot extends TimedRobot {
         cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setResolution(320, 240);
         cam.setFPS(15);
+
+        TrajectoryManager.init();
     }
     
     /**
@@ -251,7 +254,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         //m_autonomousCommand = new SkitterCommand(driveSubsystem);
         Sensors.gyro.reset();
-        m_autonomousCommand = new AutoCommand(driveSubsystem, SmartDashboard.getString("Auto Selector", null));
+        m_autonomousCommand = new AutoCommand(driveSubsystem, pickupSubsystem, SmartDashboard.getString("Auto Selector", null));
         m_autonomousCommand.schedule();
     }
 
