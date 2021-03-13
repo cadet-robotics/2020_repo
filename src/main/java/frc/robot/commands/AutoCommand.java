@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
@@ -21,8 +22,6 @@ public class AutoCommand extends SequentialCommandGroup {
             default:
                 throw new RuntimeException("Invalid autonomous");
         }
-        for (Trajectory t : tls) {
-            addCommands(drive.trajectoryCommandBuilder(t, t.getInitialPose()));
-        }
+        addCommands(drive.trajectoryCommandBuilder(tls, tls[0].getInitialPose()));
     }
 }

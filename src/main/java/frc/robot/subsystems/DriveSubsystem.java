@@ -15,10 +15,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.io.Motors;
 import frc.robot.io.Sensors;
 
@@ -66,11 +63,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
     }
 
-    public Command trajectoryCommandBuilder(Trajectory t, Pose2d initialPosMeters) {
-
-
-        t.getStates().forEach(System.out::println);
-
+    public Command trajectoryCommandBuilder(Trajectory[] tls, Pose2d initialPosMeters) {
         return new InstantCommand(() -> {
             leftEncoder.setPosition(0);
             rightEncoder.setPosition(0);
@@ -79,33 +72,41 @@ public class DriveSubsystem extends SubsystemBase {
             rightController.reset();
 
             odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(Sensors.getGyro()), initialPosMeters);
-        }).andThen(new RamseteCommand(
-                t,
-                () -> {
-                    Pose2d o = odometry.getPoseMeters();
-                    //SmartDashboard.putNumber("Gyro 2 Electric Boogaloo", o.getRotation().getDegrees());
-                    SmartDashboard.putString("Position 2 Electric Boogaloo", o.toString());
-                    //System.out.println(":> " + o);
-                    return o;
-                },
-                new RamseteController(2.0, 0.7),
-                feedforward,
-                kin,
-                () -> new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity()),
-                leftController,
-                rightController,
-                (vLeft, vRight) -> {
-                    double vMain = RobotController.getBatteryVoltage();
-                    //System.out.println("->" + vMain);
-                    SmartDashboard.putNumber("Motor Left Volt", vLeft);
-                    SmartDashboard.putNumber("Motor Right Volt", vRight);
-                    //System.out.println(leftController.getPositionError() + " ||| " + rightController.getPositionError());
-                    driveBase.tankDrive(vLeft / vMain, vRight / vMain, false);
-                },
-                this
-        )).andThen(new InstantCommand(() -> {
+        }).andThen(
+                buildRamseteCommands(tls)
+        ).andThen(new InstantCommand(() -> {
             System.out.println("End Pos: " + odometry.getPoseMeters());
             odometry = null;
         }));
+    }
+
+    private Command buildRamseteCommands(Trajectory[] tls) {
+        SequentialCommandGroup group = new SequentialCommandGroup();
+        for (Trajectory t : tls) {
+            group.addCommands(new RamseteCommand(
+                    t,
+                    () -> {
+                        Pose2d o = odometry.getPoseMeters();
+                        SmartDashboard.putString("Position 2 Electric Boogaloo", o.toString());
+                        return o;
+                    },
+                    new RamseteController(2.0, 0.7),
+                    feedforward,
+                    kin,
+                    () -> new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity()),
+                    leftController,
+                    rightController,
+                    (vLeft, vRight) -> {
+                        double vMain = RobotController.getBatteryVoltage();
+                        //System.out.println("->" + vMain);
+                        SmartDashboard.putNumber("Motor Left Volt", vLeft);
+                        SmartDashboard.putNumber("Motor Right Volt", vRight);
+                        //System.out.println(leftController.getPositionError() + " ||| " + rightController.getPositionError());
+                        driveBase.tankDrive(vLeft / vMain, vRight / vMain, false);
+                    },
+                    this
+            ));
+        }
+        return group;
     }
 }
