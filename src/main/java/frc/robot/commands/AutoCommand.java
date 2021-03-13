@@ -4,10 +4,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PickupSubsystem;
 import frc.robot.trajectory.TrajectoryManager;
 
 public class AutoCommand extends SequentialCommandGroup {
-    public AutoCommand(DriveSubsystem drive, String type) {
+    public AutoCommand(DriveSubsystem drive, PickupSubsystem pick, String type) {
         Trajectory[] tls;
         switch (type) {
             case "BARREL":
@@ -23,5 +24,6 @@ public class AutoCommand extends SequentialCommandGroup {
                 throw new RuntimeException("Invalid autonomous");
         }
         addCommands(drive.trajectoryCommandBuilder(tls, tls[0].getInitialPose()));
+        addRequirements(pick);
     }
 }
