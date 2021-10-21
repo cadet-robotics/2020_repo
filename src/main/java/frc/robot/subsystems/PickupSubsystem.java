@@ -21,7 +21,7 @@ public class PickupSubsystem extends SubsystemBase {
     PWMVictorSPX mag;
 
     private boolean autoIntakeEnabled = true;
-    public double shooterPresetSpeed = 0;
+    public double    shooterPresetSpeed = 0;
 
     /**
      * Constructor for subsystem

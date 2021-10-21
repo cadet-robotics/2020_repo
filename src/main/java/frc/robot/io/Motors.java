@@ -19,8 +19,10 @@ public class Motors {
     // Spark MAXes
     public static CANSparkMax leftDriveA,
                               leftDriveB,
+                              leftDriveC,
                               rightDriveA,
-                              rightDriveB;
+                              rightDriveB,
+                              rightDriveC;
     
     public static MotorPair leftDrive,
                             rightDrive,
@@ -56,6 +58,7 @@ public class Motors {
 
         rightDriveA = new CANSparkMax(canMotors.getIntValue("right drive a"), CANSparkMaxLowLevel.MotorType.kBrushed);
         rightDriveB = new CANSparkMax(canMotors.getIntValue("right drive b"), CANSparkMaxLowLevel.MotorType.kBrushed);
+        rightDriveC = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushed);
         rightDrive = new MotorPair(rightDriveA, rightDriveB);
         rightDrive.setInverted(true);
 

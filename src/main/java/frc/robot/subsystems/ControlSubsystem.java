@@ -224,6 +224,12 @@ public class ControlSubsystem extends SubsystemBase {
             } else if(codriverController.getRawButton(manualMagazineDown)) {
                 Motors.magazine.set(-Constants.MAGAZINE_SPEED);
             }
+
+            if (driverController.getRawButton(7))
+                Motors.rightDriveC.set(100);
+            else
+                Motors.rightDriveC.set(0);
+
         }
     }
 }  
