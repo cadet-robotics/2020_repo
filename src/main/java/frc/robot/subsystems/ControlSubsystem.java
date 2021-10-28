@@ -151,10 +151,10 @@ public class ControlSubsystem extends SubsystemBase {
         });
 
         //Shoot
-        shootButton.whenPressed(() -> {
+        //shootButton.whenPressed(() -> {
             //System.out.println("WORKING");
-            shooterSubsystem.triggerAutoShooter(true);
-        });
+        //    shooterSubsystem.triggerAutoShooter(true);
+        //});
         
         // Toggle intake
         intakeButton.whenPressed(() -> {
@@ -166,15 +166,15 @@ public class ControlSubsystem extends SubsystemBase {
         winchUnlockButton.whenPressed(() -> winchSubsystem.setLockedState(false));
         winchLockButton.whenPressed(() -> winchSubsystem.setLockedState(true));
 
-        magicShootButton.whenPressed(() -> {
-            shooterSubsystem.triggerAutoShooter(false);
+        //magicShootButton.whenPressed(() -> {
+        //    shooterSubsystem.triggerAutoShooter(false);
             //Command c = shooterSubsystem.getCurrentCommand();
             //if (c == null) {
             //    FDriverFactory.produce(shooterSubsystem, pickupSubsystem, lime::getDistance, true).schedule();
             //} else {
             //    c.cancel();
             //}
-        });
+        //});
     }
     
     /**
